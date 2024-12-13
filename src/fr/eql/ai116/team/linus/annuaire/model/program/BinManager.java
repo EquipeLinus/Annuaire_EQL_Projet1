@@ -9,7 +9,7 @@ public class BinManager {
     }
 
     private String getNodeNameFromStagiaire(Stagiaire stagiaire) {
-        return stagiaire.getPromotion() + "_" + stagiaire.getLastname() + "_" + stagiaire.getName();
+        return stagiaire.getPromotion() + "_" + stagiaire.getLastName() + "_" + stagiaire.getFirstName();
     }
 
     private Stagiaire getStagiaireFromBinIndex(int binIndex) {
