@@ -5,6 +5,7 @@ import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BinManager {
@@ -13,15 +14,27 @@ public class BinManager {
 
     public static void main(String[] args) {
         BinManager bManager = new BinManager();
-        bManager.setStagiaireInBinIndex(new Stagiaire("thomas", "duron", "ai116",2024,93),0);
+        bManager.setNodeAtIndex(new Stagiaire("thomas", "duron", "ai116",2024,93),0);
 
-        System.out.println(bManager.getStagiaireInBinIndex(0));
+        System.out.println(bManager.getStagiaireAtNodeIndex(0));
 
         bManager.addStagiaire(new Stagiaire("mazir", "ouahioune", "ai116",2024,75));
         bManager.addStagiaire(new Stagiaire("andras", "schuller", "ai116",2024,19));
         bManager.addStagiaire(new Stagiaire("miroslava", "castillo", "ai116",2024,94));
 
-        bManager.displayInOrder(0);
+        bManager.display(0);
+
+        System.out.println();
+        System.out.println(bManager.searchStagiaire("ai116_castillo_miroslava",0));
+
+        bManager.addStagiaire(new Stagiaire("jean1", "toto1", "BO05",2024,94));
+        bManager.addStagiaire(new Stagiaire("jean2", "toto2", "BO05",2024,94));
+        bManager.addStagiaire(new Stagiaire("jean3", "toto3", "BO05",2024,94));
+
+        System.out.println();
+        List<Stagiaire> stagiaireDeAI116 = bManager.searchPromo("ai116",0, new ArrayList<Stagiaire>());
+        System.out.println(stagiaireDeAI116);
+        System.out.println(bManager.searchPromo("BO05",0, new ArrayList<Stagiaire>()));
     }
 
     public void importDataInBin(List<Stagiaire> allStagiaire) {
@@ -44,7 +57,7 @@ public class BinManager {
      * @param binIndex L'index de la node qui contient les du stagiaire voulu
      * @return
      */
-    private Stagiaire getStagiaireInBinIndex(int binIndex) {
+    private Stagiaire getStagiaireAtNodeIndex(long binIndex) {
 
         try (RandomAccessFile raf = new RandomAccessFile(BIN_PATH, "rw")) {
 
@@ -71,7 +84,7 @@ public class BinManager {
      * @param stagiaire
      * @param binIndex
      */
-    private void setStagiaireInBinIndex(Stagiaire stagiaire, long binIndex) {
+    private void setNodeAtIndex(Stagiaire stagiaire, long binIndex) {
 
         try (RandomAccessFile raf = new RandomAccessFile(BIN_PATH, "rw")) {
 
@@ -123,7 +136,7 @@ public class BinManager {
                     }
                     raf.writeLong(newNodeIndex);
 
-                    setStagiaireInBinIndex(stagiaire,newNodeIndex);
+                    setNodeAtIndex(stagiaire,newNodeIndex);
                     break;
                 }
             }
@@ -144,10 +157,10 @@ public class BinManager {
 
     }
 
-    void displayInOrder(long nodeIndex) {
-        if (getPreviousIndexFromIndex(nodeIndex) != -1) displayInOrder(getPreviousIndexFromIndex(nodeIndex));
+    void display(long nodeIndex) {
+        if (getPreviousIndexFromIndex(nodeIndex) != -1) display(getPreviousIndexFromIndex(nodeIndex));
         System.out.println(getIDFromIndex(nodeIndex));
-        if (getNextIndexFromIndex(nodeIndex) != -1) displayInOrder(getNextIndexFromIndex(nodeIndex));
+        if (getNextIndexFromIndex(nodeIndex) != -1) display(getNextIndexFromIndex(nodeIndex));
     }
 
     public long getPreviousIndexFromIndex(long nodeIndex) {
@@ -186,4 +199,62 @@ public class BinManager {
         }
     }
 
+    /**
+     * fonction récursive qui recherche une node, et qui continue la recherche dans la bonne direction.
+     * @param ID
+     * @param currentIndex
+     * @return
+     */
+    private Stagiaire searchStagiaire(String ID, long currentIndex) {
+        System.out.println(getIDFromIndex(currentIndex));
+
+        try {
+            int comparison = ID.compareToIgnoreCase(getIDFromIndex(currentIndex)); // ID est supérieur ou inférieur à l'ID de currentIndex ?
+            if (comparison == 0) {
+                return getStagiaireAtNodeIndex(currentIndex);
+            } else if (comparison < 0) {
+                return searchStagiaire(ID, getPreviousIndexFromIndex(currentIndex));
+            } else {
+                return searchStagiaire(ID, getNextIndexFromIndex(currentIndex));
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+
+    /**
+     * Recherche dans l'arbre de tout les ID commençant par la promoID.
+     * La route dans l'arbre est déterminée par la comparaison du currentID avec la promoID.
+     * @param promoID
+     * @param currentIndex
+     * @param currentStagiaireFounded
+     * @return
+     */
+    private List<Stagiaire> searchPromo(String promoID, long currentIndex, List<Stagiaire> currentStagiaireFounded) {
+        System.out.println(getIDFromIndex(currentIndex));
+
+        // On regarde si le currentID commence par promoID
+        if (getIDFromIndex(currentIndex).startsWith(promoID)) {
+
+            if (getPreviousIndexFromIndex(currentIndex) != -1)
+                searchPromo(promoID,getPreviousIndexFromIndex(currentIndex),currentStagiaireFounded);
+
+            currentStagiaireFounded.add(getStagiaireAtNodeIndex(currentIndex));
+
+            if (getNextIndexFromIndex(currentIndex) != -1)
+                searchPromo(promoID,getNextIndexFromIndex(currentIndex),currentStagiaireFounded);
+
+        } else {
+            if (promoID.compareToIgnoreCase(getIDFromIndex(currentIndex)) < 0) {
+                if (getPreviousIndexFromIndex(currentIndex) != -1)
+                    searchPromo(promoID,getPreviousIndexFromIndex(currentIndex),currentStagiaireFounded);
+            } else {
+                if (getNextIndexFromIndex(currentIndex) != -1)
+                    searchPromo(promoID,getNextIndexFromIndex(currentIndex),currentStagiaireFounded);
+            }
+        }
+
+        return currentStagiaireFounded;
+    }
 }
