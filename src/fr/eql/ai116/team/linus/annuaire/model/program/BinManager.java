@@ -38,9 +38,9 @@ public class BinManager {
         System.out.println(bManager.searchPromo("BO05",0, new ArrayList<Stagiaire>()));
 
 
-        System.out.println();
-        System.out.println(bManager.getIDFromNodeIndex(bManager.searchNodeParent("ai116_ouahioune_mazir",0)));
-        System.out.println(bManager.getIDFromNodeIndex(bManager.searchNodeParent("ai116_schuller_andras",0)));
+        long[] miroslaveAndParent = bManager.searchNodeIndexWithIDAndGetParent("ai116_schuller_andras",0);
+
+        System.out.println(bManager.getIDFromNodeIndex(miroslaveAndParent[0]) + ", parent: " + bManager.getIDFromNodeIndex(miroslaveAndParent[1]));
 
         System.out.println();
         bManager.display(0);
@@ -50,13 +50,10 @@ public class BinManager {
 
         System.out.println();
         bManager.display(0);
-        System.out.println("Parent of toto: " + bManager.getIDFromNodeIndex(bManager.searchNodeParent("BO05_toto1_jean1",0)));
 
         bManager.removeStagiaire("ai116_schuller_andras");
         System.out.println("----");
         bManager.display(0);
-
-        System.out.println("Parent of toto: " + bManager.getIDFromNodeIndex(bManager.searchNodeParent("BO05_toto1_jean1",0)));
     }
 
     public void importDataInBin(List<Stagiaire> allStagiaire) {
@@ -164,21 +161,21 @@ public class BinManager {
     }
 
     public void removeStagiaire(String ID) {
-        removeStagiaire(searchStagiaireAndGetIndex(ID,0));
+        removeStagiaire(searchNodeIndexWithIDAndGetParent(ID,0));
     }
 
-    public void removeStagiaire(long indexToRemove) {
-        int childCount = getChildCount(indexToRemove);
+    public void removeStagiaire(long[] indexsToRemoveAndParent) {
+        int childCount = getChildCount(indexsToRemoveAndParent[0]);
 
         switch (childCount) {
             default:
-                removeNode_ZeroChildren(indexToRemove);
+                removeNode_ZeroChildren(indexsToRemoveAndParent);
                 break;
             case 1:
-                removeNode_OneChildren(indexToRemove);
+                removeNode_OneChildren(indexsToRemoveAndParent);
                 break;
             case 2:
-                removeNode_TwoChildren();
+                removeNode_TwoChildren(indexsToRemoveAndParent);
                 break;
         }
     }
@@ -214,16 +211,15 @@ public class BinManager {
     }
     //endregion
     //region REMOVING_METHODS
-    private void removeNode_ZeroChildren(long indexToRemove) {
-        long parentIndex = searchNodeParent(getIDFromNodeIndex(indexToRemove),0);
+    private void removeNode_ZeroChildren(long[] indexsToRemoveAndParent) {
 
-        long[] childs = getNodeChildren(parentIndex);
+        long[] childs = getNodeChildren(indexsToRemoveAndParent[1]);
         for (int i = 0; i < childs.length; i++) {
-            if (childs[i] == indexToRemove) {
+            if (childs[i] == indexsToRemoveAndParent[0]) {
 
                 try (RandomAccessFile raf = new RandomAccessFile(BIN_PATH, "rw")) {
 
-                    raf.seek(parentIndex);
+                    raf.seek(indexsToRemoveAndParent[1]);
                     raf.readUTF();
                     if (i == 1) raf.readLong();
                     raf.writeLong(-1);
@@ -237,20 +233,19 @@ public class BinManager {
         }
     }
 
-    private void removeNode_OneChildren(long indexToRemove) {
-        long parentIndex = searchNodeParent(getIDFromNodeIndex(indexToRemove),0);
+    private void removeNode_OneChildren(long[] indexsToRemoveAndParent) {
 
-        long[] childsOfParent = getNodeChildren(parentIndex);
+        long[] childsOfParent = getNodeChildren(indexsToRemoveAndParent[1]);
         for (int i = 0; i < childsOfParent.length; i++) {
-            if (childsOfParent[i] == indexToRemove) {
+            if (childsOfParent[i] == indexsToRemoveAndParent[0]) {
 
                 try (RandomAccessFile raf = new RandomAccessFile(BIN_PATH, "rw")) {
 
-                    raf.seek(parentIndex);
+                    raf.seek(indexsToRemoveAndParent[1]);
                     raf.readUTF();
                     if (i == 1) raf.readLong();
 
-                    long[] childsOfChild = getNodeChildren(indexToRemove);
+                    long[] childsOfChild = getNodeChildren(indexsToRemoveAndParent[0]);
                     for (long l : childsOfChild) {
                         if (l != -1) raf.writeLong(l);
                     }
@@ -264,7 +259,7 @@ public class BinManager {
         }
     }
 
-    private void removeNode_TwoChildren() {
+    private void removeNode_TwoChildren(long[] indexsToRemoveAndParent) {
 
     }
 //endregion
@@ -277,7 +272,7 @@ public class BinManager {
      */
     private Stagiaire searchStagiaire(String ID, long currentIndex) {
 
-        Long indexFounded = searchStagiaireAndGetIndex(ID, currentIndex);
+        Long indexFounded = searchNodeIndexWithID(ID, currentIndex);
         if (indexFounded != null) return getStagiaireAtNodeIndex(indexFounded);
         else return null;
     }
@@ -288,7 +283,7 @@ public class BinManager {
      * @param currentIndex
      * @return
      */
-    private Long searchStagiaireAndGetIndex(String ID, long currentIndex) {
+    private Long searchNodeIndexWithID(String ID, long currentIndex) {
         System.out.println("Searching for " + ID + ", currently at: " + getIDFromNodeIndex(currentIndex));
 
         try {
@@ -296,15 +291,37 @@ public class BinManager {
             if (comparison == 0) {
                 return currentIndex;
             } else if (comparison < 0) {
-                return searchStagiaireAndGetIndex(ID, getLeftNodeIndexFromNodeIndex(currentIndex));
+                return searchNodeIndexWithID(ID, getLeftNodeIndexFromNodeIndex(currentIndex));
             } else {
-                return searchStagiaireAndGetIndex(ID, getRightNodeIndexFromNodeIndex(currentIndex));
+                return searchNodeIndexWithID(ID, getRightNodeIndexFromNodeIndex(currentIndex));
             }
         } catch (Exception e) {
             return null;
         }
     }
 
+    private long[] searchNodeIndexWithIDAndGetParent(String ID, long currentIndex) {
+        System.out.println("Searching for " + ID + ", currently at: " + getIDFromNodeIndex(currentIndex));
+
+        try {
+            int comparison = ID.compareToIgnoreCase(getIDFromNodeIndex(currentIndex)); // ID est supérieur ou inférieur à l'ID de currentIndex ?
+            long[] result;
+
+            if (comparison == 0) {
+                return new long[]{currentIndex,-1};
+            } else if (comparison < 0) {
+                result = searchNodeIndexWithIDAndGetParent(ID, getLeftNodeIndexFromNodeIndex(currentIndex));
+            } else {
+                result = searchNodeIndexWithIDAndGetParent(ID, getRightNodeIndexFromNodeIndex(currentIndex));
+            }
+
+            if (result[1] == -1) result[1] = currentIndex;
+
+            return result;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     /**
      * Recherche dans l'arbre de tout les ID commençant par la promoID.
@@ -340,27 +357,7 @@ public class BinManager {
 
         return currentStagiaireFounded;
     }
-
-    private Long searchNodeParent(String IDToFind, long currentIndex) {
-        int comparison = IDToFind.compareToIgnoreCase(getIDFromNodeIndex(currentIndex)); // ID est supérieur ou inférieur à l'ID de currentIndex ?
-
-        long childIndex;
-        if (comparison < 0) {
-            childIndex = getLeftNodeIndexFromNodeIndex(currentIndex);
-        } else {
-            childIndex = getRightNodeIndexFromNodeIndex(currentIndex);
-        }
-
-        //System.out.println("TESTING CHILD OF " + getIDFromIndex(currentIndex) + ": " + getIDFromIndex(childIndex));
-        if (childIndex == -1) return null;
-
-        if (getIDFromNodeIndex(childIndex).equals(IDToFind)) {
-            return currentIndex;
-        } else {
-            return searchNodeParent(IDToFind, childIndex);
-        }
-    }
-//endregion
+    //endregion
     //region GET_DATA_FROM_NODE
     public long getLeftNodeIndexFromNodeIndex(long nodeIndex) {
         try (RandomAccessFile raf = new RandomAccessFile(BIN_PATH, "rw")) {
