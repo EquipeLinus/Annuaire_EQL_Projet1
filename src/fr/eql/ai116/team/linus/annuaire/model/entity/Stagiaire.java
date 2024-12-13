@@ -1,15 +1,15 @@
 package fr.eql.ai116.team.linus.annuaire.model.entity;
 
 public class Stagiaire {
-    private String name;
-    private String lastname;
+    private String firstName;
+    private String lastName;
     private String promotion;
     private int year;
     private int department;
 
-    public Stagiaire(String name, String lastname, String promotion, int year, int department) {
-        this.name = name;
-        this.lastname = lastname;
+    public Stagiaire(String name, String lastName, String promotion, int year, int department) {
+        this.firstName = name;
+        this.lastName = lastName;
         this.promotion = promotion;
         this.year = year;
         this.department = department;
@@ -18,26 +18,26 @@ public class Stagiaire {
     @Override
     public String toString() {
         return "Stagiaire{" +
-                "name='" + name + '\'' +
-                ", lastname='" + lastname + '\'' +
+                "name='" + firstName + '\'' +
+                ", lastname='" + lastName + '\'' +
                 ", promotion='" + promotion + '\'' +
                 ", year=" + year +
                 ", department=" + department +
                 '}';
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getLastName() {
+        return lastName;
     }
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getPromotion() {
