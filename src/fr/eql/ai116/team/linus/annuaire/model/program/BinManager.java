@@ -30,10 +30,20 @@ public class BinManager {
         }
     }
 
+    /**
+     * Concataine les données du stagiaire pour créer un ID.
+     * @param stagiaire
+     * @return
+     */
     private String getStagiaireId(Stagiaire stagiaire) {
         return stagiaire.getPromotion() + "_" + stagiaire.getLastName() + "_" + stagiaire.getFirstName();
     }
 
+    /**
+     * Va lire dans le fichie rbinaire à l'index donné. Retourne les données lues sous la forme d'un stagiaire.
+     * @param binIndex L'index de la node qui contient les du stagiaire voulu
+     * @return
+     */
     private Stagiaire getStagiaireInBinIndex(int binIndex) {
 
         try (RandomAccessFile raf = new RandomAccessFile(BIN_PATH, "rw")) {
@@ -56,6 +66,11 @@ public class BinManager {
         }
     }
 
+    /**
+     * va écrire un stagiaire à l'index dans le fichier binaire.
+     * @param stagiaire
+     * @param binIndex
+     */
     private void setStagiaireInBinIndex(Stagiaire stagiaire, long binIndex) {
 
         try (RandomAccessFile raf = new RandomAccessFile(BIN_PATH, "rw")) {
@@ -77,6 +92,12 @@ public class BinManager {
         }
     }
 
+    /**
+     * Chercher dans l'arbre jusqu'à trouver la node parent. Puis, on lie ce parent à la dernière position
+     * dans le fichier binaire. Ensuite, on crée la node du stagiaire à la dernière position dans le
+     * fichier binaire.
+     * @param stagiaire
+     */
     public void addStagiaire(Stagiaire stagiaire) {
         try (RandomAccessFile raf = new RandomAccessFile(BIN_PATH, "rw")) {
 
