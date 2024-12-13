@@ -7,6 +7,25 @@ public class Stagiaire {
     private int year;
     private int department;
 
+    public Stagiaire(String name, String lastname, String promotion, int year, int department) {
+        this.name = name;
+        this.lastname = lastname;
+        this.promotion = promotion;
+        this.year = year;
+        this.department = department;
+    }
+
+    @Override
+    public String toString() {
+        return "Stagiaire{" +
+                "name='" + name + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", promotion='" + promotion + '\'' +
+                ", year=" + year +
+                ", department=" + department +
+                '}';
+    }
+
     public String getName() {
         return name;
     }
