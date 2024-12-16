@@ -5,6 +5,7 @@ import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
 import fr.eql.ai116.team.linus.annuaire.view.AnchorPaneViewStagiaire;
 import fr.eql.ai116.team.linus.annuaire.view.GridPaneSearchStagiaires;
 import fr.eql.ai116.team.linus.annuaire.view.HBoxAdmin;
+import fr.eql.ai116.team.linus.annuaire.view.InitializeTxtPanel;
 import javafx.scene.Scene;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
@@ -75,6 +76,17 @@ public class Application extends javafx.application.Application {
         root.setTop(topPane);
         root.setCenter(centerPane);
         root.setBottom(bottomPane);
+
+        InitializeTxtPanel init = new InitializeTxtPanel();
+        Scene secondScene = new Scene(init, 230, 100);
+
+        // New window (Stage)
+        Stage newWindow = new Stage();
+        newWindow.setTitle("Second Stage");
+        newWindow.setScene(secondScene);
+
+        newWindow.show();
+
 
         stage.setTitle("Application stagiaire EQL");
         stage.setScene(scene);
