@@ -1,6 +1,8 @@
 package fr.eql.ai116.team.linus.annuaire.view;
 
+import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
+import fr.eql.ai116.team.linus.annuaire.model.program.AdministratorSorter;
 import fr.eql.ai116.team.linus.annuaire.model.program.BinManager;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -46,8 +48,9 @@ public class HBoxAdmin extends HBox {
 
     private Stagiaire selectedStagiaire;
 
-    public HBoxAdmin(TableView<Stagiaire> table) {
+    public HBoxAdmin(TableView<Stagiaire> table, Administrator account) {
         super();
+        if (AdministratorSorter.isAdmin(account)) return;
 
         vBoxFirstName = new VBox(5);
         lblFirstName = new Label("Prénom:");

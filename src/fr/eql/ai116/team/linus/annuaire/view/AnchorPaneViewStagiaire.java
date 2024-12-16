@@ -23,12 +23,13 @@ public class AnchorPaneViewStagiaire extends AnchorPane {
         List<Stagiaire> stagiaireList = new ArrayList<>();
         try {
             BinManager binManager = new BinManager();
-            stagiaireList =binManager.searchPromo("KAPLA 12", 0, new ArrayList<Stagiaire>());
+            stagiaireList = binManager.searchPromo("KAPLA 12", 0, new ArrayList<Stagiaire>());
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
         table.setEditable(false);
 
         TableColumn<Stagiaire, String> lastNameCol = new TableColumn<>("Nom");

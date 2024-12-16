@@ -39,8 +39,6 @@ public class AdministratorSorter {
         Administrator administrator = new Administrator(username, password);
         addAdministratorToFile(administrator.getUsername(), administrator.getPassword());
 
-
-
         checkLogs("Pierre","4281659");
     }
 
@@ -63,6 +61,12 @@ public class AdministratorSorter {
         else {
             logger.info("L'administrateur n'existe pas");
         }
+    }
+
+    public static boolean isAdmin(Administrator account) {
+        if (account == null) return false;
+        Administrator admin = checkIfAdminExists(getListAdmins(),account.getUsername());
+        return admin != null && admin.getPassword().equals(account.getPassword());
     }
 
     /**

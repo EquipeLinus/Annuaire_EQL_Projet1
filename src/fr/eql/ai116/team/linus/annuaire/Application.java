@@ -1,5 +1,6 @@
 package fr.eql.ai116.team.linus.annuaire;
 
+import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
 import fr.eql.ai116.team.linus.annuaire.view.AnchorPaneViewStagiaire;
 import fr.eql.ai116.team.linus.annuaire.view.HBoxAdmin;
@@ -8,6 +9,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +24,8 @@ public class Application extends javafx.application.Application {
 
     private double width = 1500;
     private double height = 900;
+
+    private Administrator account = null;
 
     public static void main(String[] args) {
         launch(args);
@@ -64,7 +71,7 @@ public class Application extends javafx.application.Application {
         /**
          * Bottom Panel
          */
-        HBoxAdmin bottomPane = new HBoxAdmin(table);
+        HBoxAdmin bottomPane = new HBoxAdmin(table, account);
         bottomPane.setPrefSize(width, height /20);
 
 
@@ -72,14 +79,9 @@ public class Application extends javafx.application.Application {
         root.setCenter(centerPane);
         root.setBottom(bottomPane);
 
-
         stage.setTitle("Application stagiaire EQL");
         stage.setScene(scene);
         stage.setResizable(true);
         stage.show();
-
-
-
-
     }
 }
