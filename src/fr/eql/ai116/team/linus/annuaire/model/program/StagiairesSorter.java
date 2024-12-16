@@ -33,6 +33,7 @@ public class StagiairesSorter {
      */
     public static List<Stagiaire> stagiairesListGenerator() {
 
+
         List<Stagiaire> stagiairesList = new ArrayList<>();
 
         try {
