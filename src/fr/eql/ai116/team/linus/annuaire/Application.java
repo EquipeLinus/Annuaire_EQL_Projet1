@@ -1,13 +1,10 @@
 package fr.eql.ai116.team.linus.annuaire;
 
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
-import fr.eql.ai116.team.linus.annuaire.view.BorderPaneViewStagiaire;
-import fr.eql.ai116.team.linus.annuaire.view.GridPaneSearchStagiaires;
+import fr.eql.ai116.team.linus.annuaire.view.AnchorPaneViewStagiaire;
 import fr.eql.ai116.team.linus.annuaire.view.HBoxAdmin;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -57,16 +54,11 @@ public class Application extends javafx.application.Application {
          * Center panel
          */
 
-        Pane centerPane = new Pane();
-        centerPane.setPrefSize(width, height /2);
-
-
+        BorderPane centerPane = new BorderPane();
         TableView<Stagiaire> table = new TableView<Stagiaire>();
 
-
-        BorderPaneViewStagiaire borderPane = new BorderPaneViewStagiaire(table);
-
-        centerPane.getChildren().add(borderPane);
+        AnchorPaneViewStagiaire borderPane = new AnchorPaneViewStagiaire(table);
+        centerPane.setCenter(borderPane);
 
 
         /**

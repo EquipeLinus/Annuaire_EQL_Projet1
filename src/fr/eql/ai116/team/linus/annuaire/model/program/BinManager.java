@@ -31,10 +31,6 @@ public class BinManager {
             bManager.writeNodeAtIndex(new Stagiaire("thomas", "duron", "ai116", 2024, 93), 0);
             bManager.initialize();
 
-            for (Stagiaire stagiaire : bManager.getAll(0, new ArrayList<>())) {
-                System.out.println(stagiaire);
-            }
-
             /*
             BinManager bManager = new BinManager();
             bManager.clearFile();
