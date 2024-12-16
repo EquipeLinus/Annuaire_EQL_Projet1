@@ -1,4 +1,5 @@
 package fr.eql.ai116.team.linus.annuaire.model.program;
+
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,6 +22,8 @@ import java.util.List;
  * Java class for the administrators list
  */
 public class AdministratorSorter {
+
+
     private static final Logger logger = LogManager.getLogger();
 
     private static final String FOLDER = "resources/";
@@ -133,5 +136,6 @@ public class AdministratorSorter {
         }
         return administratorsList;
     }
+
 
 }

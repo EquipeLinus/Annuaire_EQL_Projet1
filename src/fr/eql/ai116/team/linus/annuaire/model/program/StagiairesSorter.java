@@ -57,9 +57,9 @@ public class StagiairesSorter {
             }
 
         } catch (FileNotFoundException e) {
-            logger.error("Unable to open on " + FILE);
+            logger.error("Unable to open the " + FILE, e);
         } catch (IOException e) {
-            logger.error("Unable to operate on " + FILE);
+            logger.error("Unable to operate on the " + FILE, e);
         }
 
         return stagiairesList;

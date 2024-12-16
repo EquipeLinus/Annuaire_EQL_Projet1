@@ -47,6 +47,8 @@ public class BinManager {
             bManager.addStagiaire(new Stagiaire("jean1", "toto1", "BO05", 2024, 94));
             bManager.addStagiaire(new Stagiaire("jean3", "toto3", "BO05", 2024, 94));
 
+            bManager.displayTree(0,0);
+
             System.out.println();
             List<Stagiaire> stagiaireDeAI116 = bManager.searchPromo("ai116", 0, new ArrayList<Stagiaire>());
             System.out.println(stagiaireDeAI116);
@@ -76,6 +78,7 @@ public class BinManager {
             bManager.modifyStagiaire("ai116_ouahioune_mazir", new Stagiaire("mazirrrrr", "ouahioune", "ai116", 2024, 75));
 
             bManager.display(0);
+            bManager.displayTree(0,0);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -227,6 +230,25 @@ public class BinManager {
 
         long rightNode = getRight(nodeIndex);
         if (rightNode != -1) display(rightNode);
+    }
+
+    /**
+     * Fait des souts qui va lire l'arbre dans l'ordre
+     * @param nodeIndex
+     * @throws IOException
+     */
+    private void displayTree(long nodeIndex, int deepness) throws IOException {
+
+        for (int i = 0; i < deepness; i++) {
+            System.out.print("  ");
+        }
+        System.out.println(getID(nodeIndex));
+
+        long leftNode = getLeft(nodeIndex);
+        if (leftNode != -1) displayTree(leftNode,deepness+1);
+
+        long rightNode = getRight(nodeIndex);
+        if (rightNode != -1) displayTree(rightNode,deepness+1);
     }
 
     /**
@@ -483,5 +505,4 @@ public class BinManager {
         raf.writeLong(value);
     }
     //endregion
-
 }

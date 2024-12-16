@@ -1,6 +1,5 @@
 package fr.eql.ai116.team.linus.annuaire.view;
 
-
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
 import javafx.collections.FXCollections;
 import javafx.scene.control.TableColumn;

@@ -1,7 +1,6 @@
 package fr.eql.ai116.team.linus.annuaire.model.entity;
 
 public class Administrator {
-
     private String username;
     private String password;
 
@@ -29,4 +28,3 @@ public class Administrator {
         this.password = password;
     }
 }
-
