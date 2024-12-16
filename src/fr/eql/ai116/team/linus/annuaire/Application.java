@@ -1,14 +1,18 @@
 package fr.eql.ai116.team.linus.annuaire;
 
+import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
 import fr.eql.ai116.team.linus.annuaire.view.AnchorPaneViewStagiaire;
-import fr.eql.ai116.team.linus.annuaire.view.GridPaneSearchStagiaires;
 import fr.eql.ai116.team.linus.annuaire.view.HBoxAdmin;
 import javafx.scene.Scene;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,6 +25,8 @@ public class Application extends javafx.application.Application {
     private double width = 1500;
     private double height = 900;
 
+    private Administrator account = null;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -29,8 +35,24 @@ public class Application extends javafx.application.Application {
     public void start(Stage stage) throws Exception {
 
         BorderPane root = new BorderPane();
-
         Scene scene = new Scene(root, width, height);
+
+        /**
+         * Top panel
+         */
+
+        HBox topPane = new HBox();
+        topPane.setPrefSize(width, height /6);
+
+        Pane leftTopPane = new Pane();
+        leftTopPane.setPrefSize(width /2, height /4);
+        leftTopPane.setStyle("-fx-background-color: blue");
+
+        Pane rightTopPane = new Pane();
+        rightTopPane.setPrefSize(width /2, height /4);
+        rightTopPane.setStyle("-fx-background-color: purple");
+
+        topPane.getChildren().addAll(leftTopPane,rightTopPane);
 
         /**
          * Center panel
@@ -43,40 +65,19 @@ public class Application extends javafx.application.Application {
         centerPane.setCenter(borderPane);
 
         /**
-         * Top panel
-         */
-
-        HBox topPane = new HBox();
-        topPane.setPrefSize(width, height /6);
-
-        GridPaneSearchStagiaires leftTopPane = new GridPaneSearchStagiaires(borderPane);
-        leftTopPane.setPrefSize(width /2, height /4);
-
-        Pane rightTopPane = new Pane();
-        rightTopPane.setPrefSize(width /2, height /4);
-        rightTopPane.setStyle("-fx-background-color: purple");
-
-        topPane.getChildren().addAll(leftTopPane,rightTopPane);
-
-        /**
          * Bottom Panel
          */
-        HBoxAdmin bottomPane = new HBoxAdmin(table);
-        bottomPane.setPrefSize(width, height /20);
 
+        HBoxAdmin bottomPane = new HBoxAdmin(table, account);
+        bottomPane.setPrefSize(width, height /20);
 
         root.setTop(topPane);
         root.setCenter(centerPane);
         root.setBottom(bottomPane);
 
-
         stage.setTitle("Application stagiaire EQL");
         stage.setScene(scene);
         stage.setResizable(true);
         stage.show();
-
-
-
-
     }
 }

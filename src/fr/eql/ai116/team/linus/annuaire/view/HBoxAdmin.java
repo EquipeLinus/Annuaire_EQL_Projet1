@@ -1,6 +1,8 @@
 package fr.eql.ai116.team.linus.annuaire.view;
 
+import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
+import fr.eql.ai116.team.linus.annuaire.model.program.AdministratorSorter;
 import fr.eql.ai116.team.linus.annuaire.model.program.BinManager;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -16,12 +18,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Objects;
 
-public class HBoxAdmin extends HBox {
+public class HBoxAdmin extends VBox {
 
     private VBox vBoxFirstName;
     private Label lblFirstName;
@@ -44,10 +47,13 @@ public class HBoxAdmin extends HBox {
     private Button btnModify;
     private Button btnDelete;
 
+    private Label errorLabel = new Label("");
+
     private Stagiaire selectedStagiaire;
 
-    public HBoxAdmin(TableView<Stagiaire> table) {
+    public HBoxAdmin(TableView<Stagiaire> table, Administrator account) {
         super();
+        //if (account == null || AdministratorSorter.checkLogs(account.getUsername(),account.getPassword()) == null) return;
 
         vBoxFirstName = new VBox(5);
         lblFirstName = new Label("Prénom:");
@@ -80,7 +86,11 @@ public class HBoxAdmin extends HBox {
         btnDelete = new Button("Delete");
         vBoxBtn.getChildren().addAll(btnAdd, btnDelete);
 
-        getChildren().addAll(vBoxFirstName,vBoxLastName,vBoxPromotion,vBoxYear,vBoxDepartment,vBoxBtn);
+        HBox generalBox = new HBox(5);
+        generalBox.getChildren().addAll(vBoxFirstName,vBoxLastName,vBoxPromotion,vBoxYear,vBoxDepartment,vBoxBtn);
+
+        errorLabel.setTextFill(Color.RED);
+        getChildren().addAll(generalBox, errorLabel);
 
         table.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Stagiaire>() {
             @Override
@@ -104,18 +114,21 @@ public class HBoxAdmin extends HBox {
                     int department = Integer.parseInt(txtDepartment.getText());
 
                     BinManager bManager = new BinManager();
-                    bManager.addStagiaire(new Stagiaire(
+                    if (!bManager.addStagiaire(new Stagiaire(
                             txtFirstName.getText(),
                             txtLastName.getText(),
                             txtPromotion.getText(),
-                            year,department
-                    ));
+                            year,
+                            department
+                    ))) {
+                        errorLabel.setText("Stagiaire déjà existant");
+                    }
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 } catch (NumberFormatException e) {
-                    throw new RuntimeException(e);
+                    errorLabel.setText("Année ou département incorrect");
                 }
             }
         });
@@ -132,14 +145,15 @@ public class HBoxAdmin extends HBox {
                             txtFirstName.getText(),
                             txtLastName.getText(),
                             txtPromotion.getText(),
-                            year,department
+                            year,
+                            department
                     ));
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 } catch (NumberFormatException e) {
-                    throw new RuntimeException(e);
+                    errorLabel.setText("Année ou département incorrect");
                 }
             }
         });
@@ -171,8 +185,10 @@ public class HBoxAdmin extends HBox {
         txtYear.textProperty().addListener(onTextFieldChanged);
         txtDepartment.textProperty().addListener(onTextFieldChanged);
 
-        setSpacing(10);
-        setAlignment(Pos.BASELINE_CENTER);
+        generalBox.setSpacing(10);
+        generalBox.setAlignment(Pos.BASELINE_CENTER);
+
+        setAlignment(Pos.TOP_CENTER);
     }
 
     private void updateBtnBox() {
@@ -194,8 +210,15 @@ public class HBoxAdmin extends HBox {
                 vBoxBtn.getChildren().set(1, btnModify);
             }
 
+            resetErrorLabel();
+
         } catch (NumberFormatException e) {
             vBoxBtn.getChildren().set(1, btnModify);
+            errorLabel.setText("Année ou département incorrect");
         }
+    }
+
+    private void resetErrorLabel() {
+        errorLabel.setText("");
     }
 }

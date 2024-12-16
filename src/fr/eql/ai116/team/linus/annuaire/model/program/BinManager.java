@@ -28,9 +28,10 @@ public class BinManager {
         try {
             BinManager bManager = new BinManager();
             bManager.clearFile();
-            bManager.writeNodeAtIndex(new Stagiaire("thomas", "duron", "ai116", 2024, 93), 0);
+            //bManager.writeNodeAtIndex(new Stagiaire("thomas", "duron", "ai116", 2024, 93), 0);
             bManager.initialize();
 
+            bManager.displayTree(0,0);
             /*
             BinManager bManager = new BinManager();
             bManager.clearFile();
@@ -93,8 +94,12 @@ public class BinManager {
     }
 
     public void initialize() throws IOException {
-        for (Stagiaire stagiaire : StagiairesSorter.stagiairesListGenerator()) {
-            addStagiaire(stagiaire);
+
+        List<Stagiaire> fetchedStagiaire = StagiairesSorter.stagiairesListGenerator();
+
+        writeNodeAtIndex(fetchedStagiaire.get(0),0); //La root est write à la main
+        for (int i = 1; i < fetchedStagiaire.size(); i++) {
+            addStagiaire(fetchedStagiaire.get(i));
         }
     }
 
@@ -105,9 +110,12 @@ public class BinManager {
      * @param stagiaire Le stagiaire à ajouter
      * @throws IOException
      */
-    public void addStagiaire(Stagiaire stagiaire) throws IOException {
+    public boolean addStagiaire(Stagiaire stagiaire) throws IOException {
 
-        long parent = searchCoupleWithID(stagiaire.getID(), 0)[1];
+        long[] couple = searchCoupleWithID(stagiaire.getID(), 0);
+        if (couple[0] != -1) return false;
+
+        long parent = couple[1];
         log.debug("Adding new stagiaire " + stagiaire.getID() + ", parent is " + getID(parent));
         if (isIDOnRight(getID(parent), stagiaire.getID())) {
             setRight(parent, raf.length());
@@ -116,6 +124,7 @@ public class BinManager {
         }
         writeNodeAtIndex(stagiaire, raf.length());
         log.debug("adding done");
+        return true;
     }
 
     /**
