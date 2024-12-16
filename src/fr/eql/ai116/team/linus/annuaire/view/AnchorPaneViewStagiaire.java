@@ -16,30 +16,11 @@ import java.util.List;
 
 public class AnchorPaneViewStagiaire extends AnchorPane {
 
-    public ObservableList<Stagiaire> getStagiaireListDao() {
-        return stagiaireListDao;
-    }
-
-    public void setStagiaireListDao(List<Stagiaire> stagiaireListDao) {
-        this.stagiaireListDao = FXCollections.observableList(stagiaireListDao);
-    }
-
-    private ObservableList<Stagiaire> stagiaireListDao;
+    private final TableView<Stagiaire> table;
 
     public AnchorPaneViewStagiaire(TableView<Stagiaire> table){
-
         super();
-
-        try {
-            BinManager binManager = new BinManager();
-            List<Stagiaire> stagiaireList = binManager.getAll( 0, new ArrayList<Stagiaire>());
-            setStagiaireListDao(stagiaireList);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        table.setEditable(false);
+        this.table = table;
 
         TableColumn<Stagiaire, String> lastNameCol = new TableColumn<>("Nom");
         lastNameCol.setMinWidth(200);
@@ -63,7 +44,15 @@ public class AnchorPaneViewStagiaire extends AnchorPane {
 
         table.getColumns().addAll(lastNameCol,firstNameCol,promotionCol,yearCol,departmentCol);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        table.setItems(stagiaireListDao);
+
+        try {
+            BinManager binManager = new BinManager();
+            setTable(binManager.getAll( 0, new ArrayList<Stagiaire>()));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         getChildren().add(table);
 
@@ -71,5 +60,10 @@ public class AnchorPaneViewStagiaire extends AnchorPane {
         setLeftAnchor(table,5.);
         setTopAnchor(table,5.);
         setBottomAnchor(table,5.);
+    }
+
+    public void setTable(List<Stagiaire> list) {
+        table.setItems(FXCollections.observableList(list));
+        table.refresh();
     }
 }
