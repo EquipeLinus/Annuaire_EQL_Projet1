@@ -17,6 +17,9 @@ public class Stagiaire {
         this.department = department;
     }
 
+    public Stagiaire() {
+    }
+
     @Override
     public String toString() {
         return "Stagiaire{" +
