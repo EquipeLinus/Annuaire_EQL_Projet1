@@ -62,4 +62,6 @@ public class AnchorPaneViewStagiaire extends AnchorPane {
         setTopAnchor(table,5.);
         setBottomAnchor(table,5.);
     }
+
+
 }

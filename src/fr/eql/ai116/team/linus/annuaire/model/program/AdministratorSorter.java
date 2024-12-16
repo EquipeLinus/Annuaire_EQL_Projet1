@@ -6,13 +6,10 @@ import org.apache.logging.log4j.Logger;
 
 
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -32,29 +29,68 @@ public class AdministratorSorter {
 
     public static void main(String[] args) {
 
-        String username = "Pierre";
-        String password = "TRRâzmvkvopjavopvzjopzavjzovjozjopvzjzzopazvjavzovjazv";
-        password = String.valueOf(password.hashCode());
+        //addSuperAdminToFile("Super User","Super Password","Super Administrateur");
+        //logger.info(getListAdmins().get(1).getStatut());
 
-        Administrator administrator = new Administrator(username, password);
-        addAdministratorToFile(administrator.getUsername(), administrator.getPassword());
+       //createAdmin("a","b","Super User","Super Password");
+       removeAdmin("a","Super User","Super Password");
 
-
-
-        checkLogs("Pierre","4281659");
     }
 
+    private static void removeAdmin(String usernameChoiceDelete, String usernameCheck, String usernamePassword) {
+//        File ressourcesFolder = new File(FOLDER);
+//        ressourcesFolder.mkdir();
+//
+//        try(RandomAccessFile output = new RandomAccessFile(FILE,"rw")){
+//
+//            output.seek(output.length());
+//            output.writeUTF(username);
+//            output.writeUTF(password);
+//            output.writeUTF(statut);
+//
+//        }
+//        catch (FileNotFoundException e){
+//            logger.error("The file was not found ");
+//        }
+//        catch (IOException e){
+//            logger.error("L'écriture n'a pas marché ");
+//        }
+    }
+
+
+    public static void createAdmin(String newAdminUsername , String newAdminPassword,String usernameCheck, String usernamePassword){
+
+        if(checkLogs(usernameCheck,usernamePassword).equals("Super Administrateur")){
+            System.out.println(checkIfAdminExists(getListAdmins(),newAdminUsername) );
+
+            if(checkIfAdminExists(getListAdmins(),newAdminUsername) == null){
+                addUsernamesToFile(newAdminUsername, newAdminPassword, "Administrateur");
+                logger.info("The user has been created");
+            }
+           else {
+                logger.info("The user with this username exist ");
+            }
+
+        }
+        else {
+            logger.info("Only the Super Admin can create administrators");
+        }
+    }
     /**
      * For check if the logs for the connexion are good
-     * @param usernameWanted
-     * @param password
      */
-    private static void checkLogs(String usernameWanted , String password) {
+    private static String checkLogs(String usernameWanted , String password) {
         Administrator admin = checkIfAdminExists(getListAdmins(),usernameWanted);
         if ( admin != null){
             logger.info("L'administrateur existe");
             if(admin.getPassword().equals(password)){
-                logger.info("Le username et le mot de passe sont bon");
+
+                if(admin.getStatut().equals("Super Administrateur")){
+                    return admin.getStatut();
+                }
+                else if(admin.getStatut().equals("Administrateur")){
+                    return admin.getStatut();
+                }
             }
             else {
                 logger.info("Le mot de passe n'est pas bon");
@@ -63,30 +99,29 @@ public class AdministratorSorter {
         else {
             logger.info("L'administrateur n'existe pas");
         }
+
+        return null;
     }
 
     /**
      * For check if the input admin exist
-     * @param listAdmins
-     * @param usernameWanted
-     * @return
      */
     private static Administrator checkIfAdminExists(List<Administrator> listAdmins, String usernameWanted) {
+
         for (Administrator admin : listAdmins) {
             if(admin.getUsername().equals(usernameWanted)){
                 return admin;
             }
         }
         return null;
+
     }
 
 
     /**
      * Add one username to the binary file administrator
-     * @param username
-     * @param password
      */
-    public static void addAdministratorToFile(String username, String password) {
+    public static void addUsernamesToFile(String username, String password, String statut) {
 
         File ressourcesFolder = new File(FOLDER);
         ressourcesFolder.mkdir();
@@ -96,10 +131,11 @@ public class AdministratorSorter {
             output.seek(output.length());
             output.writeUTF(username);
             output.writeUTF(password);
+            output.writeUTF(statut);
 
         }
         catch (FileNotFoundException e){
-            logger.error("L'écriture n'a pas marché ");
+            logger.error("The file was not found ");
         }
         catch (IOException e){
             logger.error("L'écriture n'a pas marché ");
@@ -107,6 +143,16 @@ public class AdministratorSorter {
 
     }
 
+    /**
+     * For add the super admin in the file
+     * @param username
+     * @param password
+     * @param statut
+     */
+
+    private static void addSuperAdminToFile(String username, String password, String statut) {
+        addUsernamesToFile(username,password, statut);
+    }
     /**
      * Read the binary file administrator
      * @return List of administrastor object
@@ -119,7 +165,8 @@ public class AdministratorSorter {
                 try {
                     String user = input.readUTF();
                     String password = input.readUTF();
-                    Administrator administrator = new Administrator(user,password);
+                    String statut = input.readUTF();
+                    Administrator administrator = new Administrator(user,password,statut);
                     administratorsList.add(administrator);
                 }
                 catch (EOFException e){
