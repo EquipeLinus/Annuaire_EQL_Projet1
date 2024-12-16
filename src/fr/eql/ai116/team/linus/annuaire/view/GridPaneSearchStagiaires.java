@@ -44,6 +44,9 @@ public class GridPaneSearchStagiaires extends GridPane {
         addRow(0, textFieldPromo);
         addRow(0,validerButton);
 
+
+
+
         // Action à effectuer lors du clic sur le bouton "Valider" pour promo
         validerButton.setOnAction(e -> {
             try {
