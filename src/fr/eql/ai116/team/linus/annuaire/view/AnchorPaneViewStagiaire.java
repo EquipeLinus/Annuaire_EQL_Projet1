@@ -3,6 +3,7 @@ package fr.eql.ai116.team.linus.annuaire.view;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
 import fr.eql.ai116.team.linus.annuaire.model.program.BinManager;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -15,21 +16,29 @@ import java.util.List;
 
 public class AnchorPaneViewStagiaire extends AnchorPane {
 
+    public ObservableList<Stagiaire> getStagiaireListDao() {
+        return stagiaireListDao;
+    }
+
+    public void setStagiaireListDao(List<Stagiaire> stagiaireListDao) {
+        this.stagiaireListDao = FXCollections.observableList(stagiaireListDao);
+    }
+
+    private ObservableList<Stagiaire> stagiaireListDao;
 
     public AnchorPaneViewStagiaire(TableView<Stagiaire> table){
 
         super();
 
-        List<Stagiaire> stagiaireList = new ArrayList<>();
         try {
             BinManager binManager = new BinManager();
-            stagiaireList = binManager.searchPromo("KAPLA 12", 0, new ArrayList<Stagiaire>());
+            List<Stagiaire> stagiaireList = binManager.getAll( 0, new ArrayList<Stagiaire>());
+            setStagiaireListDao(stagiaireList);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         table.setEditable(false);
 
         TableColumn<Stagiaire, String> lastNameCol = new TableColumn<>("Nom");
@@ -54,7 +63,7 @@ public class AnchorPaneViewStagiaire extends AnchorPane {
 
         table.getColumns().addAll(lastNameCol,firstNameCol,promotionCol,yearCol,departmentCol);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        table.setItems(FXCollections.observableList(stagiaireList));
+        table.setItems(stagiaireListDao);
 
         getChildren().add(table);
 
@@ -63,6 +72,4 @@ public class AnchorPaneViewStagiaire extends AnchorPane {
         setTopAnchor(table,5.);
         setBottomAnchor(table,5.);
     }
-
-
 }
