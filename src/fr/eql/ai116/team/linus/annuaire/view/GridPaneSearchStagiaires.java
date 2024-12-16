@@ -87,7 +87,7 @@ public class GridPaneSearchStagiaires extends GridPane {
                 System.out.println(currentStagiaire);
             }
 
-            viewStagiaire.setStagiaireListDao(currentStagiaires);
+            viewStagiaire.setTable(currentStagiaires);
 
         } catch (FileNotFoundException ex1) {
             throw new RuntimeException(ex1);
