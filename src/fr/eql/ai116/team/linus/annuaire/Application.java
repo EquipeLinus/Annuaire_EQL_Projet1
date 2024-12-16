@@ -79,12 +79,10 @@ public class Application extends javafx.application.Application {
 
         InitializeTxtPanel init = new InitializeTxtPanel();
         Scene secondScene = new Scene(init, 230, 100);
-
         // New window (Stage)
         Stage newWindow = new Stage();
         newWindow.setTitle("Second Stage");
         newWindow.setScene(secondScene);
-
         newWindow.show();
 
 
