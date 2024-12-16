@@ -1,15 +1,18 @@
 package fr.eql.ai116.team.linus.annuaire;
 
+import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
-import fr.eql.ai116.team.linus.annuaire.view.BorderPaneViewStagiaire;
-import fr.eql.ai116.team.linus.annuaire.view.GridPaneSearchStagiaires;
-import javafx.geometry.Pos;
+import fr.eql.ai116.team.linus.annuaire.view.AnchorPaneViewStagiaire;
+import fr.eql.ai116.team.linus.annuaire.view.HBoxAdmin;
 import javafx.scene.Scene;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,6 +25,8 @@ public class Application extends javafx.application.Application {
     private double width = 1500;
     private double height = 900;
 
+    private Administrator account = null;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -30,12 +35,10 @@ public class Application extends javafx.application.Application {
     public void start(Stage stage) throws Exception {
 
         BorderPane root = new BorderPane();
-
         Scene scene = new Scene(root, width, height);
 
-
-        /** Top panel
-         *
+        /**
+         * Top panel
          */
 
         HBox topPane = new HBox();
@@ -51,43 +54,30 @@ public class Application extends javafx.application.Application {
 
         topPane.getChildren().addAll(leftTopPane,rightTopPane);
 
-
         /**
          * Center panel
          */
 
-        Pane centerPane = new Pane();
-        centerPane.setPrefSize(width, height /2);
-
-
+        BorderPane centerPane = new BorderPane();
         TableView<Stagiaire> table = new TableView<Stagiaire>();
 
-
-        BorderPaneViewStagiaire borderPane = new BorderPaneViewStagiaire(table);
-
-        centerPane.getChildren().add(borderPane);
-
+        AnchorPaneViewStagiaire borderPane = new AnchorPaneViewStagiaire(table);
+        centerPane.setCenter(borderPane);
 
         /**
          * Bottom Panel
          */
-        Pane bottomPane = new Pane();
-        bottomPane.setPrefSize(width, height /8);
-        bottomPane.setStyle("-fx-background-color: green");
 
+        HBoxAdmin bottomPane = new HBoxAdmin(table, account);
+        bottomPane.setPrefSize(width, height /20);
 
         root.setTop(topPane);
         root.setCenter(centerPane);
         root.setBottom(bottomPane);
 
-
         stage.setTitle("Application stagiaire EQL");
         stage.setScene(scene);
         stage.setResizable(true);
         stage.show();
-
-
-
-
     }
 }

@@ -26,7 +26,13 @@ public class BinManager {
     public static void main(String[] args) {
 
         try {
+            BinManager bManager = new BinManager();
+            bManager.clearFile();
+            //bManager.writeNodeAtIndex(new Stagiaire("thomas", "duron", "ai116", 2024, 93), 0);
+            bManager.initialize();
 
+            bManager.displayTree(0,0);
+            /*
             BinManager bManager = new BinManager();
             bManager.clearFile();
 
@@ -79,10 +85,21 @@ public class BinManager {
 
             bManager.display(0);
             bManager.displayTree(0,0);
+             */
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void initialize() throws IOException {
+
+        List<Stagiaire> fetchedStagiaire = StagiairesSorter.stagiairesListGenerator();
+
+        writeNodeAtIndex(fetchedStagiaire.get(0),0); //La root est write à la main
+        for (int i = 1; i < fetchedStagiaire.size(); i++) {
+            addStagiaire(fetchedStagiaire.get(i));
         }
     }
 
@@ -92,9 +109,12 @@ public class BinManager {
      * @param stagiaire Le stagiaire à ajouter
      * @throws IOException
      */
-    public void addStagiaire(Stagiaire stagiaire) throws IOException {
+    public boolean addStagiaire(Stagiaire stagiaire) throws IOException {
 
-        long parent = searchCoupleWithID(stagiaire.getID(), 0)[1];
+        long[] couple = searchCoupleWithID(stagiaire.getID(), 0);
+        if (couple[0] != -1) return false;
+
+        long parent = couple[1];
         log.debug("Adding new stagiaire " + stagiaire.getID() + ", parent is " + getID(parent));
         if (isIDOnRight(getID(parent), stagiaire.getID())) {
             setRight(parent, raf.length());
@@ -103,6 +123,7 @@ public class BinManager {
         }
         writeNodeAtIndex(stagiaire, raf.length());
         log.debug("adding done");
+        return true;
     }
 
     /**
@@ -171,6 +192,17 @@ public class BinManager {
         return currentStagiaireFounded;
     }
 
+    public List<Stagiaire> getAll(long nodeIndex, List<Stagiaire> currentList) throws IOException {
+        long leftNode = getLeft(nodeIndex);
+        if (leftNode != -1) currentList = getAll(leftNode,currentList);
+
+        currentList.add(readStagiaireAtIndex(nodeIndex));
+
+        long rightNode = getRight(nodeIndex);
+        if (rightNode != -1) currentList = getAll(rightNode,currentList);
+
+        return currentList;
+    }
 
 
     //region WRITE_READ
@@ -233,7 +265,7 @@ public class BinManager {
     }
 
     /**
-     * Fait des souts qui va lire l'arbre dans l'ordre
+     * Fait des souts qui va lire les nodes
      * @param nodeIndex
      * @throws IOException
      */
