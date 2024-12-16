@@ -3,6 +3,7 @@ package fr.eql.ai116.team.linus.annuaire;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
 import fr.eql.ai116.team.linus.annuaire.view.AnchorPaneViewStagiaire;
+import fr.eql.ai116.team.linus.annuaire.view.GridPaneSearchStagiaires;
 import fr.eql.ai116.team.linus.annuaire.view.HBoxAdmin;
 import javafx.scene.Scene;
 import javafx.scene.control.TableView;
@@ -38,23 +39,6 @@ public class Application extends javafx.application.Application {
         Scene scene = new Scene(root, width, height);
 
         /**
-         * Top panel
-         */
-
-        HBox topPane = new HBox();
-        topPane.setPrefSize(width, height /6);
-
-        Pane leftTopPane = new Pane();
-        leftTopPane.setPrefSize(width /2, height /4);
-        leftTopPane.setStyle("-fx-background-color: blue");
-
-        Pane rightTopPane = new Pane();
-        rightTopPane.setPrefSize(width /2, height /4);
-        rightTopPane.setStyle("-fx-background-color: purple");
-
-        topPane.getChildren().addAll(leftTopPane,rightTopPane);
-
-        /**
          * Center panel
          */
 
@@ -63,6 +47,23 @@ public class Application extends javafx.application.Application {
 
         AnchorPaneViewStagiaire borderPane = new AnchorPaneViewStagiaire(table);
         centerPane.setCenter(borderPane);
+
+        /**
+         * Top panel
+         */
+
+        HBox topPane = new HBox();
+        topPane.setPrefSize(width, height /6);
+
+        GridPaneSearchStagiaires leftTopPane = new GridPaneSearchStagiaires(borderPane);
+        leftTopPane.setPrefSize(width /2, height /4);
+        leftTopPane.setStyle("-fx-background-color: blue");
+
+        Pane rightTopPane = new Pane();
+        rightTopPane.setPrefSize(width /2, height /4);
+        rightTopPane.setStyle("-fx-background-color: purple");
+
+        topPane.getChildren().addAll(leftTopPane,rightTopPane);
 
         /**
          * Bottom Panel
