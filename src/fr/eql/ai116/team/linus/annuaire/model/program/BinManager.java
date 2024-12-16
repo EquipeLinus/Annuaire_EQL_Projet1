@@ -99,6 +99,7 @@ public class BinManager {
     }
 
     /**
+     *
      * Permet d'ajouter un stagiaire dans l'arbre binaire.
      *
      * @param stagiaire Le stagiaire à ajouter

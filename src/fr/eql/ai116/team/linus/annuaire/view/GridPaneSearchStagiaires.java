@@ -1,35 +1,83 @@
 package fr.eql.ai116.team.linus.annuaire.view;
 
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
+import fr.eql.ai116.team.linus.annuaire.model.program.BinManager;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
-public class GridPaneSearchStagiaires extends Application {
+public class GridPaneSearchStagiaires extends GridPane {
 
+
+    public GridPaneSearchStagiaires(AnchorPaneViewStagiaire viewStagiaire) {
+        super();
+
+        TextField textFieldPromo = new TextField();
+        textFieldPromo.setPromptText("Entrez une promotion");
+        TextField textFieldLastName = new TextField();
+        textFieldLastName.setPromptText("Entrez un nom");
+        TextField textFieldFirstName = new TextField();
+        textFieldFirstName.setPromptText("Entrez un nom");
+
+        Button validerButton = new Button("Valider");
+
+        Label resultLabel = new Label("Résultat :");
+        Label firsNameLabel = new Label("Prénom : ");
+        Label lastNameLabel = new Label("Nom : ");
+        Label promotionLabel = new Label("Promotion : ");
+        Label yearLabel = new Label("Année : ");
+        Label departmentLabel = new Label("Département : ");
+
+        addRow(0, textFieldPromo);
+        addRow(0,validerButton);
+
+        // Action à effectuer lors du clic sur le bouton "Valider" pour promo
+        validerButton.setOnAction(e -> {
+            try {
+                BinManager binManager = new BinManager();
+                List<Stagiaire> currentStagiaires = new ArrayList<>();
+                currentStagiaires = binManager.searchPromo(textFieldPromo.getText(), 0, new ArrayList<>());
+
+                for (Stagiaire currentStagiaire : currentStagiaires) {
+                    System.out.println(currentStagiaire);
+                }
+
+                viewStagiaire.setStagiaireListDao(currentStagiaires);
+
+            } catch (FileNotFoundException ex1) {
+                throw new RuntimeException(ex1);
+            } catch (IOException ex2) {
+                throw new RuntimeException(ex2);
+            }
+        });
+    }
+/*
     @Override
-    public void start(Stage stage)  {
+    public void start(Stage stage) {
 
         // Liste des stagiaires
-        List<Stagiaire> stagiaires = new ArrayList<>();
-        //public BordPaneTable(Stagiaires stagiaires, TableView<Stagiaire> table){
-        stagiaires.add(new Stagiaire("Jean", "Dupont", "Ai116", 1550, 75012));
-        stagiaires.add(new Stagiaire("Rachel", "Aremab", "Ai114", 1950, 75012));
-
 
 
         // Création des composants de l'interface
-        TextField textField = new TextField();
-        textField.setPromptText("Entrez une promotion");
-        textField.setPromptText("Entrez un nom");
+        TextField textFieldPromo = new TextField();
+        textFieldPromo.setPromptText("Entrez une promotion");
+        TextField textFieldLastName = new TextField();
+        textFieldLastName.setPromptText("Entrez un nom");
+        TextField textFieldFirstName = new TextField();
+        textFieldFirstName.setPromptText("Entrez un nom");
 
         Button validerButton = new Button("Valider");
 
@@ -42,8 +90,26 @@ public class GridPaneSearchStagiaires extends Application {
 
         // Action à effectuer lors du clic sur le bouton "Valider" pour promo
         validerButton.setOnAction(e -> {
-            String searchPromo = textField.getText().trim();
-            boolean found = false;
+            try {
+                BinManager binManager = new BinManager();
+                List<Stagiaire> currentStagiaires = new ArrayList<>();
+                currentStagiaires = binManager.searchPromo(textFieldPromo.getText(), 0, new ArrayList<>());
+                for (Stagiaire stagiaire : currentStagiaires) {
+                    if (stagiaire.getPromotion().equalsIgnoreCase(String.valueOf(textFieldPromo))) {
+                        // Afficher les informations du stagiaire trouvée
+                        firsNameLabel.setText("Prénom : " + stagiaire.getFirstName());
+                        lastNameLabel.setText("Nom : " + stagiaire.getLastName());
+                        promotionLabel.setText("Promotion : " + stagiaire.getPromotion());
+                        yearLabel.setText("Année : " + stagiaire.getYear());
+                        departmentLabel.setText("Département: " + stagiaire.getDepartment());
+                        resultLabel.setText("Résultat : Stagiaire trouvée !");
+                    }
+                }
+            } catch (FileNotFoundException ex1) {
+                throw new RuntimeException(ex1);
+            } catch (IOException ex2) {
+                throw new RuntimeException(ex2);
+            }
 
             // Rechercher la promotion dans la liste
             for (Stagiaire stagiaire : stagiaires) {
@@ -69,15 +135,18 @@ public class GridPaneSearchStagiaires extends Application {
                 yearLabel.setText("Année : ");
                 departmentLabel.setText("Département : ");
             }
+
         });
+
 
         // Action à effectuer lors du clic sur le bouton "Valider" pour nom
         validerButton.setOnAction(e -> {
-            String searchLastName = textField.getText().trim();
+            String searchLastName = textFieldLastName.getText().trim();
             boolean found = false;
 
             // Rechercher le stagiaire dans la liste
             for (Stagiaire stagiaire : stagiaires) {
+
                 if (stagiaire.getLastName().equalsIgnoreCase(searchLastName)) {
                     // Afficher les informations du stagiaire trouvée
                     firsNameLabel.setText("Prénom : " + stagiaire.getFirstName());
@@ -100,14 +169,14 @@ public class GridPaneSearchStagiaires extends Application {
                 yearLabel.setText("Année : ");
                 departmentLabel.setText("Département : ");
             }
-        });
 
+        });
 
 
         // Création d'un VBox pour organiser les éléments
         VBox vbox = new VBox(10);
         vbox.setAlignment(Pos.TOP_LEFT);
-        vbox.getChildren().addAll(textField, validerButton, resultLabel, firsNameLabel, lastNameLabel, promotionLabel,yearLabel,departmentLabel);
+        vbox.getChildren().addAll(textFieldPromo, validerButton, resultLabel, firsNameLabel, lastNameLabel, promotionLabel, yearLabel, departmentLabel);
 
         // Création de la scène
         Scene scene = new Scene(vbox, 400, 300);
@@ -122,6 +191,8 @@ public class GridPaneSearchStagiaires extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+ */
 }
 
 
