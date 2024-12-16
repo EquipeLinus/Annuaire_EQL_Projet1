@@ -57,6 +57,8 @@ public class Application extends javafx.application.Application {
         topPane.getChildren().addAll(leftTopPane,rightTopPane);
 
 
+
+
         /**
          * Center panel
          */
