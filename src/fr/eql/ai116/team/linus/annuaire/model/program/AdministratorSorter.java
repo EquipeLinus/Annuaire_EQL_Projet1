@@ -79,7 +79,7 @@ public class AdministratorSorter {
     /**
      * For check if the logs for the connexion are good
      */
-    private static String checkLogs(String usernameWanted , String password) {
+    public static String checkLogs(String usernameWanted , String password) {
         Administrator admin = checkIfAdminExists(getListAdmins(),usernameWanted);
         if ( admin != null){
             logger.info("L'administrateur existe");

@@ -109,10 +109,10 @@ public class BinManager {
      * @param stagiaire Le stagiaire à ajouter
      * @throws IOException
      */
-    public void addStagiaire(Stagiaire stagiaire) throws IOException {
+    public boolean addStagiaire(Stagiaire stagiaire) throws IOException {
 
         long[] couple = searchCoupleWithID(stagiaire.getID(), 0);
-        if (couple[0] != -1) return;
+        if (couple[0] != -1) return false;
 
         long parent = couple[1];
         log.debug("Adding new stagiaire " + stagiaire.getID() + ", parent is " + getID(parent));
@@ -123,6 +123,7 @@ public class BinManager {
         }
         writeNodeAtIndex(stagiaire, raf.length());
         log.debug("adding done");
+        return true;
     }
 
     /**

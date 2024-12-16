@@ -35,12 +35,10 @@ public class Application extends javafx.application.Application {
     public void start(Stage stage) throws Exception {
 
         BorderPane root = new BorderPane();
-
         Scene scene = new Scene(root, width, height);
 
-
-        /** Top panel
-         *
+        /**
+         * Top panel
          */
 
         HBox topPane = new HBox();
@@ -56,9 +54,6 @@ public class Application extends javafx.application.Application {
 
         topPane.getChildren().addAll(leftTopPane,rightTopPane);
 
-
-
-
         /**
          * Center panel
          */
@@ -69,13 +64,12 @@ public class Application extends javafx.application.Application {
         AnchorPaneViewStagiaire borderPane = new AnchorPaneViewStagiaire(table);
         centerPane.setCenter(borderPane);
 
-
         /**
          * Bottom Panel
          */
+
         HBoxAdmin bottomPane = new HBoxAdmin(table, account);
         bottomPane.setPrefSize(width, height /20);
-
 
         root.setTop(topPane);
         root.setCenter(centerPane);

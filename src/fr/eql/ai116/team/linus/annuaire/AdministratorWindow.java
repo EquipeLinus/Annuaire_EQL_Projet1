@@ -3,7 +3,7 @@ package fr.eql.ai116.team.linus.annuaire;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
 import fr.eql.ai116.team.linus.annuaire.model.program.AdministratorSorter;
-import fr.eql.ai116.team.linus.annuaire.view.BorderPaneViewStagiaire;
+import fr.eql.ai116.team.linus.annuaire.view.AnchorPaneViewStagiaire;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -59,6 +59,5 @@ public class AdministratorWindow extends javafx.application.Application {
         stage.setScene(scene);
         stage.setResizable(true);
         stage.show();
-
     }
 }
