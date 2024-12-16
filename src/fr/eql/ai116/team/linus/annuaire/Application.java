@@ -3,6 +3,7 @@ package fr.eql.ai116.team.linus.annuaire;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
 import fr.eql.ai116.team.linus.annuaire.view.BorderPaneViewStagiaire;
 import fr.eql.ai116.team.linus.annuaire.view.GridPaneSearchStagiaires;
+import fr.eql.ai116.team.linus.annuaire.view.HBoxAdmin;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.TableView;
@@ -71,9 +72,8 @@ public class Application extends javafx.application.Application {
         /**
          * Bottom Panel
          */
-        Pane bottomPane = new Pane();
-        bottomPane.setPrefSize(width, height /8);
-        bottomPane.setStyle("-fx-background-color: green");
+        HBoxAdmin bottomPane = new HBoxAdmin(table);
+        bottomPane.setPrefSize(width, height /20);
 
 
         root.setTop(topPane);
