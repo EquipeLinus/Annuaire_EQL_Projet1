@@ -1,5 +1,7 @@
 package fr.eql.ai116.team.linus.annuaire.model.entity;
 
+import java.util.Objects;
+
 public class Stagiaire {
     private String firstName;
     private String lastName;
@@ -24,6 +26,18 @@ public class Stagiaire {
                 ", year=" + year +
                 ", department=" + department +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Stagiaire stagiaire = (Stagiaire) o;
+        return year == stagiaire.year && department == stagiaire.department && Objects.equals(firstName, stagiaire.firstName) && Objects.equals(lastName, stagiaire.lastName) && Objects.equals(promotion, stagiaire.promotion);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, promotion, year, department);
     }
 
     public String getID() {
