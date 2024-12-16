@@ -1,12 +1,16 @@
 package fr.eql.ai116.team.linus.annuaire.view;
 
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
+import fr.eql.ai116.team.linus.annuaire.model.program.BinManager;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,12 +20,17 @@ public class BorderPaneViewStagiaire extends BorderPane {
     public BorderPaneViewStagiaire( TableView<Stagiaire> table){
 
         super();
-        List<Stagiaire> stagiaireList = new ArrayList<>();
-        Stagiaire stagiaire1 = new Stagiaire("Jean","Dupont","Ai116",1550,75012);
-        Stagiaire stagiaire2 = new Stagiaire("Rachel","Aremab","Ai114",1950,75012);
-        stagiaireList.add(stagiaire1);
-        stagiaireList.add(stagiaire2);
 
+
+        List<Stagiaire> stagiaireList = new ArrayList<>();
+        try {
+            BinManager binManager = new BinManager();
+            stagiaireList =binManager.searchPromo("AZERTY 01", 0, new ArrayList<Stagiaire>());
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         table.setEditable(false);
 
         TableColumn<Stagiaire, String> lastNameCol = new TableColumn<>("Nom");
