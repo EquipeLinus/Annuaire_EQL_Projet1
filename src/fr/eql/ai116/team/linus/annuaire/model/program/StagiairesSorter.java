@@ -16,11 +16,9 @@ import java.util.List;
  */
 public class StagiairesSorter {
 
-
     private static final Logger logger = LogManager.getLogger();
 
-    private static final String FOLDER = "resources/";
-    private static final String FILE = "stagiaires.txt";
+    public static String path = "resources/stagiaires.txt";
 
     public static void main(String[] args) {
 
@@ -38,7 +36,7 @@ public class StagiairesSorter {
 
         try {
 
-            FileReader fr = new FileReader(FOLDER + FILE);
+            FileReader fr = new FileReader(path);
             BufferedReader br = new BufferedReader(fr);
 
 
@@ -57,9 +55,9 @@ public class StagiairesSorter {
             }
 
         } catch (FileNotFoundException e) {
-            logger.error("Unable to open the " + FILE, e);
+            logger.error("Unable to open the " + path, e);
         } catch (IOException e) {
-            logger.error("Unable to operate on the " + FILE, e);
+            logger.error("Unable to operate on the " + path, e);
         }
 
         return stagiairesList;
