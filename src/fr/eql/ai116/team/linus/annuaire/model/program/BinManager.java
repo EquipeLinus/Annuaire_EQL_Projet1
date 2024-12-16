@@ -26,7 +26,16 @@ public class BinManager {
     public static void main(String[] args) {
 
         try {
+            BinManager bManager = new BinManager();
+            bManager.clearFile();
+            bManager.writeNodeAtIndex(new Stagiaire("thomas", "duron", "ai116", 2024, 93), 0);
+            bManager.initialize();
 
+            for (Stagiaire stagiaire : bManager.getAll(0, new ArrayList<>())) {
+                System.out.println(stagiaire);
+            }
+
+            /*
             BinManager bManager = new BinManager();
             bManager.clearFile();
 
@@ -79,10 +88,17 @@ public class BinManager {
 
             bManager.display(0);
             bManager.displayTree(0,0);
+             */
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void initialize() throws IOException {
+        for (Stagiaire stagiaire : StagiairesSorter.stagiairesListGenerator()) {
+            addStagiaire(stagiaire);
         }
     }
 
@@ -171,6 +187,17 @@ public class BinManager {
         return currentStagiaireFounded;
     }
 
+    public List<Stagiaire> getAll(long nodeIndex, List<Stagiaire> currentList) throws IOException {
+        long leftNode = getLeft(nodeIndex);
+        if (leftNode != -1) currentList = getAll(leftNode,currentList);
+
+        currentList.add(readStagiaireAtIndex(nodeIndex));
+
+        long rightNode = getRight(nodeIndex);
+        if (rightNode != -1) currentList = getAll(rightNode,currentList);
+
+        return currentList;
+    }
 
 
     //region WRITE_READ
@@ -233,7 +260,7 @@ public class BinManager {
     }
 
     /**
-     * Fait des souts qui va lire l'arbre dans l'ordre
+     * Fait des souts qui va lire les nodes
      * @param nodeIndex
      * @throws IOException
      */
