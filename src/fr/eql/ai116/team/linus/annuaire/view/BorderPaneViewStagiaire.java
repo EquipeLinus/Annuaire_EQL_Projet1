@@ -49,4 +49,6 @@ public class BorderPaneViewStagiaire extends BorderPane {
 
         this.setCenter(table);
     }
+
+
 }
