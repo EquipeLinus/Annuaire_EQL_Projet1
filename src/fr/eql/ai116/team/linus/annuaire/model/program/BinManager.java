@@ -1,8 +1,11 @@
 package fr.eql.ai116.team.linus.annuaire.model.program;
 
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -11,80 +14,78 @@ import java.util.List;
 public class BinManager {
 
     public static final String BIN_PATH = "resources/datas.bin";
+    private static final Logger log = LogManager.getLogger();
 
+    private final RandomAccessFile raf;
+
+    public BinManager() throws FileNotFoundException {
+        raf = new RandomAccessFile(BIN_PATH, "rw");
+    }
+
+    // Le main ici est temporaire, je m'en sert pour mes tests
     public static void main(String[] args) {
-        BinManager bManager = new BinManager();
-        bManager.setNodeAtIndex(new Stagiaire("thomas", "duron", "ai116",2024,93),0);
 
-        System.out.println(bManager.getStagiaireAtNodeIndex(0));
+        try {
+            BinManager bManager = new BinManager();
+            bManager.clearFile();
+            //bManager.writeNodeAtIndex(new Stagiaire("thomas", "duron", "ai116", 2024, 93), 0);
+            bManager.initialize();
 
-        bManager.addStagiaire(new Stagiaire("mazir", "ouahioune", "ai116",2024,75));
-        bManager.addStagiaire(new Stagiaire("andras", "schuller", "ai116",2024,19));
-        bManager.addStagiaire(new Stagiaire("miroslava", "castillo", "ai116",2024,94));
+            bManager.displayTree(0,0);
+            /*
+            BinManager bManager = new BinManager();
+            bManager.clearFile();
 
-        bManager.display(0);
+            bManager.writeNodeAtIndex(new Stagiaire("thomas", "duron", "ai116", 2024, 93), 0);
 
-        System.out.println();
-        System.out.println(bManager.searchStagiaire("ai116_castillo_miroslava",0));
+            System.out.println(bManager.readStagiaireAtIndex(0));
 
-        bManager.addStagiaire(new Stagiaire("jean1", "toto1", "BO05",2024,94));
-        bManager.addStagiaire(new Stagiaire("jean3", "toto3", "BO05",2024,94));
-        bManager.addStagiaire(new Stagiaire("jean2", "toto2", "BO05",2024,94));
+            bManager.addStagiaire(new Stagiaire("mazir", "ouahioune", "ai116", 2024, 75));
+            bManager.addStagiaire(new Stagiaire("andras", "schuller", "ai116", 2024, 19));
+            bManager.addStagiaire(new Stagiaire("miroslava", "castillo", "ai116", 2024, 94));
 
-        System.out.println();
-        List<Stagiaire> stagiaireDeAI116 = bManager.searchPromo("ai116",0, new ArrayList<Stagiaire>());
-        System.out.println(stagiaireDeAI116);
-        System.out.println();
-        System.out.println(bManager.searchPromo("BO05",0, new ArrayList<Stagiaire>()));
+            bManager.display(0);
 
+            System.out.println();
+            System.out.println(bManager.searchStagiaire("ai116_castillo_miroslava", 0));
 
-        System.out.println();
-        System.out.println(bManager.getIDFromNodeIndex(bManager.searchNodeParent("ai116_ouahioune_mazir",0)));
-        System.out.println(bManager.getIDFromNodeIndex(bManager.searchNodeParent("ai116_schuller_andras",0)));
+            bManager.addStagiaire(new Stagiaire("jean2", "toto2", "BO05", 2024, 94));
+            bManager.addStagiaire(new Stagiaire("jean1", "toto1", "BO05", 2024, 94));
+            bManager.addStagiaire(new Stagiaire("jean3", "toto3", "BO05", 2024, 94));
 
-        System.out.println();
-        bManager.display(0);
-        bManager.removeStagiaire("ai116_castillo_miroslava");
-        System.out.println("----");
-        bManager.display(0);
+            bManager.displayTree(0,0);
 
-        System.out.println();
-        bManager.display(0);
-        System.out.println("Parent of toto: " + bManager.getIDFromNodeIndex(bManager.searchNodeParent("BO05_toto1_jean1",0)));
+            System.out.println();
+            List<Stagiaire> stagiaireDeAI116 = bManager.searchPromo("ai116", 0, new ArrayList<Stagiaire>());
+            System.out.println(stagiaireDeAI116);
+            System.out.println();
+            System.out.println(bManager.searchPromo("BO05", 0, new ArrayList<Stagiaire>()));
 
-        bManager.removeStagiaire("ai116_schuller_andras");
-        System.out.println("----");
-        bManager.display(0);
+            long[] miroslaveAndParent = bManager.searchCoupleWithID("ai116_castillo_miroslava", 0);
 
-        System.out.println("Parent of toto: " + bManager.getIDFromNodeIndex(bManager.searchNodeParent("BO05_toto1_jean1",0)));
-    }
+            System.out.println(bManager.getID(miroslaveAndParent[0]) + ", parent: " + bManager.getID(miroslaveAndParent[1]));
+            System.out.println(bManager.getChildCount(miroslaveAndParent[0]));
 
-    public void importDataInBin(List<Stagiaire> allStagiaire) {
-        for (Stagiaire stagiaire : allStagiaire) {
-            addStagiaire(stagiaire);
-        }
-    }
+            System.out.println();
+            System.out.println("-- REMOVINGS:");
 
-    /**
-     * Va lire dans le fichie rbinaire à l'index donné. Retourne les données lues sous la forme d'un stagiaire.
-     * @param binIndex L'index de la node qui contient les du stagiaire voulu
-     * @return
-     */
-    private Stagiaire getStagiaireAtNodeIndex(long binIndex) {
+            bManager.display(0);
+            bManager.removeStagiaire("ai116_castillo_miroslava");
+            bManager.display(0);
 
-        try (RandomAccessFile raf = new RandomAccessFile(BIN_PATH, "rw")) {
+            System.out.println();
+            bManager.removeStagiaire("ai116_schuller_andras");
+            bManager.display(0);
 
-            raf.seek(binIndex);
-            raf.readUTF();
-            raf.readLong();
-            raf.readLong();
-            String firstName = raf.readUTF();
-            String lastName = raf.readUTF();
-            String promotion = raf.readUTF();
-            int year = raf.readInt();
-            int department = raf.readInt();
-            return new Stagiaire(firstName,lastName,promotion,year,department);
+            System.out.println();
+            bManager.removeStagiaire("BO05_toto2_jean2");
+            bManager.display(0);
 
+            bManager.modifyStagiaire("ai116_ouahioune_mazir", new Stagiaire("mazirrrrr", "ouahioune", "ai116", 2024, 75));
+
+            bManager.display(0);
+            bManager.displayTree(0,0);
+             */
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -92,310 +93,449 @@ public class BinManager {
         }
     }
 
+    public void initialize() throws IOException {
+
+        List<Stagiaire> fetchedStagiaire = StagiairesSorter.stagiairesListGenerator();
+
+        writeNodeAtIndex(fetchedStagiaire.get(0),0); //La root est write à la main
+        for (int i = 1; i < fetchedStagiaire.size(); i++) {
+            addStagiaire(fetchedStagiaire.get(i));
+        }
+    }
+
     /**
-     * va écrire un stagiaire à l'index dans le fichier binaire.
-     * @param stagiaire
-     * @param binIndex
+     *
+     * Permet d'ajouter un stagiaire dans l'arbre binaire.
+     *
+     * @param stagiaire Le stagiaire à ajouter
+     * @throws IOException
      */
-    private void setNodeAtIndex(Stagiaire stagiaire, long binIndex) {
+    public boolean addStagiaire(Stagiaire stagiaire) throws IOException {
 
-        try (RandomAccessFile raf = new RandomAccessFile(BIN_PATH, "rw")) {
+        long[] couple = searchCoupleWithID(stagiaire.getID(), 0);
+        if (couple[0] != -1) return false;
 
-            raf.seek(binIndex);
-            raf.writeUTF(getStagiaireId(stagiaire));
-            raf.writeLong(-1);
-            raf.writeLong(-1);
-
-            raf.writeUTF(stagiaire.getFirstName());
-            raf.writeUTF(stagiaire.getLastName());
-            raf.writeUTF(stagiaire.getPromotion());
-            raf.writeInt(stagiaire.getYear());
-            raf.writeInt(stagiaire.getDepartment());
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        long parent = couple[1];
+        log.debug("Adding new stagiaire " + stagiaire.getID() + ", parent is " + getID(parent));
+        if (isIDOnRight(getID(parent), stagiaire.getID())) {
+            setRight(parent, raf.length());
+        } else {
+            setLeft(parent, raf.length());
         }
+        writeNodeAtIndex(stagiaire, raf.length());
+        log.debug("adding done");
+        return true;
     }
 
-    //region PUBLIC_FUNCTION
     /**
-     * Chercher dans l'arbre jusqu'à trouver la node parent. Puis, on lie ce parent à la dernière position
-     * dans le fichier binaire. Ensuite, on crée la node du stagiaire à la dernière position dans le
-     * fichier binaire.
-     * @param stagiaire
+     * Permet de supprimer un stagiaire de l'arbre binaire.
+     * @param ID l'ID du stagiaire à supprimer
+     * @throws IOException
      */
-    public void addStagiaire(Stagiaire stagiaire) {
-        try (RandomAccessFile raf = new RandomAccessFile(BIN_PATH, "rw")) {
-
-            long currentNodeIndex = 0;
-            while (true) {
-
-                raf.seek(currentNodeIndex);
-                String currentNodeId = raf.readUTF();
-
-                int comparison = currentNodeId.compareToIgnoreCase(getStagiaireId(stagiaire));
-
-                long parentNodeIndex = currentNodeIndex;
-
-                currentNodeIndex = comparison <= 0? getRightNodeIndexFromNodeIndex(parentNodeIndex): getLeftNodeIndexFromNodeIndex(parentNodeIndex);
-
-                if (currentNodeIndex == -1) {
-                    long newNodeIndex = raf.length();
-
-                    raf.seek(parentNodeIndex);
-                    raf.readUTF();
-                    if (comparison <= 0) {
-                        raf.readLong();
-                    }
-                    raf.writeLong(newNodeIndex);
-
-                    setNodeAtIndex(stagiaire,newNodeIndex);
-                    break;
-                }
-            }
-
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+    public void removeStagiaire(String ID) throws IOException {
+        removeStagiaire(searchCoupleWithID(ID, 0));
+        log.debug("removing done");
     }
 
-    public void removeStagiaire(String ID) {
-        removeStagiaire(searchStagiaireAndGetIndex(ID,0));
+    public void modifyStagiaire(String IDoldStagiaire, Stagiaire newStagiaire) throws IOException {
+        log.debug("modifying " + IDoldStagiaire + " to " + newStagiaire.getID());
+        removeStagiaire(searchCoupleWithID(IDoldStagiaire, 0));
+        addStagiaire(newStagiaire);
+        log.debug("modify done");
     }
 
-    public void removeStagiaire(long indexToRemove) {
-        int childCount = getChildCount(indexToRemove);
-
-        switch (childCount) {
-            default:
-                removeNode_ZeroChildren(indexToRemove);
-                break;
-            case 1:
-                removeNode_OneChildren(indexToRemove);
-                break;
-            case 2:
-                removeNode_TwoChildren();
-                break;
-        }
-    }
-    //endregion
-    //region UTILITY
-    /**
-     * Concataine les données du stagiaire pour créer un ID.
-     * @param stagiaire
-     * @return
-     */
-    private String getStagiaireId(Stagiaire stagiaire) {
-        return stagiaire.getPromotion() + "_" + stagiaire.getLastName() + "_" + stagiaire.getFirstName();
-    }
-
-    void display(long nodeIndex) {
-        if (getLeftNodeIndexFromNodeIndex(nodeIndex) != -1) display(getLeftNodeIndexFromNodeIndex(nodeIndex));
-        System.out.println(getIDFromNodeIndex(nodeIndex));
-        if (getRightNodeIndexFromNodeIndex(nodeIndex) != -1) display(getRightNodeIndexFromNodeIndex(nodeIndex));
-    }
-    //endregion
-    //region CHILDS/PARENT
-    private long[] getNodeChildren(long nodeIndex) {
-        return new long[]{ getLeftNodeIndexFromNodeIndex(nodeIndex), getRightNodeIndexFromNodeIndex(nodeIndex)};
-    }
-
-    private int getChildCount(long nodeIndex) {
-        int amount = 0;
-        long[] childs = getNodeChildren(nodeIndex);
-        for (long child : childs) {
-            if (child != -1) amount++;
-        }
-        return amount;
-    }
-    //endregion
-    //region REMOVING_METHODS
-    private void removeNode_ZeroChildren(long indexToRemove) {
-        long parentIndex = searchNodeParent(getIDFromNodeIndex(indexToRemove),0);
-
-        long[] childs = getNodeChildren(parentIndex);
-        for (int i = 0; i < childs.length; i++) {
-            if (childs[i] == indexToRemove) {
-
-                try (RandomAccessFile raf = new RandomAccessFile(BIN_PATH, "rw")) {
-
-                    raf.seek(parentIndex);
-                    raf.readUTF();
-                    if (i == 1) raf.readLong();
-                    raf.writeLong(-1);
-
-                } catch (FileNotFoundException e) {
-                    throw new RuntimeException(e);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-    }
-
-    private void removeNode_OneChildren(long indexToRemove) {
-        long parentIndex = searchNodeParent(getIDFromNodeIndex(indexToRemove),0);
-
-        long[] childsOfParent = getNodeChildren(parentIndex);
-        for (int i = 0; i < childsOfParent.length; i++) {
-            if (childsOfParent[i] == indexToRemove) {
-
-                try (RandomAccessFile raf = new RandomAccessFile(BIN_PATH, "rw")) {
-
-                    raf.seek(parentIndex);
-                    raf.readUTF();
-                    if (i == 1) raf.readLong();
-
-                    long[] childsOfChild = getNodeChildren(indexToRemove);
-                    for (long l : childsOfChild) {
-                        if (l != -1) raf.writeLong(l);
-                    }
-
-                } catch (FileNotFoundException e) {
-                    throw new RuntimeException(e);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-    }
-
-    private void removeNode_TwoChildren() {
-
-    }
-//endregion
-    //region SEARCHING_METHODS
     /**
      * Fonction qui cherche un stagiaire et qui renvois ces datas
+     *
      * @param ID
      * @param currentIndex
      * @return
      */
-    private Stagiaire searchStagiaire(String ID, long currentIndex) {
+    public Stagiaire searchStagiaire(String ID, long currentIndex) throws IOException {
 
-        Long indexFounded = searchStagiaireAndGetIndex(ID, currentIndex);
-        if (indexFounded != null) return getStagiaireAtNodeIndex(indexFounded);
+        long indexFounded = searchIndexWithID(ID, currentIndex);
+        if (indexFounded != -1) return readStagiaireAtIndex(indexFounded);
         else return null;
     }
 
     /**
-     * fonction récursive qui recherche une node, et qui continue la recherche dans la bonne direction.
-     * @param ID
-     * @param currentIndex
-     * @return
-     */
-    private Long searchStagiaireAndGetIndex(String ID, long currentIndex) {
-        System.out.println("Searching for " + ID + ", currently at: " + getIDFromNodeIndex(currentIndex));
-
-        try {
-            int comparison = ID.compareToIgnoreCase(getIDFromNodeIndex(currentIndex)); // ID est supérieur ou inférieur à l'ID de currentIndex ?
-            if (comparison == 0) {
-                return currentIndex;
-            } else if (comparison < 0) {
-                return searchStagiaireAndGetIndex(ID, getLeftNodeIndexFromNodeIndex(currentIndex));
-            } else {
-                return searchStagiaireAndGetIndex(ID, getRightNodeIndexFromNodeIndex(currentIndex));
-            }
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-
-    /**
      * Recherche dans l'arbre de tout les ID commençant par la promoID.
      * La route dans l'arbre est déterminée par la comparaison du currentID avec la promoID.
+     *
      * @param promoID
      * @param currentIndex
      * @param currentStagiaireFounded
      * @return
      */
-    private List<Stagiaire> searchPromo(String promoID, long currentIndex, List<Stagiaire> currentStagiaireFounded) {
-        System.out.println(getIDFromNodeIndex(currentIndex));
+    public List<Stagiaire> searchPromo(String promoID, long currentIndex, List<Stagiaire> currentStagiaireFounded) throws IOException {
 
         // On regarde si le currentID commence par promoID
-        if (getIDFromNodeIndex(currentIndex).startsWith(promoID)) {
+        if (getID(currentIndex).startsWith(promoID)) {
 
-            if (getLeftNodeIndexFromNodeIndex(currentIndex) != -1)
-                searchPromo(promoID, getLeftNodeIndexFromNodeIndex(currentIndex),currentStagiaireFounded);
+            if (getLeft(currentIndex) != -1)
+                searchPromo(promoID, getLeft(currentIndex), currentStagiaireFounded);
 
-            currentStagiaireFounded.add(getStagiaireAtNodeIndex(currentIndex));
+            currentStagiaireFounded.add(readStagiaireAtIndex(currentIndex));
 
-            if (getRightNodeIndexFromNodeIndex(currentIndex) != -1)
-                searchPromo(promoID, getRightNodeIndexFromNodeIndex(currentIndex),currentStagiaireFounded);
+            if (getRight(currentIndex) != -1)
+                searchPromo(promoID, getRight(currentIndex), currentStagiaireFounded);
 
         } else {
-            if (promoID.compareToIgnoreCase(getIDFromNodeIndex(currentIndex)) < 0) {
-                if (getLeftNodeIndexFromNodeIndex(currentIndex) != -1)
-                    searchPromo(promoID, getLeftNodeIndexFromNodeIndex(currentIndex),currentStagiaireFounded);
+            if (promoID.compareToIgnoreCase(getID(currentIndex)) < 0) {
+                if (getLeft(currentIndex) != -1)
+                    searchPromo(promoID, getLeft(currentIndex), currentStagiaireFounded);
             } else {
-                if (getRightNodeIndexFromNodeIndex(currentIndex) != -1)
-                    searchPromo(promoID, getRightNodeIndexFromNodeIndex(currentIndex),currentStagiaireFounded);
+                if (getRight(currentIndex) != -1)
+                    searchPromo(promoID, getRight(currentIndex), currentStagiaireFounded);
             }
         }
 
         return currentStagiaireFounded;
     }
 
-    private Long searchNodeParent(String IDToFind, long currentIndex) {
-        int comparison = IDToFind.compareToIgnoreCase(getIDFromNodeIndex(currentIndex)); // ID est supérieur ou inférieur à l'ID de currentIndex ?
+    public List<Stagiaire> getAll(long nodeIndex, List<Stagiaire> currentList) throws IOException {
+        long leftNode = getLeft(nodeIndex);
+        if (leftNode != -1) currentList = getAll(leftNode,currentList);
 
-        long childIndex;
-        if (comparison < 0) {
-            childIndex = getLeftNodeIndexFromNodeIndex(currentIndex);
-        } else {
-            childIndex = getRightNodeIndexFromNodeIndex(currentIndex);
+        currentList.add(readStagiaireAtIndex(nodeIndex));
+
+        long rightNode = getRight(nodeIndex);
+        if (rightNode != -1) currentList = getAll(rightNode,currentList);
+
+        return currentList;
+    }
+
+
+    //region WRITE_READ
+    /**
+     * Va lire dans le fichier binaire à l'index donné. Retourne les données lues sous la forme d'un stagiaire.
+     *
+     * @param binIndex L'index de la node qui contient les du stagiaire voulu
+     * @return
+     */
+    private Stagiaire readStagiaireAtIndex(long binIndex) throws IOException {
+
+        raf.seek(binIndex);
+        raf.readUTF();
+        raf.readLong();
+        raf.readLong();
+        String firstName = raf.readUTF();
+        String lastName = raf.readUTF();
+        String promotion = raf.readUTF();
+        int year = raf.readInt();
+        int department = raf.readInt();
+        return new Stagiaire(firstName, lastName, promotion, year, department);
+    }
+
+    /**
+     * va écrire une node sans enfant qui contient les données du stagiaire à l'index dans le fichier binaire.
+     *
+     * @param stagiaire
+     * @param binIndex
+     */
+    private void writeNodeAtIndex(Stagiaire stagiaire, long binIndex) throws IOException {
+
+        raf.seek(binIndex);
+        raf.writeUTF(stagiaire.getID());
+        raf.writeLong(-1);
+        raf.writeLong(-1);
+
+        raf.writeUTF(stagiaire.getFirstName());
+        raf.writeUTF(stagiaire.getLastName());
+        raf.writeUTF(stagiaire.getPromotion());
+        raf.writeInt(stagiaire.getYear());
+        raf.writeInt(stagiaire.getDepartment());
+    }
+    //endregion
+    //region UTILITY
+
+    /**
+     * Fait des souts qui va lire l'arbre dans l'ordre
+     * @param nodeIndex
+     * @throws IOException
+     */
+    private void display(long nodeIndex) throws IOException {
+
+        long leftNode = getLeft(nodeIndex);
+        if (leftNode != -1) display(leftNode);
+
+        System.out.println(getID(nodeIndex));
+
+        long rightNode = getRight(nodeIndex);
+        if (rightNode != -1) display(rightNode);
+    }
+
+    /**
+     * Fait des souts qui va lire les nodes
+     * @param nodeIndex
+     * @throws IOException
+     */
+    private void displayTree(long nodeIndex, int deepness) throws IOException {
+
+        for (int i = 0; i < deepness; i++) {
+            System.out.print("  ");
+        }
+        System.out.println(getID(nodeIndex));
+
+        long leftNode = getLeft(nodeIndex);
+        if (leftNode != -1) displayTree(leftNode,deepness+1);
+
+        long rightNode = getRight(nodeIndex);
+        if (rightNode != -1) displayTree(rightNode,deepness+1);
+    }
+
+    /**
+     * permet de supprimer tout ce qu'il y a dans le fichier binaire
+     * @throws IOException
+     */
+    private void clearFile() throws IOException {
+        new FileOutputStream(BIN_PATH).close();
+    }
+
+    /**
+     * Test pour savoir si IDChild est à droite de IDparent dans l'arbre
+     * @param IDparent
+     * @param IDchild
+     * @return
+     */
+    private boolean isIDOnRight(String IDparent, String IDchild) {
+        int comparison = IDparent.compareToIgnoreCase(IDchild);
+        return comparison <= 0;
+    }
+
+    /**
+     * Permet d'inverser les parents et les enfants de deux nodes dans l'arbre.
+     * @param coupleA Couple node-parent de la node A
+     * @param coupleB Couple node-parent de la node B
+     * @throws IOException
+     */
+    private void inverseConnexions(long[] coupleA, long[] coupleB) throws IOException {
+
+        List<Long> allIndexs = new ArrayList<>();
+        allIndexs.add(coupleA[0]);
+        for (long l : getChilds(coupleA[0])) {
+            allIndexs.add(l);
+        }
+        allIndexs.add(coupleA[1]);
+        for (long l : getChilds(coupleA[1])) {
+            allIndexs.add(l);
+        }
+        allIndexs.add(coupleB[0]);
+        for (long l : getChilds(coupleB[0])) {
+            allIndexs.add(l);
+        }
+        allIndexs.add(coupleB[1]);
+        for (long l : getChilds(coupleB[1])) {
+            allIndexs.add(l);
         }
 
-        //System.out.println("TESTING CHILD OF " + getIDFromIndex(currentIndex) + ": " + getIDFromIndex(childIndex));
-        if (childIndex == -1) return null;
+        for (int i = 0; i < allIndexs.size(); i++) {
+            if (allIndexs.get(i) == coupleA[0]) allIndexs.set(i,coupleB[0]);
+            else if (allIndexs.get(i) == coupleB[0]) allIndexs.set(i,coupleA[0]);
+        }
 
-        if (getIDFromNodeIndex(childIndex).equals(IDToFind)) {
+        for (int i = 0; i < allIndexs.size()/3; i++) {
+            long current = allIndexs.get((i*3));
+            long right = allIndexs.get((i*3)+1);
+            long left = allIndexs.get((i*3)+2);
+
+            setChilds(current, new long[]{right, left});
+        }
+    }
+    //endregion
+    //region REMOVING_METHODS
+
+    /**
+     * Permet de choisir quel method appeler lors du déréférencement d'une node
+     * @param couple
+     * @throws IOException
+     */
+    private void removeStagiaire(long[] couple) throws IOException {
+        log.debug("Trying to remove " + getID(couple[0]) + " (" + couple[0] + ")");
+        int childCount = getChildCount(couple[0]);
+
+        switch (childCount) {
+            default:
+                log.debug("0 child");
+                removeNode_ZeroChildren(couple);
+                break;
+            case 1:
+                log.debug("1 child");
+                removeNode_OneChildren(couple);
+                break;
+            case 2:
+                log.debug("2 childs");
+                removeNode_TwoChildren(couple);
+                break;
+        }
+    }
+
+    /**
+     * Méthode pour déréférencer une node sans enfant
+     * @param couple
+     * @throws IOException
+     */
+    private void removeNode_ZeroChildren(long[] couple) throws IOException {
+
+        if (isIDOnRight(getID(couple[1]),getID(couple[0]))) {
+            setRight(couple[1],-1);
+        } else {
+            setLeft(couple[1],-1);
+        }
+    }
+
+    /**
+     * Méthode pour déréférencer une node avec 1 enfant
+     * @param couple
+     * @throws IOException
+     */
+    private void removeNode_OneChildren(long[] couple) throws IOException {
+
+        long[] childOfNodeToRemove = getChilds(couple[0]);
+        long goodChild = childOfNodeToRemove[0]==-1?childOfNodeToRemove[1]:childOfNodeToRemove[0];
+
+        if (isIDOnRight(getID(couple[1]),getID(couple[0]))) {
+            setRight(couple[1],goodChild);
+        } else {
+            setLeft(couple[1],goodChild);
+        }
+    }
+
+    /**
+     * Méthode pour déréférencer une node avec 2 enfants
+     * @param couple
+     * @throws IOException
+     */
+    private void removeNode_TwoChildren(long[] couple) throws IOException {
+
+        long[] switchingNode = searchRighterNode(couple[0]);
+        inverseConnexions(couple, switchingNode);
+
+        long[] newChildParentCouple = new long[]{switchingNode[1],switchingNode[0]};
+        removeStagiaire(newChildParentCouple);
+
+    }
+    //endregion
+    //region SEARCHING_METHODS
+
+    /**
+     * Fonction récursive qui recherche une node, et qui continue la recherche dans la bonne direction.
+     *
+     * @param IDToSearch
+     * @param currentIndex
+     * @return
+     */
+    private long searchIndexWithID(String IDToSearch, long currentIndex) throws IOException {
+
+        int comparison = IDToSearch.compareToIgnoreCase(getID(currentIndex)); // ID est supérieur ou inférieur à l'ID de currentIndex ?
+        if (comparison == 0) {
             return currentIndex;
+        } else if (comparison < 0) {
+            long leftNode = getLeft(currentIndex);
+            if (leftNode != -1) return searchIndexWithID(IDToSearch, leftNode);
+            else return leftNode;
         } else {
-            return searchNodeParent(IDToFind, childIndex);
-        }
-    }
-//endregion
-    //region GET_DATA_FROM_NODE
-    public long getLeftNodeIndexFromNodeIndex(long nodeIndex) {
-        try (RandomAccessFile raf = new RandomAccessFile(BIN_PATH, "rw")) {
-            raf.seek(nodeIndex);
-            raf.readUTF();
-            return raf.readLong();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            long rightNode = getRight(currentIndex);
+            if (rightNode != -1) return searchIndexWithID(IDToSearch, rightNode);
+            else return rightNode;
         }
     }
 
-    public long getRightNodeIndexFromNodeIndex(long nodeIndex) {
-        try (RandomAccessFile raf = new RandomAccessFile(BIN_PATH, "rw")) {
-            raf.seek(nodeIndex);
-            raf.readUTF();
-            raf.readLong();
-            return raf.readLong();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    /**
+     * Fonction récursive qui recherche une node et son parent, et qui continue la recherche dans la bonne direction.
+     *
+     * @param IDToSearch
+     * @param currentIndex
+     * @return le couple node-parent
+     * @throws IOException
+     */
+    private long[] searchCoupleWithID(String IDToSearch, long currentIndex) throws IOException {
+
+        int comparison = IDToSearch.compareToIgnoreCase(getID(currentIndex)); // ID est supérieur ou inférieur à l'ID de currentIndex ?
+        long[] result = new long[]{-1, -1};
+
+        if (comparison == 0) {
+            //System.out.println("Founded !");
+            return new long[]{currentIndex, -1};
+        } else if (comparison < 0) {
+            long leftNode = getLeft(currentIndex);
+            if (leftNode != -1) result = searchCoupleWithID(IDToSearch, leftNode);
+        } else {
+            long rightNode = getRight(currentIndex);
+            if (rightNode != -1) result = searchCoupleWithID(IDToSearch, rightNode);
         }
+
+        if (result[1] == -1) result[1] = currentIndex;
+
+        return result;
     }
 
-    public String getIDFromNodeIndex(long nodeIndex) {
-        try (RandomAccessFile raf = new RandomAccessFile(BIN_PATH, "rw")) {
-            raf.seek(nodeIndex);
-            return raf.readUTF();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    /**
+     * Fonction qui recher la node la plus à droite dans l'arbre en partant de nodeIndex et qui renvoie l'index de la node et de son parent.
+     * @param nodeIndex
+     * @return le couple node-parent
+     * @throws IOException
+     */
+    private long[] searchRighterNode(long nodeIndex) throws IOException {
+        long[] result;
+        long right = getRight(nodeIndex);
+        if (right != -1) {
+            result = searchRighterNode(right);
+            if (result[1] == -1) result[1] = nodeIndex;
         }
+        else result = new long[]{nodeIndex,-1};
+        return result;
+    }
+
+    //endregion
+    //region NODE_GET_SET
+    private void setChilds(long index, long[] newChilds) throws IOException {
+        setLeft(index, newChilds[0]);
+        setRight(index, newChilds[1]);
+    }
+
+    private long[] getChilds(long nodeIndex) throws IOException {
+        return new long[]{getLeft(nodeIndex), getRight(nodeIndex)};
+    }
+
+    private int getChildCount(long nodeIndex) throws IOException {
+        int amount = 0;
+        long[] childs = getChilds(nodeIndex);
+        for (long child : childs) {
+            if (child != -1) amount++;
+        }
+        return amount;
+    }
+
+    private long getLeft(long nodeIndex) throws IOException {
+        raf.seek(nodeIndex);
+        raf.readUTF();
+        return raf.readLong();
+    }
+
+    private long getRight(long nodeIndex) throws IOException {
+        raf.seek(nodeIndex);
+        raf.readUTF();
+        raf.readLong();
+        return raf.readLong();
+    }
+
+    private String getID(long nodeIndex) throws IOException {
+        raf.seek(nodeIndex);
+        return raf.readUTF();
+    }
+
+    private void setLeft(long nodeIndex, long value) throws IOException {
+        raf.seek(nodeIndex);
+        raf.readUTF();
+        raf.writeLong(value);
+    }
+
+    private void setRight(long nodeIndex, long value) throws IOException {
+        raf.seek(nodeIndex);
+        raf.readUTF();
+        raf.readLong();
+        raf.writeLong(value);
     }
     //endregion
 }
