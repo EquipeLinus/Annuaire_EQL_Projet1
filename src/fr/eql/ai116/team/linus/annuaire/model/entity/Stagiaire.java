@@ -26,6 +26,10 @@ public class Stagiaire {
                 '}';
     }
 
+    public String getID() {
+        return getPromotion() + "_" + getLastName() + "_" + getFirstName();
+    }
+
     public String getFirstName() {
         return firstName;
     }
