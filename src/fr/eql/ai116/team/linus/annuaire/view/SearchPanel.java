@@ -9,9 +9,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.VBox;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -60,7 +57,7 @@ public class SearchPanel extends GridPane {
 
         // Action à effectuer lors du clic sur le bouton "Valider" pour promo
         validerButton.setOnAction(e -> {
-            searchPromo();
+            search();
         });
 
         textFieldPromo.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -74,7 +71,7 @@ public class SearchPanel extends GridPane {
 
     }
 
-    private void searchPromo() {
+    public void search() {
         try {
             BinManager binManager = new BinManager();
             List<Stagiaire> currentStagiaires = getStagiaireByPromos(binManager);

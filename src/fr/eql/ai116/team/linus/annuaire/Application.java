@@ -2,11 +2,12 @@ package fr.eql.ai116.team.linus.annuaire;
 
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
+import fr.eql.ai116.team.linus.annuaire.model.program.BinManager;
 import fr.eql.ai116.team.linus.annuaire.view.AnchorPaneViewStagiaire;
 import fr.eql.ai116.team.linus.annuaire.view.ConnexionWindow;
 import fr.eql.ai116.team.linus.annuaire.view.InitializeTxtPanel;
 import fr.eql.ai116.team.linus.annuaire.view.SearchPanel;
-import fr.eql.ai116.team.linus.annuaire.view.HBoxAdmin;
+import fr.eql.ai116.team.linus.annuaire.view.VBoxAdmin;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -98,7 +99,7 @@ public class Application extends javafx.application.Application {
          * Bottom Panel
          */
 
-        HBoxAdmin bottomPane = new HBoxAdmin(table);
+        VBoxAdmin bottomPane = new VBoxAdmin(table, leftTopPane);
         bottomPane.setPrefSize(width, height /20);
 
         root.setTop(topPane);
@@ -115,6 +116,11 @@ public class Application extends javafx.application.Application {
         newWindow.setScene(secondScene);
         newWindow.show();
 
+
+        BinManager bManager = new BinManager();
+        bManager.clearFile();
+        bManager.initialize();
+        bManager.displayTree(0,0);
 
         stage.setTitle("Application stagiaire EQL");
         stage.setScene(scene);
