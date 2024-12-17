@@ -54,7 +54,6 @@ public class AdministratorWindow extends javafx.application.Application {
             txtPassword.setText("");
         });
 
-
         stage.setTitle("Windows Administrator");
         stage.setScene(scene);
         stage.setResizable(true);

@@ -1,5 +1,6 @@
 package fr.eql.ai116.team.linus.annuaire.model.program;
 
+import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -61,6 +62,32 @@ public class StagiairesSorter {
         }
 
         return stagiairesList;
+
+    }
+
+    public static boolean verifyIfStagiaireTxtIsEmpty(Administrator account) {
+
+        if(account.getStatut().equals("Administrateur") || account.getStatut().equals("Super Administrateur")){
+            try {
+
+                FileReader fr = new FileReader(path);
+                BufferedReader br = new BufferedReader(fr);
+                if (br.readLine() == null) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+
+            } catch (FileNotFoundException e) {
+                logger.error("Unable to open the " + path, e);
+            }
+            catch (IOException e) {
+                logger.error("Unable to operate on the " + path, e);
+            }
+        }
+
+        return false;
 
     }
 

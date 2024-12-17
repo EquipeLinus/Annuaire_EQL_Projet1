@@ -32,7 +32,7 @@ public class AdministratorSorter {
         //addSuperAdminToFile("Super User","Super Password","Super Administrateur");
         //logger.info(getListAdmins().get(1).getStatut());
 
-       //createAdmin("a","b","Super User","Super Password");
+       createAdmin("d","r","Super User","Super Password");
        removeAdmin("a","Super User","Super Password");
 
     }
