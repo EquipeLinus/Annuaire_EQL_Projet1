@@ -4,6 +4,7 @@ import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
 import fr.eql.ai116.team.linus.annuaire.view.AnchorPaneViewStagiaire;
 import fr.eql.ai116.team.linus.annuaire.view.ConnexionWindow;
+import fr.eql.ai116.team.linus.annuaire.view.InitializeTxtPanel;
 import fr.eql.ai116.team.linus.annuaire.view.SearchPanel;
 import fr.eql.ai116.team.linus.annuaire.view.HBoxAdmin;
 import javafx.geometry.Pos;
@@ -24,7 +25,7 @@ public class Application extends javafx.application.Application {
     private static final Logger log = LogManager.getLogger();
 
     private double width = 1500;
-    private double height = 900;
+    private double height = 800;
 
     public static Administrator account = null;
 
@@ -104,7 +105,7 @@ public class Application extends javafx.application.Application {
         root.setCenter(centerPane);
         root.setBottom(bottomPane);
 
-        /*
+
         InitializeTxtPanel init = new InitializeTxtPanel();
         Scene secondScene = new Scene(init, 230, 100);
 
@@ -113,7 +114,7 @@ public class Application extends javafx.application.Application {
         newWindow.setTitle("Second Stage");
         newWindow.setScene(secondScene);
         newWindow.show();
-         */
+
 
         stage.setTitle("Application stagiaire EQL");
         stage.setScene(scene);
