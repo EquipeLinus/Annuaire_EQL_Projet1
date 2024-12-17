@@ -4,15 +4,12 @@ import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
 import fr.eql.ai116.team.linus.annuaire.view.AnchorPaneViewStagiaire;
 import fr.eql.ai116.team.linus.annuaire.view.ConnexionWindow;
-import fr.eql.ai116.team.linus.annuaire.view.GridPaneSearchStagiaires;
+import fr.eql.ai116.team.linus.annuaire.view.SearchPanel;
 import fr.eql.ai116.team.linus.annuaire.view.HBoxAdmin;
-import fr.eql.ai116.team.linus.annuaire.view.UpdateWindow;
-import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -31,7 +28,6 @@ public class Application extends javafx.application.Application {
 
     public static Administrator account = null;
 
-
     public static void main(String[] args) {
         launch(args);
     }
@@ -39,10 +35,9 @@ public class Application extends javafx.application.Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-
-
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root, width, height);
+
 
         /**
          * Center panel
@@ -62,11 +57,10 @@ public class Application extends javafx.application.Application {
         HBox topPane = new HBox();
         topPane.setPrefSize(width, height /6);
 
-        GridPaneSearchStagiaires leftTopPane = new GridPaneSearchStagiaires(anchorPane);
-        leftTopPane.setAlignment(Pos.CENTER);
+        SearchPanel leftTopPane = new SearchPanel(anchorPane);
+        leftTopPane.setAlignment(Pos.CENTER_LEFT);
         leftTopPane.setPrefSize(width /2, height /4);
-        leftTopPane.setVgap(15);
-        leftTopPane.setHgap(12);
+
 
         Pane rightTopPane = new Pane();
         rightTopPane.setPrefSize(width /2, height /4);
@@ -95,6 +89,7 @@ public class Application extends javafx.application.Application {
 
         btnConnexion.setOnAction(e-> {
             ConnexionWindow connexionWindow = new ConnexionWindow(stage,width,height);
+            System.out.println(account);
         });
 
 
@@ -102,21 +97,27 @@ public class Application extends javafx.application.Application {
          * Bottom Panel
          */
 
-        HBoxAdmin bottomPane = new HBoxAdmin(table, account);
+        HBoxAdmin bottomPane = new HBoxAdmin(table);
         bottomPane.setPrefSize(width, height /20);
+
         root.setTop(topPane);
         root.setCenter(centerPane);
         root.setBottom(bottomPane);
+
+        /*
+        InitializeTxtPanel init = new InitializeTxtPanel();
+        Scene secondScene = new Scene(init, 230, 100);
+
+        // New window (Stage)
+        Stage newWindow = new Stage();
+        newWindow.setTitle("Second Stage");
+        newWindow.setScene(secondScene);
+        newWindow.show();
+         */
 
         stage.setTitle("Application stagiaire EQL");
         stage.setScene(scene);
         stage.setResizable(true);
         stage.show();
-
     }
-
-
-
-
-
 }

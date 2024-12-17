@@ -52,9 +52,9 @@ public class HBoxAdmin extends VBox {
 
     private Stagiaire selectedStagiaire;
 
-    public HBoxAdmin(TableView<Stagiaire> table, Administrator account) {
+    public HBoxAdmin(TableView<Stagiaire> table) {
         super();
-        if (Application.account == null ) return;
+        if (Application.account == null || AdministratorSorter.checkLogs(Application.account.getUsername(),Application.account.getPassword()) == null) return;
 
         vBoxFirstName = new VBox(5);
         lblFirstName = new Label("Prénom:");

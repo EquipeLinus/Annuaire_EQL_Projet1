@@ -16,6 +16,15 @@ public class Administrator {
         this.statut = statut;
     }
 
+    @Override
+    public String toString() {
+        return "Administrator{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", statut='" + statut + '\'' +
+                '}';
+    }
+
     public String getUsername() {
         return username;
     }
