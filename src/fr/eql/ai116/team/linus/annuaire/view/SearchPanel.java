@@ -1,0 +1,163 @@
+package fr.eql.ai116.team.linus.annuaire.view;
+
+import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
+import fr.eql.ai116.team.linus.annuaire.model.program.BinManager;
+import javafx.event.EventHandler;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+public class SearchPanel extends GridPane {
+
+    TextField textFieldPromo = new TextField();
+    TextField textFieldLastName = new TextField();
+    TextField textFieldFirstName = new TextField();
+    PromoStack promotionStack = new PromoStack(textFieldPromo);
+
+    Button validerButton = new Button("Rechercher");
+
+    private AnchorPaneViewStagiaire viewStagiaire;
+
+    public SearchPanel(AnchorPaneViewStagiaire viewStagiaire) {
+        super();
+        this.viewStagiaire = viewStagiaire;
+
+        textFieldPromo.setPromptText("Entrez une promotion");
+        textFieldLastName.setPromptText("Entrez un nom");
+        textFieldFirstName.setPromptText("Entrez un prénom");
+
+        /*
+        HBox row0 = new HBox();
+        row0.getChildren().addAll(textFieldPromo, promotionStack);
+        HBox row1 = new HBox();
+        row1.getChildren().addAll(textFieldLastName, textFieldFirstName, validerButton);
+
+        getChildren().addAll(row0,row1);
+        */
+
+        setVgap(15);
+        setHgap(12);
+
+        getColumnConstraints().add(new ColumnConstraints(200,200,200));
+        getColumnConstraints().add(new ColumnConstraints(200,200,200));
+
+        addRow(0, textFieldPromo, promotionStack);
+        addRow(1, textFieldLastName, textFieldFirstName, validerButton);
+
+
+        // Action à effectuer lors du clic sur le bouton "Valider" pour promo
+        validerButton.setOnAction(e -> {
+            searchPromo();
+        });
+
+        textFieldPromo.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode().equals(KeyCode.ENTER)) {
+                    promotionStack.addPromo(textFieldPromo.getText());
+                }
+            }
+        });
+
+    }
+
+    private void searchPromo() {
+        try {
+            BinManager binManager = new BinManager();
+            List<Stagiaire> currentStagiaires = getStagiaireByPromos(binManager);
+
+            if (!textFieldFirstName.getText().isEmpty()) {
+                currentStagiaires = currentStagiaires.stream().filter(
+                        s -> Objects.equals(s.getFirstName(), cleanFirstName(textFieldFirstName.getText()))
+                ).collect(Collectors.toList());
+            }
+
+            if (!textFieldLastName.getText().isEmpty()) {
+                currentStagiaires = currentStagiaires.stream().filter(
+                        s -> Objects.equals(s.getLastName(), cleanLastName(textFieldLastName.getText()))
+                ).collect(Collectors.toList());
+            }
+
+            viewStagiaire.setTable(currentStagiaires);
+
+        } catch (FileNotFoundException ex1) {
+            throw new RuntimeException(ex1);
+        } catch (IOException ex2) {
+            throw new RuntimeException(ex2);
+        }
+    }
+
+    private List<Stagiaire> getStagiaireByPromos(BinManager binManager) throws IOException {
+        List<Stagiaire> result = new ArrayList<>();
+
+        if (textFieldPromo.getText().isEmpty()) result = binManager.getAll(0,new ArrayList<>());
+        else {
+            for (String promo : textFieldPromo.getText().split(",")) {
+                result = binManager.searchPromo(cleanPromo(promo), 0, result);
+            }
+        }
+        return result;
+    }
+
+    private String cleanFirstName(String stringToClean) {
+        String word =  String.valueOf(stringToClean.charAt(0)).toUpperCase() +
+                        stringToClean.substring(1).toLowerCase();
+        return word.trim();
+    }
+
+    private String cleanLastName(String stringToClean) {
+        return stringToClean.toUpperCase().trim();
+    }
+
+    private String cleanPromo(String stringToClean) {
+        return stringToClean.toUpperCase().trim();
+    }
+
+    private void addPromoStack() {
+
+    }
+}
+
+/*
+private void searchStagiaire() {
+        System.out.println("searchStagiaireWithName");
+        try {
+            BinManager binManager = new BinManager();
+            List<Stagiaire> stagiaires = new ArrayList<>();
+
+            String[] promosToSearch = getPromoToSearch(binManager);
+            for (String currentPromo : promosToSearch) {
+                String firstName = textFieldFirstName.getText();
+                String lastName = textFieldLastName.getText();
+                String searchParameter = currentPromo + "_" + lastName + "_" + firstName;
+                Stagiaire currentStagiaire = binManager.searchStagiaire(searchParameter, 0);
+
+                if (currentStagiaire != null) stagiaires.add(currentStagiaire);
+            }
+
+            viewStagiaire.setTable(stagiaires);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+ */
+
+
+
+
+

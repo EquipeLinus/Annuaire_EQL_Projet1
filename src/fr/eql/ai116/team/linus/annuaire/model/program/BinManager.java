@@ -9,7 +9,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class BinManager {
 
@@ -30,11 +33,15 @@ public class BinManager {
             bManager.clearFile();
             //bManager.writeNodeAtIndex(new Stagiaire("thomas", "duron", "ai116", 2024, 93), 0);
             bManager.initialize();
+            for (String s : bManager.getAllPromos()) {
+                System.out.println(s);
+            }
 
-            bManager.displayTree(0,0);
             /*
-            BinManager bManager = new BinManager();
-            bManager.clearFile();
+            bManager.displayTree(0,0);
+
+            //BinManager bManager = new BinManager();
+            //bManager.clearFile();
 
             bManager.writeNodeAtIndex(new Stagiaire("thomas", "duron", "ai116", 2024, 93), 0);
 
@@ -69,23 +76,23 @@ public class BinManager {
             System.out.println();
             System.out.println("-- REMOVINGS:");
 
-            bManager.display(0);
+            bManager.displayTree(0,0);
             bManager.removeStagiaire("ai116_castillo_miroslava");
-            bManager.display(0);
+            bManager.displayTree(0,0);
 
             System.out.println();
             bManager.removeStagiaire("ai116_schuller_andras");
-            bManager.display(0);
+            bManager.displayTree(0,0);
 
             System.out.println();
             bManager.removeStagiaire("BO05_toto2_jean2");
-            bManager.display(0);
+            bManager.displayTree(0,0);
 
             bManager.modifyStagiaire("ai116_ouahioune_mazir", new Stagiaire("mazirrrrr", "ouahioune", "ai116", 2024, 75));
-
-            bManager.display(0);
             bManager.displayTree(0,0);
+
              */
+
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -205,6 +212,21 @@ public class BinManager {
         return currentList;
     }
 
+    /**
+     * Fonction qui recherche tout les stagiare et donne les promos
+     * @return
+     * @throws IOException
+     */
+    public Set<String> getAllPromos() throws IOException {
+        Set<String> allPromos = new HashSet<>();
+
+        List<Stagiaire> allStagiaires = getAll(0,new ArrayList<>());
+        for (Stagiaire stagiaire : allStagiaires) {
+            allPromos.add(stagiaire.getPromotion());
+        }
+
+        return allPromos;
+    }
 
     //region WRITE_READ
     /**
@@ -275,7 +297,7 @@ public class BinManager {
         for (int i = 0; i < deepness; i++) {
             System.out.print("  ");
         }
-        System.out.println(getID(nodeIndex));
+        System.out.println(getID(nodeIndex) + "(" + nodeIndex+ ")");
 
         long leftNode = getLeft(nodeIndex);
         if (leftNode != -1) displayTree(leftNode,deepness+1);
@@ -409,6 +431,7 @@ public class BinManager {
     private void removeNode_TwoChildren(long[] couple) throws IOException {
 
         long[] switchingNode = searchRighterNode(couple[0]);
+        System.out.println(Arrays.toString(switchingNode));
         inverseConnexions(couple, switchingNode);
 
         long[] newChildParentCouple = new long[]{switchingNode[1],switchingNode[0]};

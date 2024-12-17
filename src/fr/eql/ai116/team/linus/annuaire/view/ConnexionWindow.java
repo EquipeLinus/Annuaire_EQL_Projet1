@@ -21,7 +21,6 @@ import javafx.stage.Stage;
 
 public class ConnexionWindow extends VBox{
 
-    public static Administrator account = null;
     private Boolean labelIs = false;
     public ConnexionWindow(Stage stage, double width, double height) {
 
@@ -45,12 +44,10 @@ public class ConnexionWindow extends VBox{
 
         Scene secondScene = new Scene(root, 500, 300);
         btnConnexion.setOnAction(e-> {
-
-            Application.account = AdministratorSorter.checkLogs(txtAdministrator.getText(),txtPassword.getText());
-            account = AdministratorSorter.checkLogs(txtAdministrator.getText(),txtPassword.getText());
+             Administrator account = AdministratorSorter.checkLogs(txtAdministrator.getText(),txtPassword.getText());;
+            Application.account = account;
 
             Label labelConnexionAnswer = new Label("");
-
             if(account != null){
                 root.getChildren().clear();
                 labelConnexionAnswer.setText("Vous êtes connecter en tant que " + account.getUsername() + " avec les droits "
@@ -61,9 +58,7 @@ public class ConnexionWindow extends VBox{
                 labelConnexionAnswer.setText("L'identifiant ou le mot de passe est incorrect ");
                 root.getChildren().add(labelConnexionAnswer);
                 labelIs = true;
-
             }
-
         });
 
         Stage newWindow = new Stage();
@@ -76,5 +71,4 @@ public class ConnexionWindow extends VBox{
         newWindow.show();
 
     }
-
 }
