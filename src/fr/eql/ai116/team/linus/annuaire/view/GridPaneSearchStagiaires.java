@@ -21,18 +21,21 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class GridPaneSearchStagiaires extends GridPane {
 
+    TextField textFieldPromo = new TextField();
+    TextField textFieldLastName = new TextField();
+    TextField textFieldFirstName = new TextField();
+
+    Button validerButton = new Button("Valider");
+
+    private AnchorPaneViewStagiaire viewStagiaire;
 
     public GridPaneSearchStagiaires(AnchorPaneViewStagiaire viewStagiaire) {
         super();
+        this.viewStagiaire = viewStagiaire;
 
-        TextField textFieldPromo = new TextField();
         textFieldPromo.setPromptText("Entrez une promotion");
-        TextField textFieldLastName = new TextField();
         textFieldLastName.setPromptText("Entrez un nom");
-        TextField textFieldFirstName = new TextField();
         textFieldFirstName.setPromptText("Entrez un nom");
-
-        Button validerButton = new Button("Valider");
 
         Label resultLabel = new Label("Résultat :");
         Label firsNameLabel = new Label("Prénom : ");
@@ -42,30 +45,57 @@ public class GridPaneSearchStagiaires extends GridPane {
         Label departmentLabel = new Label("Département : ");
 
         addRow(0, textFieldPromo);
-        addRow(0,validerButton);
-
-
+        addRow(1, textFieldLastName, textFieldFirstName, validerButton);
 
 
         // Action à effectuer lors du clic sur le bouton "Valider" pour promo
         validerButton.setOnAction(e -> {
-            try {
-                BinManager binManager = new BinManager();
-                List<Stagiaire> currentStagiaires = new ArrayList<>();
-                currentStagiaires = binManager.searchPromo(textFieldPromo.getText(), 0, new ArrayList<>());
-
-                for (Stagiaire currentStagiaire : currentStagiaires) {
-                    System.out.println(currentStagiaire);
-                }
-
-                //viewStagiaire.setStagiaireListDao(currentStagiaires);
-
-            } catch (FileNotFoundException ex1) {
-                throw new RuntimeException(ex1);
-            } catch (IOException ex2) {
-                throw new RuntimeException(ex2);
+            if (!textFieldPromo.getText().isEmpty() && textFieldLastName.getText().isEmpty() && textFieldFirstName.getText().isEmpty()) {
+                searchPromoGridPane ();
+            } else if (!textFieldPromo.getText().isEmpty() && !textFieldLastName.getText().isEmpty() && textFieldFirstName.getText().isEmpty()) {
+                searchStagiaireGridPane ();
             }
         });
+
+    }
+
+
+    private void searchStagiaireGridPane() {
+        try {
+            BinManager binManager = new BinManager();
+            Stagiaire currentStagiaire = new Stagiaire();
+            // Concaténation id
+            currentStagiaire = binManager.searchStagiaire(textFieldLastName.getText(), 0);
+
+
+            System.out.println(currentStagiaire);
+
+            // viewStagiaire.setStagiaireListDao(currentStagiaires);
+
+        } catch (FileNotFoundException ex1) {
+            throw new RuntimeException(ex1);
+        } catch (IOException ex2) {
+            throw new RuntimeException(ex2);
+        }
+    }
+
+    private void searchPromoGridPane() {
+        try {
+            BinManager binManager = new BinManager();
+            List<Stagiaire> currentStagiaires = new ArrayList<>();
+            currentStagiaires = binManager.searchPromo(textFieldPromo.getText(), 0, new ArrayList<>());
+
+            for (Stagiaire currentStagiaire : currentStagiaires) {
+                System.out.println(currentStagiaire);
+            }
+
+            viewStagiaire.setTable(currentStagiaires);
+
+        } catch (FileNotFoundException ex1) {
+            throw new RuntimeException(ex1);
+        } catch (IOException ex2) {
+            throw new RuntimeException(ex2);
+        }
     }
 /*
     @Override
@@ -197,9 +227,3 @@ public class GridPaneSearchStagiaires extends GridPane {
 
  */
 }
-
-
-
-
-
-
