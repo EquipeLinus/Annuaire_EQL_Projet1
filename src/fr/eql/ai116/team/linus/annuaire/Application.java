@@ -3,10 +3,13 @@ package fr.eql.ai116.team.linus.annuaire;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
 import fr.eql.ai116.team.linus.annuaire.view.AnchorPaneViewStagiaire;
+import fr.eql.ai116.team.linus.annuaire.view.ConnexionWindow;
 import fr.eql.ai116.team.linus.annuaire.view.GridPaneSearchStagiaires;
 import fr.eql.ai116.team.linus.annuaire.view.HBoxAdmin;
 import fr.eql.ai116.team.linus.annuaire.view.InitializeTxtPanel;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -27,7 +30,7 @@ public class Application extends javafx.application.Application {
     private double width = 1500;
     private double height = 900;
 
-    private Administrator account = null;
+    public static Administrator account = null;
 
     public static void main(String[] args) {
         launch(args);
@@ -39,6 +42,7 @@ public class Application extends javafx.application.Application {
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root, width, height);
 
+
         /**
          * Center panel
          */
@@ -46,8 +50,9 @@ public class Application extends javafx.application.Application {
         BorderPane centerPane = new BorderPane();
         TableView<Stagiaire> table = new TableView<Stagiaire>();
 
-        AnchorPaneViewStagiaire borderPane = new AnchorPaneViewStagiaire(table);
-        centerPane.setCenter(borderPane);
+        AnchorPaneViewStagiaire anchorPane = new AnchorPaneViewStagiaire(table);
+        centerPane.setCenter(anchorPane);
+
 
         /**
          * Top panel
@@ -56,15 +61,42 @@ public class Application extends javafx.application.Application {
         HBox topPane = new HBox();
         topPane.setPrefSize(width, height /6);
 
-        GridPaneSearchStagiaires leftTopPane = new GridPaneSearchStagiaires(borderPane);
+        GridPaneSearchStagiaires leftTopPane = new GridPaneSearchStagiaires(anchorPane);
+        leftTopPane.setAlignment(Pos.CENTER);
         leftTopPane.setPrefSize(width /2, height /4);
-        leftTopPane.setStyle("-fx-background-color: blue");
+        leftTopPane.setVgap(15);
+        leftTopPane.setHgap(12);
 
         Pane rightTopPane = new Pane();
         rightTopPane.setPrefSize(width /2, height /4);
-        rightTopPane.setStyle("-fx-background-color: purple");
 
         topPane.getChildren().addAll(leftTopPane,rightTopPane);
+        HBox btnPanel1 = new HBox(20);
+        VBox btnPanel2 = new VBox(15);
+
+        Button btnTutorial = new Button("Ressource");
+        Button btnAdmin = new Button("Account Admin");
+
+        Button btnConnexion = new Button("Connexion");
+        Button btnExport = new Button("Exporter");
+        btnConnexion.setMinWidth(120);
+        btnConnexion.setMinHeight(40);
+        btnExport.setMinWidth(120);
+        btnExport.setMinHeight(40);
+
+        btnPanel1.getChildren().addAll(btnTutorial,btnAdmin);
+        btnPanel1.relocate(120,-5);
+
+        btnPanel2.getChildren().addAll(btnConnexion,btnExport);
+        btnPanel2.relocate((width/2-width/6),25);
+
+        rightTopPane.getChildren().addAll(btnPanel1,btnPanel2);
+
+        btnConnexion.setOnAction(e-> {
+            ConnexionWindow connexionWindow = new ConnexionWindow(stage,width,height);
+            System.out.println(account);
+        });
+
 
         /**
          * Bottom Panel
@@ -79,10 +111,12 @@ public class Application extends javafx.application.Application {
 
         InitializeTxtPanel init = new InitializeTxtPanel();
         Scene secondScene = new Scene(init, 230, 100);
+
         // New window (Stage)
         Stage newWindow = new Stage();
         newWindow.setTitle("Second Stage");
         newWindow.setScene(secondScene);
+
         newWindow.show();
 
 
