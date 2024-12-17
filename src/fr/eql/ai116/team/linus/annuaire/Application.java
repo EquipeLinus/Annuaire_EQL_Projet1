@@ -2,11 +2,11 @@ package fr.eql.ai116.team.linus.annuaire;
 
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
+import fr.eql.ai116.team.linus.annuaire.model.program.BinManager;
 import fr.eql.ai116.team.linus.annuaire.view.AnchorPaneViewStagiaire;
 import fr.eql.ai116.team.linus.annuaire.view.ConnexionWindow;
-import fr.eql.ai116.team.linus.annuaire.view.GridPaneSearchStagiaires;
-import fr.eql.ai116.team.linus.annuaire.view.HBoxAdmin;
-import fr.eql.ai116.team.linus.annuaire.view.InitializeTxtPanel;
+import fr.eql.ai116.team.linus.annuaire.view.SearchPanel;
+import fr.eql.ai116.team.linus.annuaire.view.VBoxAdmin;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -15,9 +15,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.stage.Modality;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -61,11 +58,10 @@ public class Application extends javafx.application.Application {
         HBox topPane = new HBox();
         topPane.setPrefSize(width, height /6);
 
-        GridPaneSearchStagiaires leftTopPane = new GridPaneSearchStagiaires(anchorPane);
-        leftTopPane.setAlignment(Pos.CENTER);
+        SearchPanel leftTopPane = new SearchPanel(anchorPane);
+        leftTopPane.setAlignment(Pos.CENTER_LEFT);
         leftTopPane.setPrefSize(width /2, height /4);
-        leftTopPane.setVgap(15);
-        leftTopPane.setHgap(12);
+
 
         Pane rightTopPane = new Pane();
         rightTopPane.setPrefSize(width /2, height /4);
@@ -102,13 +98,14 @@ public class Application extends javafx.application.Application {
          * Bottom Panel
          */
 
-        HBoxAdmin bottomPane = new HBoxAdmin(table, account);
+        VBoxAdmin bottomPane = new VBoxAdmin(table, leftTopPane);
         bottomPane.setPrefSize(width, height /20);
 
         root.setTop(topPane);
         root.setCenter(centerPane);
         root.setBottom(bottomPane);
 
+        /*
         InitializeTxtPanel init = new InitializeTxtPanel();
         Scene secondScene = new Scene(init, 230, 100);
 
@@ -116,9 +113,13 @@ public class Application extends javafx.application.Application {
         Stage newWindow = new Stage();
         newWindow.setTitle("Second Stage");
         newWindow.setScene(secondScene);
-
         newWindow.show();
+         */
 
+        BinManager bManager = new BinManager();
+        bManager.clearFile();
+        bManager.initialize();
+        bManager.displayTree(0,0);
 
         stage.setTitle("Application stagiaire EQL");
         stage.setScene(scene);

@@ -9,7 +9,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class BinManager {
 
@@ -30,11 +33,13 @@ public class BinManager {
             bManager.clearFile();
             bManager.writeNodeAtIndex(new Stagiaire("thomas", "duron", "ai116", 2024, 93), 0);
             bManager.initialize();
-
             bManager.displayTree(0,0);
+
             /*
-            BinManager bManager = new BinManager();
-            bManager.clearFile();
+            bManager.displayTree(0,0);
+
+            //BinManager bManager = new BinManager();
+            //bManager.clearFile();
 
             bManager.writeNodeAtIndex(new Stagiaire("thomas", "duron", "ai116", 2024, 93), 0);
 
@@ -69,23 +74,23 @@ public class BinManager {
             System.out.println();
             System.out.println("-- REMOVINGS:");
 
-            bManager.display(0);
+            bManager.displayTree(0,0);
             bManager.removeStagiaire("ai116_castillo_miroslava");
-            bManager.display(0);
+            bManager.displayTree(0,0);
 
             System.out.println();
             bManager.removeStagiaire("ai116_schuller_andras");
-            bManager.display(0);
+            bManager.displayTree(0,0);
 
             System.out.println();
             bManager.removeStagiaire("BO05_toto2_jean2");
-            bManager.display(0);
+            bManager.displayTree(0,0);
 
             bManager.modifyStagiaire("ai116_ouahioune_mazir", new Stagiaire("mazirrrrr", "ouahioune", "ai116", 2024, 75));
-
-            bManager.display(0);
             bManager.displayTree(0,0);
+
              */
+
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -98,7 +103,7 @@ public class BinManager {
         List<Stagiaire> fetchedStagiaire = StagiairesSorter.stagiairesListGenerator();
 
         writeNodeAtIndex(fetchedStagiaire.get(0),0); //La root est write à la main
-        for (int i = 1; i < fetchedStagiaire.size(); i++) {
+        for (int i = 1; i < 10; i++) {
             addStagiaire(fetchedStagiaire.get(i));
         }
     }
@@ -134,7 +139,6 @@ public class BinManager {
      */
     public void removeStagiaire(String ID) throws IOException {
         removeStagiaire(searchCoupleWithID(ID, 0));
-        log.debug("removing done");
     }
 
     public void modifyStagiaire(String IDoldStagiaire, Stagiaire newStagiaire) throws IOException {
@@ -205,6 +209,21 @@ public class BinManager {
         return currentList;
     }
 
+    /**
+     * Fonction qui recherche tout les stagiare et donne les promos
+     * @return
+     * @throws IOException
+     */
+    public Set<String> getAllPromos() throws IOException {
+        Set<String> allPromos = new HashSet<>();
+
+        List<Stagiaire> allStagiaires = getAll(0,new ArrayList<>());
+        for (Stagiaire stagiaire : allStagiaires) {
+            allPromos.add(stagiaire.getPromotion());
+        }
+
+        return allPromos;
+    }
 
     //region WRITE_READ
     /**
@@ -270,25 +289,25 @@ public class BinManager {
      * @param nodeIndex
      * @throws IOException
      */
-    private void displayTree(long nodeIndex, int deepness) throws IOException {
+    public void displayTree(long nodeIndex, int deepness) throws IOException {
 
         for (int i = 0; i < deepness; i++) {
             System.out.print("  ");
         }
-        System.out.println(getID(nodeIndex));
+        System.out.println(getID(nodeIndex) + "(" + nodeIndex+ ")");
 
         long leftNode = getLeft(nodeIndex);
-        if (leftNode != -1) displayTree(leftNode,deepness+1);
+        if (leftNode != -1) displayTree(leftNode, deepness + 1);
 
         long rightNode = getRight(nodeIndex);
-        if (rightNode != -1) displayTree(rightNode,deepness+1);
+        if (rightNode != -1) displayTree(rightNode, deepness + 1);
     }
 
     /**
      * permet de supprimer tout ce qu'il y a dans le fichier binaire
      * @throws IOException
      */
-    private void clearFile() throws IOException {
+    public void clearFile() throws IOException {
         new FileOutputStream(BIN_PATH).close();
     }
 
@@ -368,6 +387,7 @@ public class BinManager {
                 removeNode_TwoChildren(couple);
                 break;
         }
+        log.debug("Removing done");
     }
 
     /**
@@ -377,7 +397,7 @@ public class BinManager {
      */
     private void removeNode_ZeroChildren(long[] couple) throws IOException {
 
-        if (isIDOnRight(getID(couple[1]),getID(couple[0]))) {
+        if (getRight(couple[1]) == couple[0]) {
             setRight(couple[1],-1);
         } else {
             setLeft(couple[1],-1);
@@ -394,7 +414,7 @@ public class BinManager {
         long[] childOfNodeToRemove = getChilds(couple[0]);
         long goodChild = childOfNodeToRemove[0]==-1?childOfNodeToRemove[1]:childOfNodeToRemove[0];
 
-        if (isIDOnRight(getID(couple[1]),getID(couple[0]))) {
+        if (getRight(couple[1]) == couple[0]) {
             setRight(couple[1],goodChild);
         } else {
             setLeft(couple[1],goodChild);
@@ -409,9 +429,14 @@ public class BinManager {
     private void removeNode_TwoChildren(long[] couple) throws IOException {
 
         long[] switchingNode = searchRighterNode(couple[0]);
+
+        displayTree(0,0);
         inverseConnexions(couple, switchingNode);
+        displayTree(0,0);
 
         long[] newChildParentCouple = new long[]{switchingNode[1],switchingNode[0]};
+
+        System.out.println(Arrays.toString(newChildParentCouple));
         removeStagiaire(newChildParentCouple);
 
     }

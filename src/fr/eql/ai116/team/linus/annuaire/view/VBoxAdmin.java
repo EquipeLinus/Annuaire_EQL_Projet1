@@ -1,6 +1,6 @@
 package fr.eql.ai116.team.linus.annuaire.view;
 
-import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
+import fr.eql.ai116.team.linus.annuaire.Application;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
 import fr.eql.ai116.team.linus.annuaire.model.program.AdministratorSorter;
 import fr.eql.ai116.team.linus.annuaire.model.program.BinManager;
@@ -10,12 +10,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -24,7 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Objects;
 
-public class HBoxAdmin extends VBox {
+public class VBoxAdmin extends VBox {
 
     private VBox vBoxFirstName;
     private Label lblFirstName;
@@ -51,9 +48,9 @@ public class HBoxAdmin extends VBox {
 
     private Stagiaire selectedStagiaire;
 
-    public HBoxAdmin(TableView<Stagiaire> table, Administrator account) {
+    public VBoxAdmin(TableView<Stagiaire> table, SearchPanel searchPanel) {
         super();
-        //if (account == null || AdministratorSorter.checkLogs(account.getUsername(),account.getPassword()) == null) return;
+        //if (Application.account == null || AdministratorSorter.checkLogs(Application.account.getUsername(),Application.account.getPassword()) == null) return;
 
         vBoxFirstName = new VBox(5);
         lblFirstName = new Label("Prénom:");
@@ -95,6 +92,7 @@ public class HBoxAdmin extends VBox {
         table.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Stagiaire>() {
             @Override
             public void changed(ObservableValue<? extends Stagiaire> observable, Stagiaire oldValue, Stagiaire newValue) {
+                if (newValue == null) return;
                 txtFirstName.setText(newValue.getFirstName());
                 txtLastName.setText(newValue.getLastName());
                 txtPromotion.setText(newValue.getPromotion());
@@ -123,6 +121,8 @@ public class HBoxAdmin extends VBox {
                     ))) {
                         errorLabel.setText("Stagiaire déjà existant");
                     }
+                    searchPanel.search();
+                    bManager.displayTree(0,0);
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (IOException e) {
@@ -148,6 +148,8 @@ public class HBoxAdmin extends VBox {
                             year,
                             department
                     ));
+                    searchPanel.search();
+                    bManager.displayTree(0,0);
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (IOException e) {
@@ -164,6 +166,8 @@ public class HBoxAdmin extends VBox {
                 try {
                     BinManager bManager = new BinManager();
                     bManager.removeStagiaire(selectedStagiaire.getID());
+                    searchPanel.search();
+                    bManager.displayTree(0,0);
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (IOException e) {
