@@ -1,6 +1,6 @@
 package fr.eql.ai116.team.linus.annuaire.view;
 
-import fr.eql.ai116.team.linus.annuaire.AdministratorWindow;
+
 import fr.eql.ai116.team.linus.annuaire.Application;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.program.AdministratorSorter;
