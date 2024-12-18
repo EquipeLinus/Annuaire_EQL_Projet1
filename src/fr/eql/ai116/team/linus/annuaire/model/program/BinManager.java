@@ -428,16 +428,21 @@ public class BinManager {
      */
     private void removeNode_TwoChildren(long[] couple) throws IOException {
 
-        long[] switchingNode = searchRighterNode(couple[0]);
+        long[] switchingNode = searchLefterNode(new long[]{getRight(couple[0]),couple[0]});
 
+        System.out.println(Arrays.toString(switchingNode));
         displayTree(0,0);
         inverseConnexions(couple, switchingNode);
         displayTree(0,0);
 
-        long[] newChildParentCouple = new long[]{switchingNode[1],switchingNode[0]};
-
-        System.out.println(Arrays.toString(newChildParentCouple));
-        removeStagiaire(newChildParentCouple);
+        long[] newCouple;
+        if (couple[0] == switchingNode[1]) {
+            newCouple = new long[]{switchingNode[1],switchingNode[0]};
+        } else {
+            newCouple = new long[]{couple[0],switchingNode[1]};
+        }
+        System.out.println(Arrays.toString(newCouple));
+        removeStagiaire(newCouple);
 
     }
     //endregion
@@ -497,18 +502,17 @@ public class BinManager {
 
     /**
      * Fonction qui recher la node la plus à droite dans l'arbre en partant de nodeIndex et qui renvoie l'index de la node et de son parent.
-     * @param nodeIndex
+     * @param coupleIndex
      * @return le couple node-parent
      * @throws IOException
      */
-    private long[] searchRighterNode(long nodeIndex) throws IOException {
+    private long[] searchLefterNode(long[] coupleIndex) throws IOException {
         long[] result;
-        long right = getRight(nodeIndex);
+        long right = getLeft(coupleIndex[0]);
         if (right != -1) {
-            result = searchRighterNode(right);
-            if (result[1] == -1) result[1] = nodeIndex;
-        }
-        else result = new long[]{nodeIndex,-1};
+            result = searchLefterNode(new long[]{right,coupleIndex[0]});}
+        else result = coupleIndex;
+        if (result[1] == -1) result[1] = coupleIndex[1];
         return result;
     }
 

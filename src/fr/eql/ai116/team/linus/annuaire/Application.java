@@ -39,6 +39,10 @@ public class Application extends javafx.application.Application {
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root, width, height);
 
+        BinManager bManager = new BinManager();
+        bManager.clearFile();
+        bManager.initialize();
+        bManager.displayTree(0,0);
 
         /**
          * Center panel
@@ -115,11 +119,6 @@ public class Application extends javafx.application.Application {
         newWindow.setScene(secondScene);
         newWindow.show();
          */
-
-        BinManager bManager = new BinManager();
-        bManager.clearFile();
-        bManager.initialize();
-        bManager.displayTree(0,0);
 
         stage.setTitle("Application stagiaire EQL");
         stage.setScene(scene);
