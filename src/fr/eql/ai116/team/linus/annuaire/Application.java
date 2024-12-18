@@ -8,6 +8,7 @@ import fr.eql.ai116.team.linus.annuaire.view.ConnexionWindow;
 import fr.eql.ai116.team.linus.annuaire.view.InitializeTxtPanel;
 import fr.eql.ai116.team.linus.annuaire.view.SearchPanel;
 import fr.eql.ai116.team.linus.annuaire.view.VBoxAdmin;
+import javafx.application.HostServices;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,9 +17,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
 
 
 public class Application extends javafx.application.Application {
@@ -93,6 +99,29 @@ public class Application extends javafx.application.Application {
             ConnexionWindow connexionWindow = new ConnexionWindow(stage,width,height);
             System.out.println(account);
         });
+
+        btnAdmin.setOnAction(e-> {
+            AdministratorWindow administratorWindow = new AdministratorWindow();
+            System.out.println(account);
+        });
+
+        btnTutorial.setOnAction(e-> {
+
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    File myFile = new File("test.pdf");
+                    Desktop.getDesktop().open(myFile);
+                } catch (IOException ex) {
+                    // no application registered for PDFs
+                }
+            }
+
+
+
+                });
+
+
+
 
 
         /**

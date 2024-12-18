@@ -103,7 +103,7 @@ public class BinManager {
         List<Stagiaire> fetchedStagiaire = StagiairesSorter.stagiairesListGenerator();
 
         writeNodeAtIndex(fetchedStagiaire.get(0),0); //La root est write à la main
-        for (int i = 1; i < 10; i++) {
+        for (int i = 1; i < fetchedStagiaire.size(); i++) {
             addStagiaire(fetchedStagiaire.get(i));
         }
     }
