@@ -5,6 +5,7 @@ import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
 import fr.eql.ai116.team.linus.annuaire.model.program.ExportToPdf;
 import fr.eql.ai116.team.linus.annuaire.view.elements.AnchorPaneViewStagiaire;
 import fr.eql.ai116.team.linus.annuaire.view.elements.SearchPanel;
+import fr.eql.ai116.team.linus.annuaire.view.elements.TootipBorderPane;
 import fr.eql.ai116.team.linus.annuaire.view.elements.VBoxAdmin;
 import fr.eql.ai116.team.linus.annuaire.view.windows.AdministratorWindow;
 import fr.eql.ai116.team.linus.annuaire.view.windows.ConnexionWindow;
@@ -31,12 +32,13 @@ public class Application extends javafx.application.Application {
     private static final Logger log = LogManager.getLogger();
 
     private double width = 1500;
-    private double height = 900;
+    private double height = 800;
 
     public Administrator account = null;
     private TableView<Stagiaire> table;
 
     private SearchPanel searchPanel;
+    private TootipBorderPane tooltipPanel;
     private HBox adminPanel;
 
     public Application() {
@@ -67,56 +69,19 @@ public class Application extends javafx.application.Application {
         AnchorPaneViewStagiaire anchorPane = new AnchorPaneViewStagiaire(table);
         centerPane.setCenter(anchorPane);
 
-
         /**
          * Top panel
          */
-        HBox topPane = new HBox();
-        topPane.setPrefSize(width, height /6);
 
         searchPanel = new SearchPanel(anchorPane);
-        searchPanel.setAlignment(Pos.CENTER_LEFT);
-        searchPanel.setPrefSize(width /2, height /4);
-        searchPanel.setPadding(new Insets(0,0,0,20));
+        searchPanel.setAlignment(Pos.BOTTOM_LEFT);
+        searchPanel.setPadding(new Insets(0,0,5,20));
 
-        // TODO: Mettre toute cette section dans une class à part histoire de rendre ça plus lisible
-        Pane rightTopPane = new Pane();
-        rightTopPane.setPrefSize(width /2, height /4);
+        tooltipPanel = new TootipBorderPane(stage,width,height);
 
-        topPane.getChildren().addAll(searchPanel,rightTopPane);
-        HBox btnPanel1 = new HBox(20);
-        VBox btnPanel2 = new VBox(15);
-
-        Button btnTutorial = new Button("Ressource");
-        Button btnPannelAdmin = new Button("Account Admin");
-
-        Button btnConnexion = new Button("Connexion");
-        Button btnExport = new Button("Exporter");
-        btnConnexion.setMinWidth(120);
-        btnConnexion.setMinHeight(40);
-        btnExport.setMinWidth(120);
-        btnExport.setMinHeight(40);
-
-        btnPanel1.getChildren().addAll(btnTutorial,btnPannelAdmin);
-        btnPanel1.relocate(120,-5);
-
-        btnPanel2.getChildren().addAll(btnConnexion,btnExport);
-        btnPanel2.relocate((width/2-width/6),25);
-
-        rightTopPane.getChildren().addAll(btnPanel1,btnPanel2);
-
-        btnConnexion.setOnAction(e-> {
-            ConnexionWindow connexionWindow = new ConnexionWindow(stage,width,height);
-        });
-
-        btnExport.setOnAction(e-> {
-            //ExportToPdf.exportAnchorPaneViewStagiaireToPdf(table);
-        });
-
-        btnPannelAdmin.setOnAction(e-> {
-            AdministratorWindow administratorWindow = new AdministratorWindow(stage,width,height);
-        });
-
+        BorderPane topPane = new BorderPane();
+        topPane.setRight(tooltipPanel);
+        topPane.setLeft(searchPanel);
 
         /**
          * Bottom Panel
@@ -147,14 +112,26 @@ public class Application extends javafx.application.Application {
     }
 
     public void setAccount(Administrator account) {
-        if (account != null && adminPanel.getChildren().isEmpty()) {
-            adminPanel.getChildren().add(new VBoxAdmin(table, searchPanel));
+        if (account != null) {
+            onConnection(account);
+        } else {
+            onDisconnection(this.account);
+        }
+        this.account = account;
 
-        } else if (account == null && adminPanel.getChildren().size() > 1){
+        tooltipPanel.updateConnectionInfo();
+    }
+
+    public void onConnection(Administrator account) {
+        if (adminPanel.getChildren().isEmpty()) {
+            adminPanel.getChildren().add(new VBoxAdmin(table, searchPanel));
+        }
+    }
+
+    public void onDisconnection(Administrator account) {
+        if (!adminPanel.getChildren().isEmpty()){
             adminPanel.getChildren().remove(0);
         }
-
-        this.account = account;
     }
 
 }

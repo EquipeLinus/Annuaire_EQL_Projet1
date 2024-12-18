@@ -1,5 +1,6 @@
 package fr.eql.ai116.team.linus.annuaire.view.windows;
 
+import fr.eql.ai116.team.linus.annuaire.Application;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
 import fr.eql.ai116.team.linus.annuaire.model.program.AdministratorSorter;
@@ -19,6 +20,8 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Objects;
 
 
 public class AdministratorWindow extends VBox {
