@@ -6,11 +6,13 @@ import fr.eql.ai116.team.linus.annuaire.view.Clean;
 import fr.eql.ai116.team.linus.annuaire.view.PromoStack;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Popup;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -32,6 +34,7 @@ public class SearchPanel extends GridPane {
 
     public SearchPanel(AnchorPaneViewStagiaire viewStagiaire) {
         super();
+
         this.viewStagiaire = viewStagiaire;
 
         textFieldPromo.setPromptText("Entrez une promotion");
@@ -61,7 +64,6 @@ public class SearchPanel extends GridPane {
                 }
             }
         });
-
     }
 
     public void search() {
