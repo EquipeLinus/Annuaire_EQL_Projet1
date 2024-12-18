@@ -7,13 +7,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeSet;
 
 public class PromoStack extends HBox {
 
     private HBox buttonContainer = new HBox();
     private final TextField promoTxt;
-    private TreeSet<String> selectedPromos = new TreeSet<>();
+    private List<String> selectedPromos = new ArrayList<>();
 
     public PromoStack(TextField promoTxt) {
         super(5.);
@@ -32,6 +34,15 @@ public class PromoStack extends HBox {
                 addPromo(promoTxt.getText());
             }
         });
+    }
+
+    public void addPromos (String name) {
+        if (name.isEmpty()) return;
+        String cleanedName = Clean.cleanPromo(name);
+        promoTxt.setText("");
+        Button promoBtn = new Button(cleanedName);
+        promoBtn.setMinWidth(80);
+        promoBtn.setMaxWidth(80);
     }
 
     public void addPromo(String name) {
