@@ -141,7 +141,9 @@ public class Application extends javafx.application.Application {
 
     public void setAccount(Administrator account) {
         if (account != null) {
-            adminPanel.getChildren().add(new VBoxAdmin(table,searchPanel));
+            if (adminPanel.getChildren().isEmpty()) {
+                adminPanel.getChildren().add(new VBoxAdmin(table, searchPanel));
+            }
         } else if (adminPanel.getChildren().size() > 1){
             adminPanel.getChildren().remove(0);
         }
