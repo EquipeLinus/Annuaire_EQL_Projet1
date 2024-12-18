@@ -98,6 +98,19 @@ public class SearchPanel extends GridPane {
     }
 
     private List<Stagiaire> getStagiaireByPromos(BinManager binManager) throws IOException {
+        List <Stagiaire> result = new ArrayList<>();
+        String[] validatedPromos = promotionStack.getValidatedPromos();
+
+        if (validatedPromos == null) {
+            result = binManager.getAll(0,new ArrayList<>());}
+        else {
+            for (String validatedPromo : validatedPromos) {
+                result = binManager.searchPromo(validatedPromo, 0, result);
+            }
+        }
+        return result;
+
+        /* TO DELETE if new solution works
         List<Stagiaire> result = new ArrayList<>();
 
         if (textFieldPromo.getText().isEmpty()) result = binManager.getAll(0,new ArrayList<>());
@@ -107,6 +120,7 @@ public class SearchPanel extends GridPane {
             }
         }
         return result;
+         */
     }
 
     private void addPromoStack() {

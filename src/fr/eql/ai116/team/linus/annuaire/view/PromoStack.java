@@ -7,10 +7,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
+import java.util.TreeSet;
+
 public class PromoStack extends HBox {
 
     private HBox buttonContainer = new HBox();
     private final TextField promoTxt;
+    private TreeSet<String> selectedPromos = new TreeSet<>();
 
     public PromoStack(TextField promoTxt) {
         super(5.);
@@ -59,7 +62,7 @@ public class PromoStack extends HBox {
         }
     }
 
-    public String[] getValidatedPromo() {
+    public String[] getValidatedPromos() {
         String[] result = new String[buttonContainer.getChildren().size()];
         for (int i = 0; i < buttonContainer.getChildren().size(); i++) {
             result[i] = ((Button)buttonContainer.getChildren().get(i)).getText();
