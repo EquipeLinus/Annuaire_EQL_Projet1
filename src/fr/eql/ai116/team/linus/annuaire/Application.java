@@ -32,7 +32,7 @@ public class Application extends javafx.application.Application {
     private static final Logger log = LogManager.getLogger();
 
     private double width = 1500;
-    private double height = 900;
+    private double height = 800;
 
     public Administrator account = null;
     private TableView<Stagiaire> table;
