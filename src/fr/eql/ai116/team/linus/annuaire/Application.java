@@ -8,15 +8,18 @@ import fr.eql.ai116.team.linus.annuaire.view.elements.SearchPanel;
 import fr.eql.ai116.team.linus.annuaire.view.elements.VBoxAdmin;
 import fr.eql.ai116.team.linus.annuaire.view.windows.AdministratorWindow;
 import fr.eql.ai116.team.linus.annuaire.view.windows.ConnexionWindow;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,17 +51,19 @@ public class Application extends javafx.application.Application {
     @Override
     public void start(Stage stage) throws Exception {
 
+        /**
+         * general variable initialization
+         */
+
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root, width, height);
-
+        table = new TableView<>();
 
         /**
          * Center panel
          */
 
         BorderPane centerPane = new BorderPane();
-        table = new TableView<>();
-
         AnchorPaneViewStagiaire anchorPane = new AnchorPaneViewStagiaire(table);
         centerPane.setCenter(anchorPane);
 
@@ -66,15 +71,15 @@ public class Application extends javafx.application.Application {
         /**
          * Top panel
          */
-
         HBox topPane = new HBox();
         topPane.setPrefSize(width, height /6);
 
         searchPanel = new SearchPanel(anchorPane);
         searchPanel.setAlignment(Pos.CENTER_LEFT);
         searchPanel.setPrefSize(width /2, height /4);
+        searchPanel.setPadding(new Insets(0,0,0,20));
 
-
+        // TODO: Mettre toute cette section dans une class à part histoire de rendre ça plus lisible
         Pane rightTopPane = new Pane();
         rightTopPane.setPrefSize(width /2, height /4);
 
@@ -105,8 +110,7 @@ public class Application extends javafx.application.Application {
         });
 
         btnExport.setOnAction(e-> {
-            ExportToPdf.exportAnchorPaneViewStagiaireToPdf(table);
-
+            //ExportToPdf.exportAnchorPaneViewStagiaireToPdf(table);
         });
 
         btnPannelAdmin.setOnAction(e-> {
@@ -121,6 +125,9 @@ public class Application extends javafx.application.Application {
         adminPanel = new HBox();
         adminPanel.setAlignment(Pos.CENTER);
 
+        /**
+         * Scene & Stage setup
+         */
         root.setTop(topPane);
         root.setCenter(centerPane);
         root.setBottom(adminPanel);
@@ -140,11 +147,10 @@ public class Application extends javafx.application.Application {
     }
 
     public void setAccount(Administrator account) {
-        if (account != null) {
-            if (adminPanel.getChildren().isEmpty()) {
-                adminPanel.getChildren().add(new VBoxAdmin(table, searchPanel));
-            }
-        } else if (adminPanel.getChildren().size() > 1){
+        if (account != null && adminPanel.getChildren().isEmpty()) {
+            adminPanel.getChildren().add(new VBoxAdmin(table, searchPanel));
+
+        } else if (account == null && adminPanel.getChildren().size() > 1){
             adminPanel.getChildren().remove(0);
         }
 
