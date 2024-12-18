@@ -7,6 +7,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -15,6 +17,7 @@ import java.util.List;
 
 public class AnchorPaneViewStagiaire extends AnchorPane {
 
+    private static final Logger logger = LogManager.getLogger();
     private final TableView<Stagiaire> table;
 
     public AnchorPaneViewStagiaire(TableView<Stagiaire> table){
@@ -48,9 +51,9 @@ public class AnchorPaneViewStagiaire extends AnchorPane {
             BinManager binManager = new BinManager();
             setTable(binManager.getAll( 0, new ArrayList<Stagiaire>()));
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            logger.info("Fichier non trouvé");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            logger.info("PErsonne dans le fichier");
         }
 
         getChildren().add(table);
