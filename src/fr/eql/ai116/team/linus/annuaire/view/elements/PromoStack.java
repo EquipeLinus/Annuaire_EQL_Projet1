@@ -47,18 +47,19 @@ public class PromoStack extends HBox {
             Button promoBtn = new Button (selectedPromo);
             promoBtn.setMinWidth(80);
             promoBtn.setMaxWidth(80);
+            selectedButtons.add(promoBtn);
 
-            promoBtn.setOnAction(new EventHandler<ActionEvent>() {
+           /* promoBtn.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
                     removePromo(selectedPromo);
                 }
-            });
-            buttonContainer.getChildren().addAll(selectedButtons);
+            });*/
         }
+        buttonContainer.getChildren().addAll(selectedButtons);
     }
 
-    public void addPromos(String name) {
+    /* public void addPromos(String name) {
         if (name.isEmpty()) return;
         promoTxt.setText(""); // A réflechir où à le mettre...
         String cleanedName = Clean.cleanPromo(name);
@@ -78,13 +79,13 @@ public class PromoStack extends HBox {
             });
             buttonContainer.getChildren().addAll(selectedButtons);
         }
-    }
+    }*/
 
         public void addPromo (String name){
             if (name.isEmpty()) return;
+            promoTxt.setText("");
             String cleanedName = Clean.cleanPromo(name);
             selectedPromos.add(cleanedName);
-            promoTxt.setText("");
     }
 
             /*
