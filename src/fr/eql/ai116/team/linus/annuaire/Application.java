@@ -2,7 +2,7 @@ package fr.eql.ai116.team.linus.annuaire;
 
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
-import fr.eql.ai116.team.linus.annuaire.model.program.ExportToPdf;
+//import fr.eql.ai116.team.linus.annuaire.model.program.ExportToPdf;
 import fr.eql.ai116.team.linus.annuaire.view.elements.AnchorPaneViewStagiaire;
 import fr.eql.ai116.team.linus.annuaire.view.elements.SearchPanel;
 import fr.eql.ai116.team.linus.annuaire.view.elements.VBoxAdmin;
@@ -21,6 +21,10 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+
 
 public class Application extends javafx.application.Application {
 
@@ -28,9 +32,9 @@ public class Application extends javafx.application.Application {
     private static final Logger log = LogManager.getLogger();
 
     private double width = 1500;
-    private double height = 900;
+    private double height = 800;
 
-    public Administrator account = null;
+    public Administrator account = null;// si null administrateur
     private TableView<Stagiaire> table;
 
     private SearchPanel searchPanel;
@@ -78,6 +82,7 @@ public class Application extends javafx.application.Application {
         Pane rightTopPane = new Pane();
         rightTopPane.setPrefSize(width /2, height /4);
 
+
         topPane.getChildren().addAll(searchPanel,rightTopPane);
         HBox btnPanel1 = new HBox(20);
         VBox btnPanel2 = new VBox(15);
@@ -103,11 +108,27 @@ public class Application extends javafx.application.Application {
         btnConnexion.setOnAction(e-> {
             ConnexionWindow connexionWindow = new ConnexionWindow(stage,width,height);
         });
+        btnTutorial.setOnAction(e-> {
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    if ( account == null) {
+                        File myFile = new File("test.pdf");
+                        Desktop.getDesktop().open(myFile);
+                    }else {
+                        File myFile = new File("resources/test2.pdf");
+                        Desktop.getDesktop().open(myFile);
+                    }
 
-        btnExport.setOnAction(e-> {
-            ExportToPdf.exportAnchorPaneViewStagiaireToPdf(table);
-
+                } catch (IOException ex) {
+                    // no application registered for PDFs
+                }
+            }
         });
+
+//        btnExport.setOnAction(e-> {
+//            ExportToPdf.exportAnchorPaneViewStagiaireToPdf(table);
+//
+//        });
 
         btnPannelAdmin.setOnAction(e-> {
             AdministratorWindow administratorWindow = new AdministratorWindow(stage,width,height);
@@ -150,5 +171,12 @@ public class Application extends javafx.application.Application {
 
         this.account = account;
     }
+
+
+
+
+
+
+
 
 }
