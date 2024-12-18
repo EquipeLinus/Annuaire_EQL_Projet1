@@ -24,6 +24,10 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+
 
 public class Application extends javafx.application.Application {
 
@@ -33,7 +37,7 @@ public class Application extends javafx.application.Application {
     private double width = 1500;
     private double height = 900;
 
-    public Administrator account = null;
+    public static Administrator account = null;
     private TableView<Stagiaire> table;
 
     private SearchPanel searchPanel;
@@ -116,6 +120,19 @@ public class Application extends javafx.application.Application {
         btnPannelAdmin.setOnAction(e-> {
             AdministratorWindow administratorWindow = new AdministratorWindow(stage,width,height);
         });
+
+        btnTutorial.setOnAction(e-> {
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    File myFile = new File("resources/java.pdf");
+                    Desktop.getDesktop().open(myFile);
+                } catch (IOException error) {
+                    log.info("Le pdf ne peut pas être lu" , error);
+                }
+            }
+        });
+
+
 
 
         /**

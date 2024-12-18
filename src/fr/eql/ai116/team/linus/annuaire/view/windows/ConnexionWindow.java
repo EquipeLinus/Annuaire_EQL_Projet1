@@ -11,6 +11,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -32,7 +33,7 @@ public class ConnexionWindow extends VBox{
         Label labelAdministrator = new Label("Username :");
         TextField txtAdministrator= new TextField();
         Label labelPassword = new Label("Password:");
-        TextField txtPassword = new TextField();
+        PasswordField txtPassword = new PasswordField();
         Button btnConnexion = new Button("Se connecter");
 
         connexionBox.addRow(0,labelAdministrator,txtAdministrator);
@@ -82,8 +83,6 @@ public class ConnexionWindow extends VBox{
                 delay(500, () -> {
                     stageConnexion.close();
                 });
-
-
 
                 root.getChildren().add(labelConnexionAnswer);
 
