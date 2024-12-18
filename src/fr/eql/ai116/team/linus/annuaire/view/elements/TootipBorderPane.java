@@ -14,9 +14,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+
 public class TootipBorderPane extends BorderPane {
 
     Label lblConnectionInfo = new Label("Compte utilisateur");
+    Button btnAccountManagement = new Button("Gestion de compte");
 
     public TootipBorderPane(Stage stage, double width, double height) {
 
@@ -44,7 +49,7 @@ public class TootipBorderPane extends BorderPane {
         HBox topPanel = new HBox(20.);
 
         Button btnHelp = new Button("Aide");
-        Button btnAccountManagement = new Button("Gestion de compte");
+        btnAccountManagement.setVisible(false);
 
         topPanel.setPadding(new Insets(-5,0,0,0));
 
@@ -67,6 +72,22 @@ public class TootipBorderPane extends BorderPane {
             AdministratorWindow administratorWindow = new AdministratorWindow(stage,width,height);
         });
 
+        btnHelp.setOnAction(e-> {
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    if ( Application.getInstance().getAccount() == null) {
+                        File myFile = new File("test.pdf");
+                        Desktop.getDesktop().open(myFile);
+                    }else {
+                        File myFile = new File("resources/test2.pdf");
+                        Desktop.getDesktop().open(myFile);
+                    }
+
+                } catch (IOException ex) {
+                    // no application registered for PDFs
+                }
+            }
+        });
     }
 
     public void updateConnectionInfo() {
@@ -74,9 +95,11 @@ public class TootipBorderPane extends BorderPane {
         String message;
         if (Application.getInstance().getAccount()==null) {
             message = "Compte utilisateur (non connecté)";
+            btnAccountManagement.setVisible(false);
         } else {
             Administrator account = Application.getInstance().getAccount();
-            message = "Bienvenu " + account.getUsername() + " (" + account.getStatut() + ")";
+            message = "Bienvenu, " + account.getUsername() + " (" + account.getStatut() + ")";
+            btnAccountManagement.setVisible(true);
         }
         lblConnectionInfo.setText(message);
     }
