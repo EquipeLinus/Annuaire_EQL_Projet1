@@ -2,6 +2,8 @@ package fr.eql.ai116.team.linus.annuaire.view.elements;
 
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
 import fr.eql.ai116.team.linus.annuaire.model.program.BinManager;
+import fr.eql.ai116.team.linus.annuaire.view.Clean;
+import fr.eql.ai116.team.linus.annuaire.view.PromoStack;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -36,15 +38,6 @@ public class SearchPanel extends GridPane {
         textFieldLastName.setPromptText("Entrez un nom");
         textFieldFirstName.setPromptText("Entrez un prénom");
 
-        /*
-        HBox row0 = new HBox();
-        row0.getChildren().addAll(textFieldPromo, promotionStack);
-        HBox row1 = new HBox();
-        row1.getChildren().addAll(textFieldLastName, textFieldFirstName, validerButton);
-
-        getChildren().addAll(row0,row1);
-        */
-
         setVgap(15);
         setHgap(12);
 
@@ -57,34 +50,34 @@ public class SearchPanel extends GridPane {
 
         // Action à effectuer lors du clic sur le bouton "Valider" pour promo
         validerButton.setOnAction(e -> {
-            searchPromo();
+            search();
         });
 
         textFieldPromo.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode().equals(KeyCode.ENTER)) {
-                    promotionStack.addPromo(textFieldPromo.getText());
+                    promotionStack.addPromo(Clean.cleanPromo(textFieldPromo.getText()));
                 }
             }
         });
 
     }
 
-    private void searchPromo() {
+    public void search() {
         try {
             BinManager binManager = new BinManager();
             List<Stagiaire> currentStagiaires = getStagiaireByPromos(binManager);
 
             if (!textFieldFirstName.getText().isEmpty()) {
                 currentStagiaires = currentStagiaires.stream().filter(
-                        s -> Objects.equals(s.getFirstName(), cleanFirstName(textFieldFirstName.getText()))
+                        s -> Objects.equals(s.getFirstName(), Clean.cleanFirstName(textFieldFirstName.getText()))
                 ).collect(Collectors.toList());
             }
 
             if (!textFieldLastName.getText().isEmpty()) {
                 currentStagiaires = currentStagiaires.stream().filter(
-                        s -> Objects.equals(s.getLastName(), cleanLastName(textFieldLastName.getText()))
+                        s -> Objects.equals(s.getLastName(), Clean.cleanLastName(textFieldLastName.getText()))
                 ).collect(Collectors.toList());
             }
 
@@ -98,29 +91,17 @@ public class SearchPanel extends GridPane {
     }
 
     private List<Stagiaire> getStagiaireByPromos(BinManager binManager) throws IOException {
-        List<Stagiaire> result = new ArrayList<>();
+        List <Stagiaire> result = new ArrayList<>();
+        String[] validatedPromos = promotionStack.getValidatedPromos();
 
-        if (textFieldPromo.getText().isEmpty()) result = binManager.getAll(0,new ArrayList<>());
+        if (validatedPromos.length == 0) {
+            result = binManager.getAll(0,new ArrayList<>());}
         else {
-            for (String promo : textFieldPromo.getText().split(",")) {
-                result = binManager.searchPromo(cleanPromo(promo), 0, result);
+            for (String validatedPromo : validatedPromos) {
+                result = binManager.searchPromo(validatedPromo, 0, result);
             }
         }
         return result;
-    }
-
-    private String cleanFirstName(String stringToClean) {
-        String word =  String.valueOf(stringToClean.charAt(0)).toUpperCase() +
-                        stringToClean.substring(1).toLowerCase();
-        return word.trim();
-    }
-
-    private String cleanLastName(String stringToClean) {
-        return stringToClean.toUpperCase().trim();
-    }
-
-    private String cleanPromo(String stringToClean) {
-        return stringToClean.toUpperCase().trim();
     }
 
     private void addPromoStack() {

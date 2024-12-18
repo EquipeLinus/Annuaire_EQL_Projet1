@@ -1,8 +1,6 @@
 package fr.eql.ai116.team.linus.annuaire.view.elements;
 
-import fr.eql.ai116.team.linus.annuaire.Application;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
-import fr.eql.ai116.team.linus.annuaire.model.program.AdministratorSorter;
 import fr.eql.ai116.team.linus.annuaire.model.program.BinManager;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -21,7 +19,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Objects;
 
-public class HBoxAdmin extends VBox {
+public class VBoxAdmin extends VBox {
 
     private VBox vBoxFirstName;
     private Label lblFirstName;
@@ -48,9 +46,8 @@ public class HBoxAdmin extends VBox {
 
     private Stagiaire selectedStagiaire;
 
-    public HBoxAdmin(TableView<Stagiaire> table) {
+    public VBoxAdmin(TableView<Stagiaire> table, SearchPanel searchPanel) {
         super();
-        if (Application.account == null || AdministratorSorter.checkLogs(Application.account.getUsername(),Application.account.getPassword()) == null) return;
 
         vBoxFirstName = new VBox(5);
         lblFirstName = new Label("Prénom:");
@@ -92,6 +89,7 @@ public class HBoxAdmin extends VBox {
         table.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Stagiaire>() {
             @Override
             public void changed(ObservableValue<? extends Stagiaire> observable, Stagiaire oldValue, Stagiaire newValue) {
+                if (newValue == null) return;
                 txtFirstName.setText(newValue.getFirstName());
                 txtLastName.setText(newValue.getLastName());
                 txtPromotion.setText(newValue.getPromotion());
@@ -120,6 +118,8 @@ public class HBoxAdmin extends VBox {
                     ))) {
                         errorLabel.setText("Stagiaire déjà existant");
                     }
+                    searchPanel.search();
+                    bManager.displayTree(0,0);
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (IOException e) {
@@ -145,6 +145,8 @@ public class HBoxAdmin extends VBox {
                             year,
                             department
                     ));
+                    searchPanel.search();
+                    bManager.displayTree(0,0);
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (IOException e) {
@@ -161,6 +163,8 @@ public class HBoxAdmin extends VBox {
                 try {
                     BinManager bManager = new BinManager();
                     bManager.removeStagiaire(selectedStagiaire.getID());
+                    searchPanel.search();
+                    bManager.displayTree(0,0);
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (IOException e) {

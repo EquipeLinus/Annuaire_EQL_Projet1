@@ -19,7 +19,6 @@ import javafx.stage.Stage;
 
 public class ConnexionWindow extends VBox{
 
-    public static Administrator account = null;
     private Boolean labelIs = false;
     public ConnexionWindow(Stage stage, double width, double height) {
 
@@ -55,8 +54,8 @@ public class ConnexionWindow extends VBox{
 
         btnConnexion.setOnAction(e-> {
 
-            Application.account = AdministratorSorter.checkLogs(txtAdministrator.getText(),txtPassword.getText());
-            account = Application.account;
+            Administrator account = AdministratorSorter.checkLogs(txtAdministrator.getText(),txtPassword.getText());
+            Application.getInstance().setAccount(account);
 
             Label labelConnexionAnswer = new Label("");
 

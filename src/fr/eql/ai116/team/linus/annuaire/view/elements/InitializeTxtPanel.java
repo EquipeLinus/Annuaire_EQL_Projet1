@@ -6,6 +6,7 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -81,5 +82,15 @@ public class InitializeTxtPanel extends VBox {
         };
         sleeper.setOnSucceeded(event -> continuation.run());
         new Thread(sleeper).start();
+    }
+
+    public static void openWindow() {
+        InitializeTxtPanel init = new InitializeTxtPanel();
+        Scene secondScene = new Scene(init, 230, 100);
+
+        Stage newWindow = new Stage();
+        newWindow.setTitle("Please select initialization file");
+        newWindow.setScene(secondScene);
+        newWindow.show();
     }
 }
