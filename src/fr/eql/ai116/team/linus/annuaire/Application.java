@@ -34,7 +34,7 @@ public class Application extends javafx.application.Application {
     private double width = 1500;
     private double height = 900;
 
-    public Administrator account = null;
+    public static Administrator account = null;
     private TableView<Stagiaire> table;
 
     private SearchPanel searchPanel;

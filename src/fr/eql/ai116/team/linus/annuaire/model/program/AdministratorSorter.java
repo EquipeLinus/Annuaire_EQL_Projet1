@@ -60,7 +60,7 @@ public class AdministratorSorter {
 
     public static void createAdmin(String newAdminUsername , String newAdminPassword,String usernameCheck, String usernamePassword){
 
-        if(checkLogs(usernameCheck,usernamePassword).equals("Super Administrateur")){
+        if(checkLogs(usernameCheck,usernamePassword).getStatut().equals("Super Administrateur")){
             System.out.println(checkIfAdminExists(getListAdmins(),newAdminUsername) );
 
             if(checkIfAdminExists(getListAdmins(),newAdminUsername) == null){
@@ -160,29 +160,17 @@ public class AdministratorSorter {
     public static List<Administrator> getListAdmins(){
 
         List<Administrator> administratorsList = new ArrayList<>();
-        try (DataInputStream input = new DataInputStream(new FileInputStream(FILE))){
-            while (true){
-                try {
-                    String user = input.readUTF();
-                    String password = input.readUTF();
-                    String statut = input.readUTF();
-                    Administrator administrator = new Administrator(user,password,statut);
-                    administratorsList.add(administrator);
-                }
-                catch (EOFException e){
-                    break;
-                }
-            }
 
-        }
-        catch (FileNotFoundException e) {
-            logger.error("Unable to create " + FILE, e);
-        }
-        catch (IOException e) {
-            logger.error("Unable to operate on the " + FILE, e);
-        }
         return administratorsList;
     }
 
 
+    public static void modifyUsernameAdministrator(String newUsernameName, Administrator account) {
+        findAdministratorWithUsername(account.getUsername());
+    }
+
+    private static void findAdministratorWithUsername(String username) {
+
+
+    }
 }
