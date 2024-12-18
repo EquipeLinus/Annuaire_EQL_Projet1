@@ -44,8 +44,8 @@ public class ConnexionWindow extends VBox{
 
         Scene secondScene = new Scene(root, 500, 300);
         btnConnexion.setOnAction(e-> {
-             Administrator account = AdministratorSorter.checkLogs(txtAdministrator.getText(),txtPassword.getText());;
-            Application.account = account;
+            Administrator account = AdministratorSorter.checkLogs(txtAdministrator.getText(),txtPassword.getText());;
+            Application.getInstance().setAccount(account);
 
             Label labelConnexionAnswer = new Label("");
             if(account != null){

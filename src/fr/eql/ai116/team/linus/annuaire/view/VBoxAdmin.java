@@ -50,7 +50,6 @@ public class VBoxAdmin extends VBox {
 
     public VBoxAdmin(TableView<Stagiaire> table, SearchPanel searchPanel) {
         super();
-        //if (Application.account == null || AdministratorSorter.checkLogs(Application.account.getUsername(),Application.account.getPassword()) == null) return;
 
         vBoxFirstName = new VBox(5);
         lblFirstName = new Label("Prénom:");
