@@ -5,67 +5,104 @@ import fr.eql.ai116.team.linus.annuaire.Application;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.program.AdministratorSorter;
 import fr.eql.ai116.team.linus.annuaire.model.program.StagiairesSorter;
+import fr.eql.ai116.team.linus.annuaire.view.Clean;
 import fr.eql.ai116.team.linus.annuaire.view.elements.InitializeTxtPanel;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class ConnexionWindow extends VBox{
+public class ConnexionWindow extends VBox {
 
     private Boolean labelIs = false;
+
     public ConnexionWindow(Stage stage, double width, double height) {
 
         VBox root = new VBox(20);
 
         root.setAlignment(Pos.CENTER);
 
-        GridPane connexionBox = new GridPane();
+        VBox connexionBox = new VBox(5);
         connexionBox.setAlignment(Pos.CENTER);
         root.getChildren().add(connexionBox);
-        Label labelAdministrator = new Label("Username :");
-        TextField txtAdministrator= new TextField();
-        Label labelPassword = new Label("Password:");
-        TextField txtPassword = new TextField();
+        Label labelAdministrator = new Label("Nom d'utilisateur :");
+        TextField txtAdministrator = new TextField();
+
+        Label labelPassword = new Label("Mot de passe:");
+        PasswordField txtPassword = new PasswordField();
+
         Button btnConnexion = new Button("Se connecter");
+        connexionBox.setAlignment(Pos.CENTER_LEFT);
+        connexionBox.setMaxSize(200,300);
 
-        connexionBox.addRow(0,labelAdministrator,txtAdministrator);
-        connexionBox.addRow(1,labelPassword,txtPassword);
-        connexionBox.addRow(2,btnConnexion);
-        connexionBox.setVgap(20);
+        /**
+         * EMPTY REGIONS SALE PARCE QUE JE NE SAIS PAS COMMENT FAIRE
+         */
+        Region emptyRegion1 = new Region();
+        emptyRegion1.setPrefSize(1,10);
 
-        Scene connexionWindows = new Scene(root, 500, 300);
+        Region emptyRegion2 = new Region();
+        emptyRegion2.setPrefSize(1,10);
+
+        connexionBox.getChildren().addAll(labelAdministrator, txtAdministrator,emptyRegion1, labelPassword, txtPassword,emptyRegion2, btnConnexion);
+
+        Scene connexionWindows = new Scene(root, 300, 300);
 
         Stage connexionWindow = new Stage();
         connexionWindow.setTitle("Connexion");
         connexionWindow.setScene(connexionWindows);
 
-        connexionWindow.setX(stage.getX() + width/2 -200);
-        connexionWindow.setY(stage.getY() + height/2 -200);
+        connexionWindow.setX(stage.getX() + width / 2 - 200);
+        connexionWindow.setY(stage.getY() + height / 2 - 200);
 
         connexionWindow.show();
         Stage stageConnexion = (Stage) btnConnexion.getScene().getWindow();
 
-        btnConnexion.setOnAction(e-> {
+        txtAdministrator.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode().equals(KeyCode.ENTER)) {
+                    txtPassword.requestFocus();
+                }
+            }
+        });
 
-            Administrator account = AdministratorSorter.checkLogs(txtAdministrator.getText(),txtPassword.getText());
+        txtPassword.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode().equals(KeyCode.ENTER)) {
+                    btnConnexion.fire();
+                }
+            }
+        });
+
+        btnConnexion.setOnAction(e -> {
+
+            Administrator account = AdministratorSorter.checkLogs(txtAdministrator.getText(), txtPassword.getText());
             Application.getInstance().setAccount(account);
 
             Label labelConnexionAnswer = new Label("");
 
-            if(account != null){
+            if (account != null) {
                 System.out.println();
                 root.getChildren().clear();
                 labelConnexionAnswer.setText("Vous êtes connecté en tant que " + account.getUsername() + " avec les droits "
                         + account.getStatut());
 
-                if(StagiairesSorter.verifyIfStagiaireTxtIsEmpty(account)){
+                if (StagiairesSorter.verifyIfStagiaireTxtIsEmpty(account)) {
                     InitializeTxtPanel init = new InitializeTxtPanel();
                     Scene initialiseStagiaireWindows = new Scene(init, 230, 100);
 
@@ -84,10 +121,9 @@ public class ConnexionWindow extends VBox{
                 });
 
 
-
                 root.getChildren().add(labelConnexionAnswer);
 
-            }else if(!labelIs) {
+            } else if (!labelIs) {
                 labelConnexionAnswer.setText("L'identifiant ou le mot de passe est incorrect ");
                 root.getChildren().add(labelConnexionAnswer);
                 labelIs = true;
@@ -101,8 +137,10 @@ public class ConnexionWindow extends VBox{
         Task<Void> sleeper = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                try { Thread.sleep(millis); }
-                catch (InterruptedException e) { }
+                try {
+                    Thread.sleep(millis);
+                } catch (InterruptedException e) {
+                }
                 return null;
             }
         };
