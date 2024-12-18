@@ -160,7 +160,7 @@ public class AdministratorSorter {
     public static List<Administrator> getListAdmins(){
 
         List<Administrator> administratorsList = new ArrayList<>();
-        try (DataInputStream input = new DataInputStream(new FileInputStream(FILE))){
+        try (DataInputStream input = new DataInputStream(new FileInputStream(FOLDER + FILE))){
             while (true){
                 try {
                     String user = input.readUTF();
