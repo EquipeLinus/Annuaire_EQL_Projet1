@@ -1,4 +1,4 @@
-package fr.eql.ai116.team.linus.annuaire.view;
+package fr.eql.ai116.team.linus.annuaire.view.elements;
 
 import fr.eql.ai116.team.linus.annuaire.model.program.BinManager;
 import fr.eql.ai116.team.linus.annuaire.model.program.StagiairesSorter;
@@ -6,6 +6,7 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -16,7 +17,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class InitializeTxtPanel extends VBox {
@@ -82,5 +82,15 @@ public class InitializeTxtPanel extends VBox {
         };
         sleeper.setOnSucceeded(event -> continuation.run());
         new Thread(sleeper).start();
+    }
+
+    public static void openWindow() {
+        InitializeTxtPanel init = new InitializeTxtPanel();
+        Scene secondScene = new Scene(init, 230, 100);
+
+        Stage newWindow = new Stage();
+        newWindow.setTitle("Please select initialization file");
+        newWindow.setScene(secondScene);
+        newWindow.show();
     }
 }

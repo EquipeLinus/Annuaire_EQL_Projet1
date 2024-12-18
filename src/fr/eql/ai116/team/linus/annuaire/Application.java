@@ -2,39 +2,44 @@ package fr.eql.ai116.team.linus.annuaire;
 
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
-import fr.eql.ai116.team.linus.annuaire.model.program.BinManager;
-import fr.eql.ai116.team.linus.annuaire.view.AnchorPaneViewStagiaire;
-import fr.eql.ai116.team.linus.annuaire.view.ConnexionWindow;
-import fr.eql.ai116.team.linus.annuaire.view.InitializeTxtPanel;
-import fr.eql.ai116.team.linus.annuaire.view.SearchPanel;
-import fr.eql.ai116.team.linus.annuaire.view.VBoxAdmin;
-import javafx.application.HostServices;
+import fr.eql.ai116.team.linus.annuaire.model.program.ExportToPdf;
+import fr.eql.ai116.team.linus.annuaire.view.elements.AnchorPaneViewStagiaire;
+import fr.eql.ai116.team.linus.annuaire.view.elements.SearchPanel;
+import fr.eql.ai116.team.linus.annuaire.view.elements.VBoxAdmin;
+import fr.eql.ai116.team.linus.annuaire.view.windows.AdministratorWindow;
+import fr.eql.ai116.team.linus.annuaire.view.windows.ConnexionWindow;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.awt.Desktop;
-import java.io.File;
-import java.io.IOException;
-
 
 public class Application extends javafx.application.Application {
 
+    private static Application instance;
     private static final Logger log = LogManager.getLogger();
 
     private double width = 1500;
-    private double height = 800;
+    private double height = 900;
 
-    public static Administrator account = null;
+    public Administrator account = null;
+    private TableView<Stagiaire> table;
+
+    private SearchPanel searchPanel;
+    private HBox adminPanel;
+
+    public Application() {
+        super();
+        instance = this;
+    }
 
     public static void main(String[] args) {
         launch(args);
@@ -52,7 +57,7 @@ public class Application extends javafx.application.Application {
          */
 
         BorderPane centerPane = new BorderPane();
-        TableView<Stagiaire> table = new TableView<Stagiaire>();
+        table = new TableView<>();
 
         AnchorPaneViewStagiaire anchorPane = new AnchorPaneViewStagiaire(table);
         centerPane.setCenter(anchorPane);
@@ -65,20 +70,20 @@ public class Application extends javafx.application.Application {
         HBox topPane = new HBox();
         topPane.setPrefSize(width, height /6);
 
-        SearchPanel leftTopPane = new SearchPanel(anchorPane);
-        leftTopPane.setAlignment(Pos.CENTER_LEFT);
-        leftTopPane.setPrefSize(width /2, height /4);
+        searchPanel = new SearchPanel(anchorPane);
+        searchPanel.setAlignment(Pos.CENTER_LEFT);
+        searchPanel.setPrefSize(width /2, height /4);
 
 
         Pane rightTopPane = new Pane();
         rightTopPane.setPrefSize(width /2, height /4);
 
-        topPane.getChildren().addAll(leftTopPane,rightTopPane);
+        topPane.getChildren().addAll(searchPanel,rightTopPane);
         HBox btnPanel1 = new HBox(20);
         VBox btnPanel2 = new VBox(15);
 
         Button btnTutorial = new Button("Ressource");
-        Button btnAdmin = new Button("Account Admin");
+        Button btnPannelAdmin = new Button("Account Admin");
 
         Button btnConnexion = new Button("Connexion");
         Button btnExport = new Button("Exporter");
@@ -87,7 +92,7 @@ public class Application extends javafx.application.Application {
         btnExport.setMinWidth(120);
         btnExport.setMinHeight(40);
 
-        btnPanel1.getChildren().addAll(btnTutorial,btnAdmin);
+        btnPanel1.getChildren().addAll(btnTutorial,btnPannelAdmin);
         btnPanel1.relocate(120,-5);
 
         btnPanel2.getChildren().addAll(btnConnexion,btnExport);
@@ -97,63 +102,53 @@ public class Application extends javafx.application.Application {
 
         btnConnexion.setOnAction(e-> {
             ConnexionWindow connexionWindow = new ConnexionWindow(stage,width,height);
-            System.out.println(account);
         });
 
-        btnAdmin.setOnAction(e-> {
-            AdministratorWindow administratorWindow = new AdministratorWindow();
-            System.out.println(account);
+        btnExport.setOnAction(e-> {
+            ExportToPdf.exportAnchorPaneViewStagiaireToPdf(table);
+
         });
 
-        btnTutorial.setOnAction(e-> {
-
-            if (Desktop.isDesktopSupported()) {
-                try {
-                    File myFile = new File("test.pdf");
-                    Desktop.getDesktop().open(myFile);
-                } catch (IOException ex) {
-                    // no application registered for PDFs
-                }
-            }
-
-
-
-                });
-
-
-
+        btnPannelAdmin.setOnAction(e-> {
+            AdministratorWindow administratorWindow = new AdministratorWindow(stage,width,height);
+        });
 
 
         /**
          * Bottom Panel
          */
 
-        VBoxAdmin bottomPane = new VBoxAdmin(table, leftTopPane);
-        bottomPane.setPrefSize(width, height /20);
+        adminPanel = new HBox();
+        adminPanel.setAlignment(Pos.CENTER);
 
         root.setTop(topPane);
         root.setCenter(centerPane);
-        root.setBottom(bottomPane);
-
-
-        InitializeTxtPanel init = new InitializeTxtPanel();
-        Scene secondScene = new Scene(init, 230, 100);
-
-        // New window (Stage)
-        Stage newWindow = new Stage();
-        newWindow.setTitle("Second Stage");
-        newWindow.setScene(secondScene);
-        newWindow.show();
-
-
-        BinManager bManager = new BinManager();
-        bManager.clearFile();
-        bManager.initialize();
-        bManager.displayTree(0,0);
+        root.setBottom(adminPanel);
 
         stage.setTitle("Application stagiaire EQL");
         stage.setScene(scene);
         stage.setResizable(true);
         stage.show();
     }
+
+    public static Application getInstance() {
+        return instance;
+    }
+
+    public Administrator getAccount() {
+        return account;
+    }
+
+    public void setAccount(Administrator account) {
+        if (account != null) {
+            if (adminPanel.getChildren().isEmpty()) {
+                adminPanel.getChildren().add(new VBoxAdmin(table, searchPanel));
+            }
+        } else if (adminPanel.getChildren().size() > 1){
+            adminPanel.getChildren().remove(0);
+        }
+
+        this.account = account;
+    }
+
 }

@@ -1,8 +1,6 @@
-package fr.eql.ai116.team.linus.annuaire.view;
+package fr.eql.ai116.team.linus.annuaire.view.elements;
 
-import fr.eql.ai116.team.linus.annuaire.Application;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
-import fr.eql.ai116.team.linus.annuaire.model.program.AdministratorSorter;
 import fr.eql.ai116.team.linus.annuaire.model.program.BinManager;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -50,7 +48,6 @@ public class VBoxAdmin extends VBox {
 
     public VBoxAdmin(TableView<Stagiaire> table, SearchPanel searchPanel) {
         super();
-        //if (Application.account == null || AdministratorSorter.checkLogs(Application.account.getUsername(),Application.account.getPassword()) == null) return;
 
         vBoxFirstName = new VBox(5);
         lblFirstName = new Label("Prénom:");
