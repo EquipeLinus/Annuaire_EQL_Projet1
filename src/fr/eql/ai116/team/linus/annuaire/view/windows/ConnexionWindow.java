@@ -1,32 +1,21 @@
-package fr.eql.ai116.team.linus.annuaire.view;
+package fr.eql.ai116.team.linus.annuaire.view.windows;
 
 
 import fr.eql.ai116.team.linus.annuaire.Application;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.program.AdministratorSorter;
-import fr.eql.ai116.team.linus.annuaire.model.program.BinManager;
 import fr.eql.ai116.team.linus.annuaire.model.program.StagiairesSorter;
-import javafx.application.Platform;
+import fr.eql.ai116.team.linus.annuaire.view.elements.InitializeTxtPanel;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.HPos;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.io.File;
-import java.io.IOException;
-
 
 public class ConnexionWindow extends VBox{
 
@@ -52,7 +41,6 @@ public class ConnexionWindow extends VBox{
         connexionBox.addRow(2,btnConnexion);
         connexionBox.setVgap(20);
 
-
         Scene connexionWindows = new Scene(root, 500, 300);
 
         Stage connexionWindow = new Stage();
@@ -65,7 +53,6 @@ public class ConnexionWindow extends VBox{
         connexionWindow.show();
         Stage stageConnexion = (Stage) btnConnexion.getScene().getWindow();
 
-        System.out.println(btnConnexion.getScene());
         btnConnexion.setOnAction(e-> {
 
             Application.account = AdministratorSorter.checkLogs(txtAdministrator.getText(),txtPassword.getText());
@@ -80,16 +67,19 @@ public class ConnexionWindow extends VBox{
                         + account.getStatut());
 
                 if(StagiairesSorter.verifyIfStagiaireTxtIsEmpty(account)){
-
                     InitializeTxtPanel init = new InitializeTxtPanel();
                     Scene initialiseStagiaireWindows = new Scene(init, 230, 100);
 
                     // New window (Stage)
                     Stage newWindow = new Stage();
+
                     newWindow.setTitle("Initialisation stagiaire.txt");
                     newWindow.setScene(initialiseStagiaireWindows);
+                    newWindow.initModality(Modality.WINDOW_MODAL);
+                    newWindow.show();
 
                 }
+
                 delay(500, () -> {
                     stageConnexion.close();
                 });
@@ -120,7 +110,5 @@ public class ConnexionWindow extends VBox{
         sleeper.setOnSucceeded(event -> continuation.run());
         new Thread(sleeper).start();
     }
-
-
 
 }

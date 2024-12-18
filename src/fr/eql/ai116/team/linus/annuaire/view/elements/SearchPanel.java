@@ -1,4 +1,4 @@
-package fr.eql.ai116.team.linus.annuaire.view;
+package fr.eql.ai116.team.linus.annuaire.view.elements;
 
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
 import fr.eql.ai116.team.linus.annuaire.model.program.BinManager;
@@ -9,9 +9,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.VBox;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

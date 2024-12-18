@@ -1,4 +1,4 @@
-package fr.eql.ai116.team.linus.annuaire.view;
+package fr.eql.ai116.team.linus.annuaire.view.elements;
 
 import javafx.application.Platform;
 

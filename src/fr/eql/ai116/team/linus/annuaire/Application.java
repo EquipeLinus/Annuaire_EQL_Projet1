@@ -2,10 +2,12 @@ package fr.eql.ai116.team.linus.annuaire;
 
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
-import fr.eql.ai116.team.linus.annuaire.view.AnchorPaneViewStagiaire;
-import fr.eql.ai116.team.linus.annuaire.view.ConnexionWindow;
-import fr.eql.ai116.team.linus.annuaire.view.SearchPanel;
-import fr.eql.ai116.team.linus.annuaire.view.HBoxAdmin;
+import fr.eql.ai116.team.linus.annuaire.model.program.ExportToPdf;
+import fr.eql.ai116.team.linus.annuaire.view.windows.AdministratorWindow;
+import fr.eql.ai116.team.linus.annuaire.view.elements.AnchorPaneViewStagiaire;
+import fr.eql.ai116.team.linus.annuaire.view.windows.ConnexionWindow;
+import fr.eql.ai116.team.linus.annuaire.view.elements.SearchPanel;
+import fr.eql.ai116.team.linus.annuaire.view.elements.HBoxAdmin;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -70,7 +72,7 @@ public class Application extends javafx.application.Application {
         VBox btnPanel2 = new VBox(15);
 
         Button btnTutorial = new Button("Ressource");
-        Button btnAdmin = new Button("Account Admin");
+        Button btnPannelAdmin = new Button("Account Admin");
 
         Button btnConnexion = new Button("Connexion");
         Button btnExport = new Button("Exporter");
@@ -79,7 +81,7 @@ public class Application extends javafx.application.Application {
         btnExport.setMinWidth(120);
         btnExport.setMinHeight(40);
 
-        btnPanel1.getChildren().addAll(btnTutorial,btnAdmin);
+        btnPanel1.getChildren().addAll(btnTutorial,btnPannelAdmin);
         btnPanel1.relocate(120,-5);
 
         btnPanel2.getChildren().addAll(btnConnexion,btnExport);
@@ -89,7 +91,15 @@ public class Application extends javafx.application.Application {
 
         btnConnexion.setOnAction(e-> {
             ConnexionWindow connexionWindow = new ConnexionWindow(stage,width,height);
-            System.out.println(account);
+        });
+
+        btnExport.setOnAction(e-> {
+            ExportToPdf.exportAnchorPaneViewStagiaireToPdf(table);
+
+        });
+
+        btnPannelAdmin.setOnAction(e-> {
+            AdministratorWindow administratorWindow = new AdministratorWindow(stage,width,height);
         });
 
 
@@ -104,20 +114,12 @@ public class Application extends javafx.application.Application {
         root.setCenter(centerPane);
         root.setBottom(bottomPane);
 
-        /*
-        InitializeTxtPanel init = new InitializeTxtPanel();
-        Scene secondScene = new Scene(init, 230, 100);
-
-        // New window (Stage)
-        Stage newWindow = new Stage();
-        newWindow.setTitle("Second Stage");
-        newWindow.setScene(secondScene);
-        newWindow.show();
-         */
 
         stage.setTitle("Application stagiaire EQL");
         stage.setScene(scene);
         stage.setResizable(true);
         stage.show();
     }
+
+
 }
