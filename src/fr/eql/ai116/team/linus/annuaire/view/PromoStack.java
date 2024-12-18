@@ -33,15 +33,16 @@ public class PromoStack extends HBox {
 
     public void addPromo(String name) {
         if (name.isEmpty()) return;
+        String cleanedName = Clean.cleanPromo(name);
         promoTxt.setText("");
-        Button promoBtn = new Button(name);
+        Button promoBtn = new Button(cleanedName);
         promoBtn.setMinWidth(80);
         promoBtn.setMaxWidth(80);
 
         promoBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                removePromo(name);
+                removePromo(cleanedName);
             }
         });
 

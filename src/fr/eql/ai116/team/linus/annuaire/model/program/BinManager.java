@@ -31,7 +31,7 @@ public class BinManager {
         try {
             BinManager bManager = new BinManager();
             bManager.clearFile();
-            //bManager.writeNodeAtIndex(new Stagiaire("thomas", "duron", "ai116", 2024, 93), 0);
+            bManager.writeNodeAtIndex(new Stagiaire("thomas", "duron", "ai116", 2024, 93), 0);
             bManager.initialize();
             bManager.displayTree(0,0);
 
