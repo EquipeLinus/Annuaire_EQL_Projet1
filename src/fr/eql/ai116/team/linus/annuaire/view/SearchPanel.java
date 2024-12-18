@@ -36,15 +36,6 @@ public class SearchPanel extends GridPane {
         textFieldLastName.setPromptText("Entrez un nom");
         textFieldFirstName.setPromptText("Entrez un prénom");
 
-        /*
-        HBox row0 = new HBox();
-        row0.getChildren().addAll(textFieldPromo, promotionStack);
-        HBox row1 = new HBox();
-        row1.getChildren().addAll(textFieldLastName, textFieldFirstName, validerButton);
-
-        getChildren().addAll(row0,row1);
-        */
-
         setVgap(15);
         setHgap(12);
 
@@ -101,7 +92,7 @@ public class SearchPanel extends GridPane {
         List <Stagiaire> result = new ArrayList<>();
         String[] validatedPromos = promotionStack.getValidatedPromos();
 
-        if (validatedPromos == null) {
+        if (validatedPromos.length == 0) {
             result = binManager.getAll(0,new ArrayList<>());}
         else {
             for (String validatedPromo : validatedPromos) {
@@ -109,18 +100,6 @@ public class SearchPanel extends GridPane {
             }
         }
         return result;
-
-        /* TO DELETE if new solution works
-        List<Stagiaire> result = new ArrayList<>();
-
-        if (textFieldPromo.getText().isEmpty()) result = binManager.getAll(0,new ArrayList<>());
-        else {
-            for (String promo : textFieldPromo.getText().split(",")) {
-                result = binManager.searchPromo(Clean.cleanPromo(promo), 0, result);
-            }
-        }
-        return result;
-         */
     }
 
     private void addPromoStack() {
