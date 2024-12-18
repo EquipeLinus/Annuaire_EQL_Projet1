@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 public class TootipBorderPane extends BorderPane {
 
     Label lblConnectionInfo = new Label("Compte utilisateur");
+    Button btnAccountManagement = new Button("Gestion de compte");
 
     public TootipBorderPane(Stage stage, double width, double height) {
 
@@ -44,7 +45,7 @@ public class TootipBorderPane extends BorderPane {
         HBox topPanel = new HBox(20.);
 
         Button btnHelp = new Button("Aide");
-        Button btnAccountManagement = new Button("Gestion de compte");
+        btnAccountManagement.setVisible(false);
 
         topPanel.setPadding(new Insets(-5,0,0,0));
 
@@ -74,9 +75,11 @@ public class TootipBorderPane extends BorderPane {
         String message;
         if (Application.getInstance().getAccount()==null) {
             message = "Compte utilisateur (non connecté)";
+            btnAccountManagement.setVisible(false);
         } else {
             Administrator account = Application.getInstance().getAccount();
-            message = "Bienvenu " + account.getUsername() + " (" + account.getStatut() + ")";
+            message = "Bienvenu, " + account.getUsername() + " (" + account.getStatut() + ")";
+            btnAccountManagement.setVisible(true);
         }
         lblConnectionInfo.setText(message);
     }
