@@ -29,10 +29,10 @@ public class AdministratorSorter {
 
     public static void main(String[] args) {
 
-        //addSuperAdminToFile("Super User","Super Password","Super Administrateur");
+        addSuperAdminToFile("Super User","Super Password","Super Administrateur");
         //logger.info(getListAdmins().get(1).getStatut());
 
-       createAdmin("d","r","Super User","Super Password");
+       createAdmin("a","b","Super User","Super Password");
        removeAdmin("a","Super User","Super Password");
 
     }
@@ -60,7 +60,7 @@ public class AdministratorSorter {
 
     public static void createAdmin(String newAdminUsername , String newAdminPassword,String usernameCheck, String usernamePassword){
 
-        if(checkLogs(usernameCheck,usernamePassword).equals("Super Administrateur")){
+        if(checkLogs(usernameCheck,usernamePassword).getStatut().equals("Super Administrateur")){
             System.out.println(checkIfAdminExists(getListAdmins(),newAdminUsername) );
 
             if(checkIfAdminExists(getListAdmins(),newAdminUsername) == null){
@@ -160,7 +160,7 @@ public class AdministratorSorter {
     public static List<Administrator> getListAdmins(){
 
         List<Administrator> administratorsList = new ArrayList<>();
-        try (DataInputStream input = new DataInputStream(new FileInputStream(FOLDER + FILE))){
+        try (DataInputStream input = new DataInputStream(new FileInputStream(FILE))){
             while (true){
                 try {
                     String user = input.readUTF();

@@ -6,6 +6,8 @@ import fr.eql.ai116.team.linus.annuaire.model.program.AdministratorSorter;
 
 import fr.eql.ai116.team.linus.annuaire.view.elements.AnchorPaneViewAdministrators;
 import fr.eql.ai116.team.linus.annuaire.view.elements.AnchorPaneViewStagiaire;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -64,6 +66,19 @@ public class AdministratorWindow extends VBox {
         gridPaneModifyAccount.setVgap(10);
 
 
+        GridPane gridPaneDeleteAdmin = new GridPane();
+
+        Label labelDeleteAccount = new Label("Administrateur à supprimer");
+        labelDeleteAccount.setFont(new Font(24));
+
+        Label labelAdministratorToDelete = new Label("Username de l'administrateur à supprimer");
+        TextField txtAdministratorToDelete = new TextField();
+
+        Button btnDeleteAdministrator = new Button("Supprimer administrateur");
+
+        gridPaneDeleteAdmin.addRow(1, labelAdministratorToDelete, txtAdministratorToDelete, btnDeleteAdministrator);
+        gridPaneDeleteAdmin.setHgap(10);
+
         ;
 
         btnCreate.setOnAction(e-> {AdministratorSorter.createAdmin(
@@ -73,8 +88,18 @@ public class AdministratorWindow extends VBox {
             txtPassword.setText("");
         });
 
+        table.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Administrator>() {
+            @Override
+            public void changed(ObservableValue<? extends Administrator> observable, Administrator oldValue, Administrator newValue) {
+                if (newValue == null) return;
+                root.getChildren().addAll(labelDeleteAccount, gridPaneDeleteAdmin);
+                txtAdministratorToDelete.setText(newValue.getUsername());
+            }
+        });
 
-        root.getChildren().addAll(labelModifyAccount,gridPaneModifyAccount,labelListAdministrators,anchorPaneViewAdministrators,labelCreateAccount,gridPaneAddAdmin);
+
+        root.getChildren().addAll(labelModifyAccount,gridPaneModifyAccount,labelListAdministrators,anchorPaneViewAdministrators
+                    ,labelCreateAccount,gridPaneAddAdmin);
 
         Scene administrationWindows = new Scene(root, 1000, 800);
 
@@ -90,5 +115,18 @@ public class AdministratorWindow extends VBox {
 
 
     }
+
+        /* @Override
+        public void changed(ObservableValue<? extends Administrator> observable, Stagiaire oldValue, Stagiaire newValue) {
+            if (newValue == null) return;
+            txtFirstName.setText(newValue.getFirstName());
+            txtLastName.setText(newValue.getLastName());
+            txtPromotion.setText(newValue.getPromotion());
+            txtYear.setText(Integer.toString(newValue.getYear()));
+            txtDepartment.setText(Integer.toString(newValue.getDepartment()));
+
+            selectedStagiaire = newValue;
+            updateBtnBox();
+        }*/
 
 }
