@@ -1,66 +1,28 @@
 package fr.eql.ai116.team.linus.annuaire.model.program;
-
-
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.element.Table;
+/*
+import com.aspose.pdf.BorderInfo;
+import com.aspose.pdf.BorderSide;
+import com.aspose.pdf.Document;
+import com.aspose.pdf.Page;
+import com.aspose.pdf.Row;
+import com.aspose.pdf.Table;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
-
-
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import javafx.scene.layout.AnchorPane;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 
-import java.io.FileNotFoundException;
+import java.awt.Color;
+import java.io.IOException;
 
 
+ */
 public class ExportToPdf {
-
-    private static final Logger log = LogManager.getLogger(ExportToPdf.class);
-    /*
-    public static void exportAnchorPaneViewStagiaireToPdf(TableView<Stagiaire> tableAnchorPane) {
-        // Creating a PdfWriter
-        String dest = "addingTable.pdf";
-        PdfWriter writer = null;
-        try {
-            writer = new PdfWriter(dest);
-        } catch (FileNotFoundException e) {
-            log.info("erreur");
-        }
-
-        // Creating a PdfDocument
-        PdfDocument pdfDoc = new PdfDocument(writer);
-
-        // Creating a Document
-        Document document = new Document(pdfDoc);
-
-
-        // Creating a table object
-        float [] pointColumnWidths = {150F, 150F, 150F};
-        Table table = new Table(pointColumnWidths);
-
-        // Adding cell 1 to the table
-        Cell cell1 = new Cell();   // Creating a cell
-        cell1.add("Name");         // Adding content to the cell
-        table.addCell(cell1);      // Adding cell to the table
-
-    // Adding cell 2 to the table Cell
-        Cell cell2 = new Cell();       // Creating a cell
-        cell2.add("Raju");        // Adding content to the cell
-        table.addCell(cell2);     // Adding cell to the table
-
-        // Adding list to the document
-        document.add(table);
-
-        // Closing the document
-        document.close();
-    }
-    */
-
-    /*
+/*
     public static void exportAnchorPaneViewStagiaireToPdf(TableView<Stagiaire> tableAnchorPane) {
         try {
             PDDocument document = new PDDocument();
@@ -128,7 +90,7 @@ public class ExportToPdf {
         }
 
     }
-    */
+
     /*
     public static void exportAnchorPaneViewStagiaireToPdf(TableView<Stagiaire> tableAnchorPane) {
         Document doc = new Document();

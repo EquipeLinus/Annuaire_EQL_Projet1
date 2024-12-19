@@ -100,6 +100,7 @@ public class VBoxAdmin extends VBox {
                 updateBtnBox();
             }
         });
+        System.out.println();
 
         btnAdd.setOnAction(new EventHandler<ActionEvent>() {
             @Override
