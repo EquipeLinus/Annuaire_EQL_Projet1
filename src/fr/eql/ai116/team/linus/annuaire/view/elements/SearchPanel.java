@@ -3,7 +3,6 @@ package fr.eql.ai116.team.linus.annuaire.view.elements;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
 import fr.eql.ai116.team.linus.annuaire.model.program.BinManager;
 import fr.eql.ai116.team.linus.annuaire.view.Clean;
-import fr.eql.ai116.team.linus.annuaire.view.PromoStack;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;

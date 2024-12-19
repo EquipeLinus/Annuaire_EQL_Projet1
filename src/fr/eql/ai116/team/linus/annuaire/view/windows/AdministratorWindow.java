@@ -5,10 +5,10 @@ import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
 import fr.eql.ai116.team.linus.annuaire.model.program.AdministratorSorter;
 
-import fr.eql.ai116.team.linus.annuaire.model.program.StagiairesSorter;
 import fr.eql.ai116.team.linus.annuaire.view.elements.AnchorPaneViewAdministrators;
 import fr.eql.ai116.team.linus.annuaire.view.elements.AnchorPaneViewStagiaire;
-import fr.eql.ai116.team.linus.annuaire.view.elements.InitializeTxtPanel;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -18,7 +18,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -72,12 +71,28 @@ public class AdministratorWindow extends VBox {
         Label labelAdministrator = new Label("New Username:");
         TextField txtAdministrator= new TextField();
         Label labelPassword = new Label("New Password:");
-        PasswordField txtPassword = new PasswordField();
+        TextField txtPassword = new TextField();
         Button btnCreate = new Button("Créer administrateur");
 
         gridPaneAddAdmin.addRow(1,labelAdministrator,txtAdministrator,labelPassword,txtPassword,btnCreate);
         gridPaneAddAdmin.setHgap(10);
         gridPaneModifyAccount.setVgap(10);
+
+
+        GridPane gridPaneDeleteAdmin = new GridPane();
+
+        Label labelDeleteAccount = new Label("Administrateur à supprimer");
+        labelDeleteAccount.setFont(new Font(24));
+
+        Label labelAdministratorToDelete = new Label("Username de l'administrateur à supprimer");
+        TextField txtAdministratorToDelete = new TextField();
+
+        Button btnDeleteAdministrator = new Button("Supprimer administrateur");
+
+        gridPaneDeleteAdmin.addRow(1, labelAdministratorToDelete, txtAdministratorToDelete, btnDeleteAdministrator);
+        gridPaneDeleteAdmin.setHgap(10);
+
+        ;
 
         btnCreate.setOnAction(e-> {AdministratorSorter.createAdmin(
                 txtAdministrator.getText(),txtPassword.getText(),
@@ -86,6 +101,14 @@ public class AdministratorWindow extends VBox {
             txtPassword.setText("");
         });
 
+        table.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Administrator>() {
+            @Override
+            public void changed(ObservableValue<? extends Administrator> observable, Administrator oldValue, Administrator newValue) {
+                if (newValue == null) return;
+                root.getChildren().addAll(labelDeleteAccount, gridPaneDeleteAdmin);
+                txtAdministratorToDelete.setText(newValue.getUsername());
+            }
+        });
 
         root.getChildren().addAll(labelModifyAccount,gridPaneModifyAccount,labelListAdministrators,anchorPaneViewAdministrators,labelCreateAccount,gridPaneAddAdmin);
 
