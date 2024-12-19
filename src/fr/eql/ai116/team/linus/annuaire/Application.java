@@ -34,7 +34,7 @@ public class Application extends javafx.application.Application {
     private double width = 1280;
     private double height = 720;
 
-    public static Administrator account = null;
+    private static Administrator account = null;
     private TableView<Stagiaire> table;
 
     private SearchPanel searchPanel;
@@ -93,6 +93,9 @@ public class Application extends javafx.application.Application {
         /**
          * Scene & Stage setup
          */
+
+        setAccount(new Administrator("fake user", "fake mdp", "Super Administrateur"));
+
         root.setTop(topPane);
         root.setCenter(centerPane);
         root.setBottom(adminPanel);

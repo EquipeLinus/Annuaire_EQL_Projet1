@@ -54,7 +54,7 @@ public class AdministratorWindow extends VBox {
 
             if(!txtUsernameChange.getText().equals("")){
 
-                AdministratorSorter.modifyUsernameAdministrator(txtUsernameChange.getText(),Application.account);
+                AdministratorSorter.modifyUsernameAdministrator(txtUsernameChange.getText(),Application.getInstance().getAccount());
             }
 
         });
