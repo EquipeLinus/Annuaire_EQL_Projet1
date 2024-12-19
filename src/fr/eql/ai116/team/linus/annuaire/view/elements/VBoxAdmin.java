@@ -75,9 +75,9 @@ public class VBoxAdmin extends VBox {
         vBoxDepartment.getChildren().addAll(lblDepartment, txtDepartment);
 
         vBoxBtn = new VBox(5);
-        btnAdd = new Button("Add");
-        btnModify = new Button("Modify");
-        btnDelete = new Button("Delete");
+        btnAdd = new Button("Ajouter");
+        btnModify = new Button("Modifier");
+        btnDelete = new Button("Supprimer");
         vBoxBtn.getChildren().addAll(btnAdd, btnDelete);
 
         HBox generalBox = new HBox(5);

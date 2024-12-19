@@ -2,24 +2,32 @@ package fr.eql.ai116.team.linus.annuaire.view.elements;
 
 import fr.eql.ai116.team.linus.annuaire.Application;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
+import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
 import fr.eql.ai116.team.linus.annuaire.view.windows.AdministratorWindow;
 import fr.eql.ai116.team.linus.annuaire.view.windows.ConnexionWindow;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 
 public class TootipBorderPane extends BorderPane {
     boolean isLoggedIn = false;
+
+
+
+
     Label lblConnectionInfo = new Label("Compte utilisateur");
     Button btnAccountManagement = new Button("Gestion de compte");
 
@@ -31,7 +39,7 @@ public class TootipBorderPane extends BorderPane {
         VBox rightPanel = new VBox(10.);
 
         Button btnConnexion = new Button("Connexion");
-        Button btnDeconnexion = new Button("Déconnexion");
+
         Button btnExport = new Button("Exporter");
 
         btnConnexion.setMinWidth(120);
@@ -60,7 +68,6 @@ public class TootipBorderPane extends BorderPane {
         lblConnectionInfo.setMaxWidth(350);
         lblConnectionInfo.setMinWidth(350);
 
-
         btnConnexion.setOnAction(e-> {
             ConnexionWindow connexionWindow = new ConnexionWindow(stage, width, height);
             if (!isLoggedIn) {
@@ -78,8 +85,8 @@ public class TootipBorderPane extends BorderPane {
         });
 
 
-        //toggleLogInLogOut(btnConnexion);
-        //});
+                //toggleLogInLogOut(btnConnexion);
+
 
 
 
@@ -90,7 +97,7 @@ public class TootipBorderPane extends BorderPane {
         btnAccountManagement.setOnAction(e-> {
             AdministratorWindow administratorWindow = new AdministratorWindow(stage,width,height);
         });
-
+        /////Bouton pour obtenir les PDF instruction soit administrateur ou super administrateur////////
         btnHelp.setOnAction(e-> {
             if (Desktop.isDesktopSupported()) {
                 try {
@@ -122,4 +129,24 @@ public class TootipBorderPane extends BorderPane {
         }
         lblConnectionInfo.setText(message);
     }
+    // méthode bouton connexion déconnexion
+    public void toggleLogInLogOut (Button button){
+       // Variable pour suivre l'état de connexion
+
+        if (isLoggedIn) {
+            button.setText("Connexion");
+            isLoggedIn = false;
+        }else{
+            button.setText("Déconnexion");
+            isLoggedIn= true;
+            btnAccountManagement.setVisible(false);
+
+
+
+
+
+        }
+
+    }
+
 }
