@@ -6,9 +6,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.EOFException;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,22 +72,19 @@ public class StagiairesSorter {
     public static boolean verifyIfStagiaireTxtIsEmpty(Administrator account) {
 
         if(account.getStatut().equals("Administrateur") || account.getStatut().equals("Super Administrateur")){
-            try {
+            try(RandomAccessFile output = new RandomAccessFile("resources/datas.bin","rw")){
 
-                FileReader fr = new FileReader(path);
-                BufferedReader br = new BufferedReader(fr);
-                if (br.readLine() == null) {
+                output.seek(output.length());
+                if(output.length() == 0){
                     return true;
                 }
-                else {
-                    return false;
-                }
 
-            } catch (FileNotFoundException e) {
-                logger.error("Unable to open the " + path, e);
             }
-            catch (IOException e) {
-                logger.error("Unable to operate on the " + path, e);
+            catch (FileNotFoundException e){
+                logger.error("The file was not found ");
+            }
+            catch (IOException e){
+                logger.error("L'écriture n'a pas marché ");
             }
         }
 

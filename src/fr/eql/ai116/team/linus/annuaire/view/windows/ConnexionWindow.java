@@ -35,15 +35,13 @@ public class ConnexionWindow extends VBox {
 
         root.setAlignment(Pos.CENTER);
 
-        VBox connexionBox = new VBox(5);
+        GridPane connexionBox = new GridPane();
         connexionBox.setAlignment(Pos.CENTER);
         root.getChildren().add(connexionBox);
-        Label labelAdministrator = new Label("Nom d'utilisateur :");
-        TextField txtAdministrator = new TextField();
-
-        Label labelPassword = new Label("Mot de passe:");
+        Label labelAdministrator = new Label("Username :");
+        TextField txtAdministrator= new TextField();
+        Label labelPassword = new Label("Password:");
         PasswordField txtPassword = new PasswordField();
-
         Button btnConnexion = new Button("Se connecter");
         connexionBox.setAlignment(Pos.CENTER_LEFT);
         connexionBox.setMaxSize(200,300);
@@ -54,19 +52,19 @@ public class ConnexionWindow extends VBox {
         Region emptyRegion1 = new Region();
         emptyRegion1.setPrefSize(1,10);
 
-        Region emptyRegion2 = new Region();
-        emptyRegion2.setPrefSize(1,10);
+        connexionBox.addRow(0,labelAdministrator,txtAdministrator);
+        connexionBox.addRow(1,labelPassword,txtPassword);
+        connexionBox.addRow(2,btnConnexion);
+        connexionBox.setVgap(20);
 
-        connexionBox.getChildren().addAll(labelAdministrator, txtAdministrator,emptyRegion1, labelPassword, txtPassword,emptyRegion2, btnConnexion);
-
-        Scene connexionWindows = new Scene(root, 300, 300);
+        Scene connexionWindows = new Scene(root, 500, 300);
 
         Stage connexionWindow = new Stage();
         connexionWindow.setTitle("Connexion");
         connexionWindow.setScene(connexionWindows);
 
-        connexionWindow.setX(stage.getX() + width / 2 - 200);
-        connexionWindow.setY(stage.getY() + height / 2 - 200);
+        connexionWindow.setX(stage.getX() + width/2 -200);
+        connexionWindow.setY(stage.getY() + height/2 -200);
 
         connexionWindow.show();
         Stage stageConnexion = (Stage) btnConnexion.getScene().getWindow();
@@ -137,10 +135,8 @@ public class ConnexionWindow extends VBox {
         Task<Void> sleeper = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                try {
-                    Thread.sleep(millis);
-                } catch (InterruptedException e) {
-                }
+                try { Thread.sleep(millis); }
+                catch (InterruptedException e) { }
                 return null;
             }
         };

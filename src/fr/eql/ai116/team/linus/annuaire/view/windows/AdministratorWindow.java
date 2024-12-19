@@ -12,6 +12,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -20,8 +21,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.Objects;
 
 
 public class AdministratorWindow extends VBox {
@@ -38,16 +37,27 @@ public class AdministratorWindow extends VBox {
 
         Label labelUsernameChange = new Label("New Username:");
         TextField txtUsernameChange = new TextField();
-        Label labelPasswordChange = new Label("New Password:");
-        TextField txtPasswordChange = new TextField();
-        Label labelConfirmationPasswordChange = new Label("Confirm new password:");
-        TextField txtConfirmationPasswordChange = new TextField();
-        Button btnModify = new Button("Modifier information");
+        Button btnModifyUsername = new Button("Modifier username");
 
-        gridPaneModifyAccount.addRow(1,labelUsernameChange,txtUsernameChange);
-        gridPaneModifyAccount.addRow(2,labelPasswordChange,txtPasswordChange,labelConfirmationPasswordChange,txtConfirmationPasswordChange,btnModify);
+        Label labelPasswordChange = new Label("New Password:");
+        PasswordField txtPasswordChange = new PasswordField();
+        Label labelConfirmationPasswordChange = new Label("Confirm new password:");
+        PasswordField txtConfirmationPasswordChange = new PasswordField();
+        Button btnModifyPassword = new Button("Modifier password");
+
+        gridPaneModifyAccount.addRow(1,labelUsernameChange,txtUsernameChange,btnModifyUsername);
+        gridPaneModifyAccount.addRow(2,labelPasswordChange,txtPasswordChange,labelConfirmationPasswordChange,txtConfirmationPasswordChange,btnModifyPassword);
         gridPaneModifyAccount.setVgap(10);
         gridPaneModifyAccount.setHgap(10);
+
+        btnModifyUsername.setOnAction(e-> {
+
+            if(!txtUsernameChange.getText().equals("")){
+
+                AdministratorSorter.modifyUsernameAdministrator(txtUsernameChange.getText(),Application.getInstance().getAccount());
+            }
+
+        });
 
         Label labelListAdministrators = new Label("Liste des administrateurs");
         AnchorPaneViewAdministrators anchorPaneViewAdministrators = new AnchorPaneViewAdministrators(table);
@@ -100,9 +110,7 @@ public class AdministratorWindow extends VBox {
             }
         });
 
-
-        root.getChildren().addAll(labelModifyAccount,gridPaneModifyAccount,labelListAdministrators,anchorPaneViewAdministrators
-                    ,labelCreateAccount,gridPaneAddAdmin);
+        root.getChildren().addAll(labelModifyAccount,gridPaneModifyAccount,labelListAdministrators,anchorPaneViewAdministrators,labelCreateAccount,gridPaneAddAdmin);
 
         Scene administrationWindows = new Scene(root, 1000, 800);
 
@@ -118,18 +126,5 @@ public class AdministratorWindow extends VBox {
 
 
     }
-
-        /* @Override
-        public void changed(ObservableValue<? extends Administrator> observable, Stagiaire oldValue, Stagiaire newValue) {
-            if (newValue == null) return;
-            txtFirstName.setText(newValue.getFirstName());
-            txtLastName.setText(newValue.getLastName());
-            txtPromotion.setText(newValue.getPromotion());
-            txtYear.setText(Integer.toString(newValue.getYear()));
-            txtDepartment.setText(Integer.toString(newValue.getDepartment()));
-
-            selectedStagiaire = newValue;
-            updateBtnBox();
-        }*/
 
 }
