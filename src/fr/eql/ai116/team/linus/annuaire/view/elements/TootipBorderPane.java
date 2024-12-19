@@ -23,13 +23,12 @@ import java.io.File;
 import java.io.IOException;
 
 public class TootipBorderPane extends BorderPane {
-    boolean isLoggedIn = false;
-
-
-
 
     Label lblConnectionInfo = new Label("Compte utilisateur");
     Button btnAccountManagement = new Button("Gestion de compte");
+    Button btnConnexion = new Button("Connexion");
+    boolean isLoggedIn = Application.getInstance().getAccount() != null;
+
 
     public TootipBorderPane(Stage stage, double width, double height) {
 
@@ -38,7 +37,6 @@ public class TootipBorderPane extends BorderPane {
          */
         VBox rightPanel = new VBox(10.);
 
-        Button btnConnexion = new Button("Connexion");
 
         Button btnExport = new Button("Exporter");
 
@@ -47,8 +45,8 @@ public class TootipBorderPane extends BorderPane {
         btnExport.setMinWidth(120);
         btnExport.setMinHeight(40);
 
-        rightPanel.setPadding(new Insets(0,100,20,0));
-        rightPanel.getChildren().addAll(btnConnexion,btnExport);
+        rightPanel.setPadding(new Insets(0, 100, 20, 0));
+        rightPanel.getChildren().addAll(btnConnexion, btnExport);
         setRight(rightPanel);
 
         /**
@@ -59,52 +57,40 @@ public class TootipBorderPane extends BorderPane {
         Button btnHelp = new Button("Aide");
         btnAccountManagement.setVisible(false);
 
-        topPanel.setPadding(new Insets(-5,0,0,0));
+        topPanel.setPadding(new Insets(-5, 0, 0, 0));
 
         topPanel.setAlignment(Pos.CENTER_LEFT);
-        topPanel.getChildren().addAll(btnHelp,btnAccountManagement,lblConnectionInfo);
+        topPanel.getChildren().addAll(btnHelp, btnAccountManagement, lblConnectionInfo);
         setTop(topPanel);
 
         lblConnectionInfo.setMaxWidth(350);
         lblConnectionInfo.setMinWidth(350);
 
-        btnConnexion.setOnAction(e-> {
-            ConnexionWindow connexionWindow = new ConnexionWindow(stage, width, height);
-            if (!isLoggedIn) {
-
-                btnConnexion.setText("Déconnexion");
-                btnAccountManagement.setVisible(false);
+        btnConnexion.setOnAction(e -> {
+             if(!isLoggedIn) {
+                ConnexionWindow connexionWindow = new ConnexionWindow(stage, width, height);
             } else {
-                // Si l'utilisateur est connecté, fermer la fenêtre de connexion
-                if (connexionWindow != null) {
 
-                    isLoggedIn = false; // L'utilisateur est maintenant déconnecté
-                    btnConnexion.setText("Connexion");
-                }
+                 Application.getInstance().setAccount(null);
             }
         });
 
 
-                //toggleLogInLogOut(btnConnexion);
-
-
-
-
-        btnExport.setOnAction(e-> {
+        btnExport.setOnAction(e -> {
             //ExportToPdf.exportAnchorPaneViewStagiaireToPdf(table);
         });
 
-        btnAccountManagement.setOnAction(e-> {
-            AdministratorWindow administratorWindow = new AdministratorWindow(stage,width,height);
+        btnAccountManagement.setOnAction(e -> {
+            AdministratorWindow administratorWindow = new AdministratorWindow(stage, width, height);
         });
-        /////Bouton pour obtenir les PDF instruction soit administrateur ou super administrateur////////
-        btnHelp.setOnAction(e-> {
+
+        btnHelp.setOnAction(e -> {
             if (Desktop.isDesktopSupported()) {
                 try {
-                    if ( Application.getInstance().getAccount() == null) {
+                    if (Application.getInstance().getAccount() == null) {
                         File myFile = new File("test.pdf");
                         Desktop.getDesktop().open(myFile);
-                    }else {
+                    } else {
                         File myFile = new File("resources/test2.pdf");
                         Desktop.getDesktop().open(myFile);
                     }
@@ -117,36 +103,33 @@ public class TootipBorderPane extends BorderPane {
     }
 
     public void updateConnectionInfo() {
+        isLoggedIn = Application.getInstance().getAccount() != null;
 
         String message;
-        if (Application.getInstance().getAccount()==null) {
+        if (!isLoggedIn) {
+            btnConnexion.setText("Connexion");
             message = "Compte utilisateur (non connecté)";
             btnAccountManagement.setVisible(false);
+
         } else {
             Administrator account = Application.getInstance().getAccount();
+            btnConnexion.setText("Déconnexion");
             message = "Bienvenu, " + account.getUsername() + " (" + account.getStatut() + ")";
             btnAccountManagement.setVisible(true);
         }
         lblConnectionInfo.setText(message);
     }
-    // méthode bouton connexion déconnexion
-    public void toggleLogInLogOut (Button button){
-       // Variable pour suivre l'état de connexion
-
-        if (isLoggedIn) {
-            button.setText("Connexion");
-            isLoggedIn = false;
-        }else{
-            button.setText("Déconnexion");
-            isLoggedIn= true;
-            btnAccountManagement.setVisible(false);
 
 
+    private void changeBoutonText() {
 
+        boolean isLoggedIn = Application.getInstance().getAccount() != null;
 
-
+        if (!isLoggedIn) {
+            btnConnexion.setText("Déconnexion");
+        } else {
+            // Si l'utilisateur est connecté, fermer la fenêtre de connexion
+            btnConnexion.setText("Connexion");
         }
-
     }
-
 }
