@@ -23,22 +23,21 @@ public class AnchorPaneViewAdministrators extends AnchorPane {
         super();
         this.table = table;
 
-        TableColumn<Administrator, String> usernameCol = new TableColumn<>("Username");
+        TableColumn<Administrator, String> usernameCol = new TableColumn<>("Identifiant administrateur(s) existant");
         usernameCol.setMinWidth(200);
         usernameCol.setCellValueFactory(new PropertyValueFactory<Administrator, String>("username"));
-
-        TableColumn<Administrator, String> passwordCol = new TableColumn<>("Password");
-        passwordCol.setMinWidth(200);
-        passwordCol.setCellValueFactory(new PropertyValueFactory<Administrator, String>("Password"));
 
         Button btnDelete = new Button("Delete");
 
 
-        table.getColumns().addAll(usernameCol,passwordCol);
+        table.getColumns().addAll(usernameCol);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        setTable(AdministratorSorter.getListAdmins());
+        List<Administrator> test = new ArrayList<>();
+        test.add(new Administrator("allo","",""));
+        test.add(new Administrator("all1","",""));
 
+        setTable(test);
 
         getChildren().add(table);
 

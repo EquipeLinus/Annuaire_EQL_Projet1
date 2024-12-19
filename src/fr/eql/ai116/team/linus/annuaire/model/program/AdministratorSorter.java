@@ -32,7 +32,7 @@ public class AdministratorSorter {
         //addSuperAdminToFile("Super User","Super Password","Super Administrateur");
         //logger.info(getListAdmins().get(1).getStatut());
 
-       createAdmin("d","r","Super User","Super Password");
+       createAdmin("d","r","Super Administrateur");
        removeAdmin("a","Super User","Super Password");
 
     }
@@ -58,9 +58,9 @@ public class AdministratorSorter {
     }
 
 
-    public static void createAdmin(String newAdminUsername , String newAdminPassword,String usernameCheck, String usernamePassword){
+    public static void createAdmin(String newAdminUsername , String newAdminPassword,String creatorStatus){
 
-        if(checkLogs(usernameCheck,usernamePassword).getStatut().equals("Super Administrateur")){
+        if(creatorStatus.equals("Super Administrateur")){
             System.out.println(checkIfAdminExists(getListAdmins(),newAdminUsername) );
 
             if(checkIfAdminExists(getListAdmins(),newAdminUsername) == null){

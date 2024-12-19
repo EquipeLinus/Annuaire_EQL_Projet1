@@ -34,12 +34,14 @@ public class Application extends javafx.application.Application {
     private double width = 1280;
     private double height = 720;
 
-    private static Administrator account = null;
+    private Administrator account = null;
     private TableView<Stagiaire> table;
 
     private SearchPanel searchPanel;
     private TootipBorderPane tooltipPanel;
     private HBox adminPanel;
+
+    private Stage currentPopup = null;
 
     public Application() {
         super();
@@ -137,4 +139,16 @@ public class Application extends javafx.application.Application {
         }
     }
 
+    public Stage getCurrentPopup() {
+        return currentPopup;
+    }
+
+    public void setCurrentPopup(Stage currentPopup) {
+
+        if (this.currentPopup != null) {
+            this.currentPopup.close();
+        }
+        this.currentPopup = currentPopup;
+        this.currentPopup.show();
+    }
 }

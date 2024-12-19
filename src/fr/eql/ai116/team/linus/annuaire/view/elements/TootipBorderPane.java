@@ -69,7 +69,7 @@ public class TootipBorderPane extends BorderPane {
         });
 
         btnAccountManagement.setOnAction(e-> {
-            AdministratorWindow administratorWindow = new AdministratorWindow(stage,width,height);
+            AdministratorWindow administratorWindow = new AdministratorWindow(stage);
         });
 
         btnHelp.setOnAction(e-> {

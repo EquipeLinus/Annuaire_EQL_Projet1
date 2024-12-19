@@ -35,16 +35,18 @@ public class ConnexionWindow extends VBox {
 
         root.setAlignment(Pos.CENTER);
 
-        GridPane connexionBox = new GridPane();
-        connexionBox.setAlignment(Pos.CENTER);
-        root.getChildren().add(connexionBox);
-        Label labelAdministrator = new Label("Username :");
-        TextField txtAdministrator= new TextField();
-        Label labelPassword = new Label("Password:");
+        Label labelAdministrator = new Label("Nom d'utilisateur :");
+        TextField txtAdministrator = new TextField();
+
+        Label labelPassword = new Label("Mot de passe:");
         PasswordField txtPassword = new PasswordField();
+
         Button btnConnexion = new Button("Se connecter");
+
+        VBox connexionBox = new VBox(5);
         connexionBox.setAlignment(Pos.CENTER_LEFT);
         connexionBox.setMaxSize(200,300);
+        root.getChildren().add(connexionBox);
 
         /**
          * EMPTY REGIONS SALE PARCE QUE JE NE SAIS PAS COMMENT FAIRE
@@ -52,12 +54,12 @@ public class ConnexionWindow extends VBox {
         Region emptyRegion1 = new Region();
         emptyRegion1.setPrefSize(1,10);
 
-        connexionBox.addRow(0,labelAdministrator,txtAdministrator);
-        connexionBox.addRow(1,labelPassword,txtPassword);
-        connexionBox.addRow(2,btnConnexion);
-        connexionBox.setVgap(20);
+        Region emptyRegion2 = new Region();
+        emptyRegion2.setPrefSize(1,10);
 
-        Scene connexionWindows = new Scene(root, 500, 300);
+        connexionBox.getChildren().addAll(labelAdministrator, txtAdministrator,emptyRegion1, labelPassword, txtPassword,emptyRegion2, btnConnexion);
+
+        Scene connexionWindows = new Scene(root, 300, 300);
 
         Stage connexionWindow = new Stage();
         connexionWindow.setTitle("Connexion");
@@ -65,8 +67,8 @@ public class ConnexionWindow extends VBox {
 
         connexionWindow.setX(stage.getX() + width/2 -200);
         connexionWindow.setY(stage.getY() + height/2 -200);
+        Application.getInstance().setCurrentPopup(connexionWindow);
 
-        connexionWindow.show();
         Stage stageConnexion = (Stage) btnConnexion.getScene().getWindow();
 
         txtAdministrator.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -106,17 +108,12 @@ public class ConnexionWindow extends VBox {
 
                     // New window (Stage)
                     Stage newWindow = new Stage();
-
                     newWindow.setTitle("Initialisation stagiaire.txt");
                     newWindow.setScene(initialiseStagiaireWindows);
-                    newWindow.initModality(Modality.WINDOW_MODAL);
-                    newWindow.show();
-
+                    Application.getInstance().setCurrentPopup(newWindow);
                 }
 
-                delay(500, () -> {
-                    stageConnexion.close();
-                });
+                delay(500, stageConnexion::close);
 
 
                 root.getChildren().add(labelConnexionAnswer);
