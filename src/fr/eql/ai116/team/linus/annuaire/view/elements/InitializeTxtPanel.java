@@ -1,15 +1,18 @@
 package fr.eql.ai116.team.linus.annuaire.view.elements;
 
+import fr.eql.ai116.team.linus.annuaire.Application;
 import fr.eql.ai116.team.linus.annuaire.model.program.BinManager;
 import fr.eql.ai116.team.linus.annuaire.model.program.StagiairesSorter;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -19,21 +22,26 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 
+// Pop up initialisation fichier
 public class InitializeTxtPanel extends VBox {
-
-    private TextField txtFilePath = new TextField("Enter file path...");
+    private Label textFile = new Label("Entrez un chemin d'accès");
+    private TextField txtFilePath = new TextField("chemin d'accès au fichier...");
     private Button btnFilePath = new Button("Select file");
     private Button btnValidate = new Button("Valider");
+    private Label lblInfo = new Label("");
 
     public InitializeTxtPanel() {
-        setAlignment(Pos.CENTER);
-        setSpacing(10.);
 
-        HBox filePathBox = new HBox(5.);
-        filePathBox.getChildren().addAll(txtFilePath, btnFilePath);
+        GridPane filePathBox = new GridPane();
+        filePathBox.addRow(3,textFile);
+        filePathBox.addRow(4,txtFilePath,btnFilePath);
+        filePathBox.addRow(6,btnValidate, lblInfo);
 
-        Label lblInfo = new Label("");
-        getChildren().addAll(filePathBox, btnValidate, lblInfo);
+        getChildren().addAll(filePathBox);
+        filePathBox.setAlignment(Pos.CENTER);
+        filePathBox.setVgap(5);
+        filePathBox.setHgap(10);
+
 
         btnFilePath.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -86,11 +94,11 @@ public class InitializeTxtPanel extends VBox {
 
     public static void openWindow() {
         InitializeTxtPanel init = new InitializeTxtPanel();
-        Scene secondScene = new Scene(init, 230, 100);
-
+        Scene secondScene = new Scene(init, 300, 120);
         Stage newWindow = new Stage();
         newWindow.setTitle("Please select initialization file");
         newWindow.setScene(secondScene);
-        newWindow.show();
+        Application.getInstance().setCurrentPopup(newWindow);
+
     }
 }

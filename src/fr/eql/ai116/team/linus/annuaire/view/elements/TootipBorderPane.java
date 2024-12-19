@@ -120,16 +120,4 @@ public class TootipBorderPane extends BorderPane {
         lblConnectionInfo.setText(message);
     }
 
-
-    private void changeBoutonText() {
-
-        boolean isLoggedIn = Application.getInstance().getAccount() != null;
-
-        if (!isLoggedIn) {
-            btnConnexion.setText("Déconnexion");
-        } else {
-            // Si l'utilisateur est connecté, fermer la fenêtre de connexion
-            btnConnexion.setText("Connexion");
-        }
-    }
 }

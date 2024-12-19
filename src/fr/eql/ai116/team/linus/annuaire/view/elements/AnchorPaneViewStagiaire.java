@@ -53,7 +53,7 @@ public class AnchorPaneViewStagiaire extends AnchorPane {
         } catch (FileNotFoundException e) {
             logger.info("Fichier non trouvé");
         } catch (IOException e) {
-            logger.info("PErsonne dans le fichier");
+            logger.info("Personne dans le fichier");
         }
 
         getChildren().add(table);
