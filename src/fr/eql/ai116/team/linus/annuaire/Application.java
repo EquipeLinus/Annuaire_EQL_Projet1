@@ -77,7 +77,7 @@ public class Application extends javafx.application.Application {
          */
 
         searchPanel = new SearchPanel(anchorPane);
-        searchPanel.setAlignment(Pos.BOTTOM_LEFT);
+        searchPanel.setAlignment(Pos.CENTER_LEFT);
         searchPanel.setPadding(new Insets(0,0,5,20));
 
         tooltipPanel = new TootipBorderPane(stage,width,height);
