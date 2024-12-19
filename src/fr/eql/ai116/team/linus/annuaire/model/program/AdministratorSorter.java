@@ -29,68 +29,188 @@ public class AdministratorSorter {
 
     public static void main(String[] args) {
 
-        //addSuperAdminToFile("Super User","Super Password","Super Administrateur");
-        //logger.info(getListAdmins().get(1).getStatut());
+//      addAdministratorToFile("Ad","Dors","Administrateur");
+          addAdministratorToFile("re","Rastors","Administrateur");
+//        logger.info(getListAdmins());
 
-       createAdmin("d","r","Super Administrateur");
-       removeAdmin("a","Super User","Super Password");
+        //modifyAdministrator("Adk","Adk", "Dorsee","Administrateur");
 
     }
 
-    private static void removeAdmin(String usernameChoiceDelete, String usernameCheck, String usernamePassword) {
-//        File ressourcesFolder = new File(FOLDER);
-//        ressourcesFolder.mkdir();
-//
-//        try(RandomAccessFile output = new RandomAccessFile(FILE,"rw")){
-//
-//            output.seek(output.length());
-//            output.writeUTF(username);
-//            output.writeUTF(password);
-//            output.writeUTF(statut);
-//
-//        }
-//        catch (FileNotFoundException e){
-//            logger.error("The file was not found ");
-//        }
-//        catch (IOException e){
-//            logger.error("L'écriture n'a pas marché ");
-//        }
+    private static void modifyAdministrator(String OldUsername ,String NewUsername,String NewPassword, String statut) {
+        removeAdministrator(OldUsername);
+        addAdministratorToFile(NewUsername,NewPassword,statut);
     }
 
+    private static void removeAdministrator(String usernameWanted) {
 
-    public static void createAdmin(String newAdminUsername , String newAdminPassword,String creatorStatus){
+        String username ="";
+        int nextValue = 0;
+        int previousValue = 0;
 
-        if(creatorStatus.equals("Super Administrateur")){
-            System.out.println(checkIfAdminExists(getListAdmins(),newAdminUsername) );
+        try (RandomAccessFile output = new RandomAccessFile(FILE,"rw")){
 
-            if(checkIfAdminExists(getListAdmins(),newAdminUsername) == null){
-                addUsernamesToFile(newAdminUsername, newAdminPassword, "Administrateur");
-                logger.info("The user has been created");
+            do {
+                output.readInt();
+                previousValue = output.readInt();
+                nextValue = output.readInt();
+                username = output.readUTF();
+                if(nextValue != -1){
+                    output.seek(nextValue);
+                }
+
+                logger.info("Username : " + username + " | Username Wanted" + usernameWanted + " | Next value : " +nextValue +" | Previous value : " + previousValue);
+            }while (!usernameWanted.equals(username));
+            System.out.println("sortie");
+
+            if (nextValue == -1){
+                output.seek(previousValue);
+                output.readInt();
+                output.readInt();
+                output.writeInt(nextValue);
+
             }
-           else {
-                logger.info("The user with this username exist ");
+            else {
+                output.seek(previousValue);
+                output.readInt();
+                output.readInt();
+                output.writeInt(nextValue);
+
+                output.seek(nextValue);
+                output.readInt();
+                output.writeInt(previousValue);
+
             }
+
 
         }
-        else {
-            logger.info("Only the Super Admin can create administrators");
+        catch (FileNotFoundException e) {
+            logger.error("Unable to create " + FILE, e);
+        }
+        catch (IOException e) {
+            logger.error("Unable to operate on the " + FILE, e);
+        }
+
+    }
+
+    public static List<Administrator> getListAdmins() {
+        List<Administrator> administratorsList = new ArrayList<>();
+        try (RandomAccessFile input = new RandomAccessFile(FILE,"rw")){
+
+                int value = 0;
+                do {
+                    input.seek(value);
+                    int index = input.readInt();
+                    int oldValue = input.readInt();
+                    value = input.readInt();
+                    String user = input.readUTF();
+                    String password = input.readUTF();
+                    String statut = input.readUTF();
+                    Administrator administrator = new Administrator(user,password,statut);
+                    administratorsList.add(administrator);
+
+                }while (value !=-1);
+
+
+        }
+        catch (FileNotFoundException e) {
+            logger.error("Unable to create " + FILE, e);
+        }
+        catch (IOException e) {
+            logger.error("Unable to operate on the " + FILE, e);
+        }
+        return administratorsList;
+    }
+
+    private static void addSuperAdminToFile() {
+        File ressourcesFolder = new File(FOLDER);
+        ressourcesFolder.mkdir();
+
+        try(RandomAccessFile output = new RandomAccessFile(FILE,"rw")){
+            output.writeInt(0);
+            output.writeInt(-1);
+            output.writeInt(-1);
+            output.writeUTF("Super User");
+            output.writeUTF("Super Password");
+            output.writeUTF("Super Administrator");
+
+        }
+        catch (FileNotFoundException e){
+            logger.error("The file was not found ");
+        }
+        catch (IOException e){
+            logger.error("L'écriture n'a pas marché ");
         }
     }
-    /**
-     * For check if the logs for the connexion are good
-     */
+
+
+    public static void addAdministratorToFile( String username, String password, String statut) {
+
+        File ressourcesFolder = new File(FOLDER);
+        ressourcesFolder.mkdir();
+        if(checkIfAdminExists(getListAdmins() , username) != null){
+            logger.info("L'administrateur existe déjà");
+            return;
+        }
+
+        try(RandomAccessFile output = new RandomAccessFile(FILE,"rw")){
+
+
+           if(output.length()==0){
+               addSuperAdminToFile();
+           }
+
+
+           output.readInt();
+           output.readInt();
+           int value = output.readInt();
+
+           int oldvalue =0;
+
+
+           while (value!= -1){
+
+               output.seek(value);
+               oldvalue =output.readInt();
+               output.readInt();
+               value = output.readInt();
+
+           }
+
+           // Ecrire sur l'ancienne node pour la ratacher à la nouvelle
+
+           output.seek(oldvalue);
+           output.readInt();
+           output.readInt();
+           output.writeInt((int) output.length());
+
+
+           // Ecrire la node
+
+           output.seek((int) output.length());
+           output.writeInt((int) output.length());
+           output.writeInt(oldvalue);
+           output.writeInt(-1);
+           output.writeUTF(username);
+           output.writeUTF(password);
+           output.writeUTF(statut);
+
+        }
+        catch (FileNotFoundException e){
+           logger.error("The file was not found ");
+        }
+        catch (IOException e){
+            logger.error("L'écriture n'a pas marché ");
+        }
+    }
+
     public static Administrator checkLogs(String usernameWanted , String password) {
         Administrator admin = checkIfAdminExists(getListAdmins(),usernameWanted);
         if ( admin != null){
             logger.info("L'administrateur existe");
+            System.out.println(admin.getPassword() + "|" + password);
             if(admin.getPassword().equals(password)){
-
-                if(admin.getStatut().equals("Super Administrateur")){
-                    return admin;
-                }
-                else if(admin.getStatut().equals("Administrateur")){
-                    return admin;
-                }
+                return admin;
             }
             else {
                 logger.info("Le mot de passe n'est pas bon");
@@ -109,7 +229,9 @@ public class AdministratorSorter {
     private static Administrator checkIfAdminExists(List<Administrator> listAdmins, String usernameWanted) {
 
         for (Administrator admin : listAdmins) {
+            System.out.println(usernameWanted + "  " +admin.getUsername());
             if(admin.getUsername().equals(usernameWanted)){
+
                 return admin;
             }
         }
@@ -118,59 +240,4 @@ public class AdministratorSorter {
     }
 
 
-    /**
-     * Add one username to the binary file administrator
-     */
-    public static void addUsernamesToFile(String username, String password, String statut) {
-
-        File ressourcesFolder = new File(FOLDER);
-        ressourcesFolder.mkdir();
-
-        try(RandomAccessFile output = new RandomAccessFile(FILE,"rw")){
-
-            output.seek(output.length());
-            output.writeUTF(username);
-            output.writeUTF(password);
-            output.writeUTF(statut);
-
-        }
-        catch (FileNotFoundException e){
-            logger.error("The file was not found ");
-        }
-        catch (IOException e){
-            logger.error("L'écriture n'a pas marché ");
-        }
-
-    }
-
-    /**
-     * For add the super admin in the file
-     * @param username
-     * @param password
-     * @param statut
-     */
-
-    private static void addSuperAdminToFile(String username, String password, String statut) {
-        addUsernamesToFile(username,password, statut);
-    }
-    /**
-     * Read the binary file administrator
-     * @return List of administrastor object
-     */
-    public static List<Administrator> getListAdmins(){
-
-        List<Administrator> administratorsList = new ArrayList<>();
-
-        return administratorsList;
-    }
-
-
-    public static void modifyUsernameAdministrator(String newUsernameName, Administrator account) {
-        findAdministratorWithUsername(account.getUsername());
-    }
-
-    private static void findAdministratorWithUsername(String username) {
-
-
-    }
 }
