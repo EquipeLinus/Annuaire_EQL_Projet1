@@ -2,6 +2,8 @@ package fr.eql.ai116.team.linus.annuaire.view.windows;
 
 import fr.eql.ai116.team.linus.annuaire.Application;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
+import fr.eql.ai116.team.linus.annuaire.model.program.AdministratorSorter;
+import fr.eql.ai116.team.linus.annuaire.model.program.StagiairesSorter;
 import fr.eql.ai116.team.linus.annuaire.view.elements.AnchorPaneViewAdministrators;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -33,6 +35,7 @@ import java.util.List;
 public class AdministratorWindow extends AnchorPane {
 
     private static final Logger logger = LogManager.getLogger();
+    private AnchorPaneViewAdministrators anchorPaneViewAdministrators;
 
     public AdministratorWindow(Stage stage) {
 
@@ -62,7 +65,7 @@ public class AdministratorWindow extends AnchorPane {
         labelSuperAdmin.setFont(new Font(24));
 
         TableView<Administrator> table = new TableView<>();
-        AnchorPaneViewAdministrators anchorPaneViewAdministrators = new AnchorPaneViewAdministrators(table);
+        anchorPaneViewAdministrators = new AnchorPaneViewAdministrators(table);
 
         Button btnDeleteAdministrator = new Button();
         btnDeleteAdministrator.setVisible(false);
@@ -73,8 +76,21 @@ public class AdministratorWindow extends AnchorPane {
                 if (newValue == null) return;
                 btnDeleteAdministrator.setVisible(true);
                 btnDeleteAdministrator.setText("Supprimer l'administrateur sélectionné ?");
+
+                btnDeleteAdministrator.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        AdministratorSorter.removeAdministrator(newValue.getUsername());
+                        logger.info("Supprimer");
+
+                        anchorPaneViewAdministrators.setTable(AdministratorSorter.getListAdmins());
+                    }
+                });
+
             }
         });
+
+
 
         elements.add(labelSuperAdmin);
         elements.add(getAddAdminSection());
@@ -114,10 +130,14 @@ public class AdministratorWindow extends AnchorPane {
         btnModifyUsername.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                /// AJOUTER FONCTION QUI PERMET DE VRAIMENT MODIFIER L' ID:
-
-                confirmationLbl.setTextFill(Color.GREEN);
-                confirmationLbl.setText("Identifiant modifié avec succès");
+                if (!txtUsernameChange.getText().isEmpty() ){
+                    AdministratorSorter.modifyAdministrator(Application.getInstance().getAccount().getUsername(),
+                            txtUsernameChange.getText(),
+                            Application.getInstance().getAccount().getPassword(),
+                            "Administrateur");
+                    confirmationLbl.setTextFill(Color.GREEN);
+                    confirmationLbl.setText("Identifiant modifié avec succès");
+                }
             }
         });
 
@@ -153,10 +173,19 @@ public class AdministratorWindow extends AnchorPane {
         btnModifyPassword.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                /// AJOUTER FONCTION QUI PERMET DE VRAIMENT MODIFIER LE MDP:
+                if(txtPasswordChange.getText().equals(txtConfirmationPasswordChange.getText()) && !txtPasswordChange.getText().isEmpty() ){
+                    AdministratorSorter.modifyAdministrator(Application.getInstance().getAccount().getUsername(),
+                            Application.getInstance().getAccount().getUsername(),
+                            txtPasswordChange.getText(),
+                            "Administrateur");
+                    confirmationLbl.setTextFill(Color.GREEN);
+                    confirmationLbl.setText("Mot de passe modifié avec succès");
+                }
+                else {
+                    confirmationLbl.setTextFill(Color.RED);
+                    confirmationLbl.setText("Les mots de passes ne sont pas identiques");
+                }
 
-                confirmationLbl.setTextFill(Color.GREEN);
-                confirmationLbl.setText("Mot de passe modifié avec succès");
             }
         });
 
@@ -176,7 +205,7 @@ public class AdministratorWindow extends AnchorPane {
         Label labelAdministrator = new Label("Identifiant:");
         TextField txtAdministrator = new TextField();
         Label labelPassword = new Label("Mot de passe:");
-        TextField txtPassword = new TextField();
+        PasswordField txtPassword = new PasswordField();
 
         HBox btnBox = new HBox(5);
         Button btnCreate = new Button("Créer administrateur");
@@ -192,10 +221,11 @@ public class AdministratorWindow extends AnchorPane {
         btnCreate.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                /// AJOUTER FONCTION QUI PERMET DE VRAIMENT D'AJOUTER UN ADMIN:
-
+                AdministratorSorter.addAdministratorToFile(txtAdministrator.getText(),txtPassword.getText(),"Administrateur");
                 confirmationLbl.setTextFill(Color.GREEN);
                 confirmationLbl.setText("Administrateur créer avec succès");
+
+                anchorPaneViewAdministrators.setTable(AdministratorSorter.getListAdmins());
             }
         });
 

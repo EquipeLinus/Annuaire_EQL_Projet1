@@ -4,6 +4,7 @@ import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
 import fr.eql.ai116.team.linus.annuaire.model.program.ExportToPdf;
 import fr.eql.ai116.team.linus.annuaire.view.elements.AnchorPaneViewStagiaire;
+import fr.eql.ai116.team.linus.annuaire.view.elements.InitializeTxtPanel;
 import fr.eql.ai116.team.linus.annuaire.view.elements.SearchPanel;
 import fr.eql.ai116.team.linus.annuaire.view.elements.TootipBorderPane;
 import fr.eql.ai116.team.linus.annuaire.view.elements.VBoxAdmin;
@@ -96,7 +97,6 @@ public class Application extends javafx.application.Application {
          * Scene & Stage setup
          */
 
-        setAccount(new Administrator("fake user", "fake mdp", "Super Administrateur"));
 
         root.setTop(topPane);
         root.setCenter(centerPane);

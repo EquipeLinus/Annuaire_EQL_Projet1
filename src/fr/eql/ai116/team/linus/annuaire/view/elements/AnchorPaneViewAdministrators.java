@@ -33,11 +33,10 @@ public class AnchorPaneViewAdministrators extends AnchorPane {
         table.getColumns().addAll(usernameCol);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        List<Administrator> test = new ArrayList<>();
-        test.add(new Administrator("allo","",""));
-        test.add(new Administrator("all1","",""));
+        List<Administrator> administratorList = new ArrayList<>();
+        administratorList = AdministratorSorter.getListAdmins();
 
-        setTable(test);
+        setTable(administratorList);
 
         getChildren().add(table);
 

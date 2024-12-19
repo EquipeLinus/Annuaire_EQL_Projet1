@@ -90,7 +90,7 @@ public class ConnexionWindow extends VBox {
         });
 
         btnConnexion.setOnAction(e -> {
-
+            System.out.println(AdministratorSorter.getListAdmins());
             Administrator account = AdministratorSorter.checkLogs(txtAdministrator.getText(), txtPassword.getText());
             Application.getInstance().setAccount(account);
 
