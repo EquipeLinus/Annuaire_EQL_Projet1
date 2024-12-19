@@ -3,6 +3,9 @@ package fr.eql.ai116.team.linus.annuaire.model.entity;
 import java.util.Objects;
 
 public class Administrator {
+    private int indexNode ;
+    private int indexPreviousNode ;
+    private int indexNextNode;
     private String username;
     private String password;
     private String statut ;
@@ -10,7 +13,7 @@ public class Administrator {
     public Administrator() {
     }
 
-    public Administrator(String username, String password,String statut) {
+    public Administrator( String username, String password,String statut) {
         this.username = username;
         this.password = password;
         this.statut = statut;
@@ -48,5 +51,4 @@ public class Administrator {
     public void setStatut(String statut) {
         this.statut = statut;
     }
-
 }
