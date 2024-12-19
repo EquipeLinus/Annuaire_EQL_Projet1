@@ -109,7 +109,7 @@ public class Application extends javafx.application.Application {
         });
 
         btnExport.setOnAction(e-> {
-            ExportToPdf.exportAnchorPaneViewStagiaireToPdf(table);
+           // ExportToPdf.exportAnchorPaneViewStagiaireToPdf(table);
 
         });
 
