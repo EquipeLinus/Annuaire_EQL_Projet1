@@ -19,7 +19,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class TootipBorderPane extends BorderPane {
-
+    boolean isLoggedIn = false;
     Label lblConnectionInfo = new Label("Compte utilisateur");
     Button btnAccountManagement = new Button("Gestion de compte");
 
@@ -60,9 +60,28 @@ public class TootipBorderPane extends BorderPane {
         lblConnectionInfo.setMaxWidth(350);
         lblConnectionInfo.setMinWidth(350);
 
+
         btnConnexion.setOnAction(e-> {
-            ConnexionWindow connexionWindow = new ConnexionWindow(stage,width,height);
+            ConnexionWindow connexionWindow = new ConnexionWindow(stage, width, height);
+            if (!isLoggedIn) {
+
+                btnConnexion.setText("Déconnexion");
+                btnAccountManagement.setVisible(false);
+            } else {
+                // Si l'utilisateur est connecté, fermer la fenêtre de connexion
+                if (connexionWindow != null) {
+
+                    isLoggedIn = false; // L'utilisateur est maintenant déconnecté
+                    btnConnexion.setText("Connexion");
+                }
+            }
         });
+
+
+        //toggleLogInLogOut(btnConnexion);
+        //});
+
+
 
         btnExport.setOnAction(e-> {
             //ExportToPdf.exportAnchorPaneViewStagiaireToPdf(table);
