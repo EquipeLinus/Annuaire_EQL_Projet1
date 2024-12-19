@@ -48,9 +48,6 @@ public class ConnexionWindow extends VBox {
         connexionBox.setMaxSize(200,300);
         root.getChildren().add(connexionBox);
 
-        /**
-         * EMPTY REGIONS SALE PARCE QUE JE NE SAIS PAS COMMENT FAIRE
-         */
         Region emptyRegion1 = new Region();
         emptyRegion1.setPrefSize(1,10);
 
@@ -59,18 +56,21 @@ public class ConnexionWindow extends VBox {
 
         connexionBox.getChildren().addAll(labelAdministrator, txtAdministrator,emptyRegion1, labelPassword, txtPassword,emptyRegion2, btnConnexion);
 
-        Scene connexionWindows = new Scene(root, 300, 300);
-
+        /**
+         * Scene setup & window opening
+         */
+        Scene connexionScene = new Scene(root, 300, 300);
         Stage connexionWindow = new Stage();
         connexionWindow.setTitle("Connexion");
-        connexionWindow.setScene(connexionWindows);
+        connexionWindow.setScene(connexionScene);
 
         connexionWindow.setX(stage.getX() + width/2 -200);
         connexionWindow.setY(stage.getY() + height/2 -200);
         Application.getInstance().setCurrentPopup(connexionWindow);
 
-        Stage stageConnexion = (Stage) btnConnexion.getScene().getWindow();
-
+        /**
+         * Button setup
+         */
         txtAdministrator.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
@@ -103,18 +103,10 @@ public class ConnexionWindow extends VBox {
                         + account.getStatut());
 
                 if (StagiairesSorter.verifyIfStagiaireTxtIsEmpty(account)) {
-                    InitializeTxtPanel init = new InitializeTxtPanel();
-                    Scene initialiseStagiaireWindows = new Scene(init, 230, 100);
-
-                    // New window (Stage)
-                    Stage newWindow = new Stage();
-                    newWindow.setTitle("Initialisation stagiaire.txt");
-                    newWindow.setScene(initialiseStagiaireWindows);
-                    Application.getInstance().setCurrentPopup(newWindow);
+                    InitializeTxtPanel.openWindow();
                 }
 
-                delay(500, stageConnexion::close);
-
+                delay(500, connexionWindow::close);
 
                 root.getChildren().add(labelConnexionAnswer);
 
@@ -125,7 +117,6 @@ public class ConnexionWindow extends VBox {
             }
 
         });
-
     }
 
     public static void delay(long millis, Runnable continuation) {

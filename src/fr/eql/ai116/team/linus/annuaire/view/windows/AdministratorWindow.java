@@ -1,33 +1,26 @@
 package fr.eql.ai116.team.linus.annuaire.view.windows;
 
-import com.sun.javafx.geom.BaseBounds;
-import com.sun.javafx.geom.transform.BaseTransform;
-import com.sun.javafx.jmx.MXNodeAlgorithm;
-import com.sun.javafx.jmx.MXNodeAlgorithmContext;
-import com.sun.javafx.sg.prism.NGNode;
 import fr.eql.ai116.team.linus.annuaire.Application;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
-import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
-import fr.eql.ai116.team.linus.annuaire.model.program.AdministratorSorter;
-
 import fr.eql.ai116.team.linus.annuaire.view.elements.AnchorPaneViewAdministrators;
-import fr.eql.ai116.team.linus.annuaire.view.elements.AnchorPaneViewStagiaire;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -44,38 +37,15 @@ public class AdministratorWindow extends AnchorPane {
     public AdministratorWindow(Stage stage) {
 
         VBox root = new VBox(10);
-        AnchorPane.setLeftAnchor(root,50.);
-        AnchorPane.setRightAnchor(root,50.);
-        AnchorPane.setTopAnchor(root,30.);
-        AnchorPane.setBottomAnchor(root,30.);
+        AnchorPane.setLeftAnchor(root, 50.);
+        AnchorPane.setRightAnchor(root, 50.);
+        AnchorPane.setTopAnchor(root, 30.);
+        AnchorPane.setBottomAnchor(root, 30.);
 
         Label labelModifyAccount = new Label("Modifier mon compte");
         labelModifyAccount.setFont(new Font(24));
 
-        HBox idRow = new HBox();
-        Label labelUsernameChange = new Label("Identifiant:");
-        TextField txtUsernameChange = new TextField(Application.getInstance().getAccount().getUsername());
-        Button btnModifyUsername = new Button("Modifier l'identifiant");
-        idRow.getChildren().addAll(txtUsernameChange,btnModifyUsername);
-
-        HBox mdpRow = new HBox();
-        Label labelPasswordChange = new Label("Mot de passe:");
-        PasswordField txtPasswordChange = new PasswordField();
-        Label labelConfirmationPasswordChange = new Label("Confirmation nouveau mot de passe:");
-        PasswordField txtConfirmationPasswordChange = new PasswordField();
-        Button btnModifyPassword = new Button("Modifier mot de passe");
-        mdpRow.getChildren().addAll(txtPasswordChange,labelConfirmationPasswordChange,txtConfirmationPasswordChange,btnModifyPassword);
-
-        root.getChildren().addAll(labelModifyAccount,labelUsernameChange,idRow,labelPasswordChange,mdpRow);
-
-        btnModifyUsername.setOnAction(e-> {
-
-            if(!txtUsernameChange.getText().isEmpty()){
-
-                AdministratorSorter.modifyUsernameAdministrator(txtUsernameChange.getText(),Application.getInstance().getAccount());
-            }
-
-        });
+        root.getChildren().addAll(labelModifyAccount, getModifyIdSection(), getModifyMDPSection());
 
         root.getChildren().addAll(getSuperAdminElements());
         getChildren().add(root);
@@ -92,32 +62,10 @@ public class AdministratorWindow extends AnchorPane {
         labelSuperAdmin.setFont(new Font(24));
 
         TableView<Administrator> table = new TableView<>();
-
         AnchorPaneViewAdministrators anchorPaneViewAdministrators = new AnchorPaneViewAdministrators(table);
-
-        GridPane gridPaneAddAdmin = new GridPane();
-
-        Label labelCreateAccount = new Label("Créer un nouveau administrateur");
-        labelCreateAccount.setFont(new Font(20));
-
-        Label labelAdministrator = new Label("New Username:");
-        TextField txtAdministrator= new TextField();
-        Label labelPassword = new Label("New Password:");
-        TextField txtPassword = new TextField();
-        Button btnCreate = new Button("Créer administrateur");
-
-        gridPaneAddAdmin.addRow(1,labelAdministrator,txtAdministrator,labelPassword,txtPassword,btnCreate);
-        gridPaneAddAdmin.setHgap(10);
-        gridPaneAddAdmin.setVgap(10);
 
         Button btnDeleteAdministrator = new Button();
         btnDeleteAdministrator.setVisible(false);
-
-        btnCreate.setOnAction(e-> {AdministratorSorter.createAdmin(
-                txtAdministrator.getText(),txtPassword.getText(), "Super Administrateur");
-                txtAdministrator.setText("");
-                txtPassword.setText("");
-        });
 
         table.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Administrator>() {
             @Override
@@ -129,8 +77,7 @@ public class AdministratorWindow extends AnchorPane {
         });
 
         elements.add(labelSuperAdmin);
-        elements.add(labelCreateAccount);
-        elements.add(gridPaneAddAdmin);
+        elements.add(getAddAdminSection());
         elements.add(anchorPaneViewAdministrators);
         elements.add(btnDeleteAdministrator);
 
@@ -145,5 +92,120 @@ public class AdministratorWindow extends AnchorPane {
         administrationWindow.setScene(administrationWindows);
 
         Application.getInstance().setCurrentPopup(administrationWindow);
+    }
+
+    private Accordion getModifyIdSection() {
+        Accordion idAccordion = new Accordion();
+        idAccordion.setPrefWidth(20);
+        Label lblNewID = new Label("Nouvel identifiant:");
+        TextField txtUsernameChange = new TextField(Application.getInstance().getAccount().getUsername());
+
+        HBox btnBox = new HBox(5);
+        Button btnModifyUsername = new Button("Modifier l'identifiant");
+        Label confirmationLbl = new Label("");
+        confirmationLbl.setFont(new Font(12));
+        btnBox.setAlignment(Pos.CENTER_LEFT);
+        btnBox.getChildren().addAll(btnModifyUsername,confirmationLbl);
+
+        TitledPane idAccordionTP = new TitledPane("Identifiant",
+                new VBox(lblNewID, txtUsernameChange, btnBox));
+        idAccordion.getPanes().add(idAccordionTP);
+
+        btnModifyUsername.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                /// AJOUTER FONCTION QUI PERMET DE VRAIMENT MODIFIER L' ID:
+
+                confirmationLbl.setTextFill(Color.GREEN);
+                confirmationLbl.setText("Identifiant modifié avec succès");
+            }
+        });
+
+        idAccordion.getPanes().get(0).expandedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (!newValue) confirmationLbl.setText("");
+            }
+        });
+
+        return idAccordion;
+    }
+
+    private Accordion getModifyMDPSection() {
+        Accordion mdpAccordion = new Accordion();
+        mdpAccordion.setPrefWidth(20);
+        Label labelPasswordChange = new Label("Nouveau mot de passe:");
+        PasswordField txtPasswordChange = new PasswordField();
+        Label labelConfirmationPasswordChange = new Label("Confirmation nouveau mot de passe:");
+        PasswordField txtConfirmationPasswordChange = new PasswordField();
+
+        HBox btnBox = new HBox(5);
+        Button btnModifyPassword = new Button("Modifier mot de passe");
+        Label confirmationLbl = new Label("");
+        confirmationLbl.setFont(new Font(12));
+        btnBox.setAlignment(Pos.CENTER_LEFT);
+        btnBox.getChildren().addAll(btnModifyPassword,confirmationLbl);
+
+        TitledPane mdpAccordionTP = new TitledPane("Mot de passe",
+                new VBox(labelPasswordChange, txtPasswordChange, labelConfirmationPasswordChange, txtConfirmationPasswordChange, btnBox));
+        mdpAccordion.getPanes().add(mdpAccordionTP);
+
+        btnModifyPassword.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                /// AJOUTER FONCTION QUI PERMET DE VRAIMENT MODIFIER LE MDP:
+
+                confirmationLbl.setTextFill(Color.GREEN);
+                confirmationLbl.setText("Mot de passe modifié avec succès");
+            }
+        });
+
+        mdpAccordion.getPanes().get(0).expandedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (!newValue) confirmationLbl.setText("");
+            }
+        });
+
+        return mdpAccordion;
+    }
+
+    private Accordion getAddAdminSection() {
+        Accordion adminCreationAccordion = new Accordion();
+        adminCreationAccordion.setPrefWidth(20);
+        Label labelAdministrator = new Label("Identifiant:");
+        TextField txtAdministrator = new TextField();
+        Label labelPassword = new Label("Mot de passe:");
+        TextField txtPassword = new TextField();
+
+        HBox btnBox = new HBox(5);
+        Button btnCreate = new Button("Créer administrateur");
+        Label confirmationLbl = new Label("");
+        confirmationLbl.setFont(new Font(12));
+        btnBox.setAlignment(Pos.CENTER_LEFT);
+        btnBox.getChildren().addAll(btnCreate,confirmationLbl);
+
+        TitledPane adminCreationAccordionTP = new TitledPane("Créer un nouveau administrateur",
+                new VBox(labelAdministrator, txtAdministrator, labelPassword, txtPassword, btnBox));
+        adminCreationAccordion.getPanes().add(adminCreationAccordionTP);
+
+        btnCreate.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                /// AJOUTER FONCTION QUI PERMET DE VRAIMENT D'AJOUTER UN ADMIN:
+
+                confirmationLbl.setTextFill(Color.GREEN);
+                confirmationLbl.setText("Administrateur créer avec succès");
+            }
+        });
+
+        adminCreationAccordion.getPanes().get(0).expandedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (!newValue) confirmationLbl.setText("");
+            }
+        });
+
+        return adminCreationAccordion;
     }
 }
