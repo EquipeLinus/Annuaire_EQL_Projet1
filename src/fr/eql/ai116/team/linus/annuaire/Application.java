@@ -2,6 +2,7 @@ package fr.eql.ai116.team.linus.annuaire;
 
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
+import fr.eql.ai116.team.linus.annuaire.model.program.AdministratorSorter;
 import fr.eql.ai116.team.linus.annuaire.model.program.ExportToPdf;
 import fr.eql.ai116.team.linus.annuaire.view.elements.AnchorPaneViewStagiaire;
 import fr.eql.ai116.team.linus.annuaire.view.elements.InitializeTxtPanel;
@@ -53,8 +54,14 @@ public class Application extends javafx.application.Application {
         launch(args);
     }
 
+    public TableView<Stagiaire> getTable() {
+        return table;
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
+
+        AdministratorSorter.addAdministratorToFile("d","b","Administrateur");
 
         /**
          * general variable initialization

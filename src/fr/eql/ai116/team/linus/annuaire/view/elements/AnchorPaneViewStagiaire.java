@@ -69,5 +69,7 @@ public class AnchorPaneViewStagiaire extends AnchorPane {
         table.refresh();
     }
 
-
+    public TableView<Stagiaire> getTable() {
+        return table;
+    }
 }
