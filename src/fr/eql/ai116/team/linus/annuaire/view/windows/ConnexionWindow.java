@@ -59,6 +59,8 @@ public class ConnexionWindow extends VBox {
         connexionWindow.setTitle("Connexion");
         connexionWindow.setScene(connexionScene);
 
+        connexionWindow.setResizable(false);
+
         connexionWindow.setX(stage.getX() + width/2 -200);
         connexionWindow.setY(stage.getY() + height/2 -200);
         Application.getInstance().setCurrentPopup(connexionWindow);

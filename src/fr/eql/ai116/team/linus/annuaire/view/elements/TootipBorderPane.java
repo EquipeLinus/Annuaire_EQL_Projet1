@@ -55,7 +55,7 @@ public class TootipBorderPane extends BorderPane {
         /**
          * Top panel
          */
-        HBox topPanel = new HBox();
+        HBox topPanel = new HBox(20.);
 
         Button btnHelp = new Button("Aide");
         btnAccountManagement.setVisible(false);
@@ -103,10 +103,10 @@ public class TootipBorderPane extends BorderPane {
             if (Desktop.isDesktopSupported()) {
                 try {
                     if (Application.getInstance().getAccount() == null) {
-                        File myFile = new File("test.pdf");
+                        File myFile = new File("resources/guide_utilisateur.pdf");
                         Desktop.getDesktop().open(myFile);
                     } else {
-                        File myFile = new File("resources/test2.pdf");
+                        File myFile = new File("resources/guide_administrateur.pdf");
                         Desktop.getDesktop().open(myFile);
                     }
 

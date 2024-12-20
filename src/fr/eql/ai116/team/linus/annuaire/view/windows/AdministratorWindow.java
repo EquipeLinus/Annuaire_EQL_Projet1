@@ -5,6 +5,7 @@ import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.program.AdministratorSorter;
 import fr.eql.ai116.team.linus.annuaire.model.program.StagiairesSorter;
 import fr.eql.ai116.team.linus.annuaire.view.elements.AnchorPaneViewAdministrators;
+import fr.eql.ai116.team.linus.annuaire.view.elements.InitializeTxtPanel;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -138,6 +139,7 @@ public class AdministratorWindow extends AnchorPane {
         administrationWindow.setTitle("Gestion de compte");
         administrationWindow.setScene(administrationScene);
 
+        administrationWindow.setResizable(false);
         Application.getInstance().setCurrentPopup(administrationWindow);
     }
 
@@ -168,6 +170,11 @@ public class AdministratorWindow extends AnchorPane {
                             "Administrateur");
                     confirmationLbl.setTextFill(Color.GREEN);
                     confirmationLbl.setText("Identifiant modifié avec succès");
+
+                    Administrator account = AdministratorSorter.checkLogs(txtUsernameChange.getText(), Application.getInstance().getAccount().getPassword());
+                    Application.getInstance().setAccount(account);
+
+                    Application.getInstance().getTooltipPanel().updateConnectionInfo();
                 }
             }
         });
