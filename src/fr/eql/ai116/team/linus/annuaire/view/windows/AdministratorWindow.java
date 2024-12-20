@@ -69,6 +69,8 @@ public class AdministratorWindow extends AnchorPane {
 
         Button btnDeleteAdministrator = new Button();
         btnDeleteAdministrator.setVisible(false);
+        Label lblErrorDeleteSuperAdmin = new Label();
+        lblErrorDeleteSuperAdmin.setVisible(false);
 
         table.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Administrator>() {
             @Override
@@ -82,6 +84,13 @@ public class AdministratorWindow extends AnchorPane {
                     public void handle(ActionEvent event) {
                         AdministratorSorter.removeAdministrator(newValue.getUsername());
                         logger.info("Supprimer");
+                        if (newValue.getStatut().equals("Super Administrateur")) {
+                            lblErrorDeleteSuperAdmin.setVisible(true);
+                            lblErrorDeleteSuperAdmin.setTextFill(Color.RED);
+                            lblErrorDeleteSuperAdmin.setText("Vous ne pouvez pas supprimer le Super Administrateur !");
+                        } else {
+                            lblErrorDeleteSuperAdmin.setVisible(false);
+                        }
 
                         anchorPaneViewAdministrators.setTable(AdministratorSorter.getListAdmins());
                     }
@@ -96,6 +105,7 @@ public class AdministratorWindow extends AnchorPane {
         elements.add(getAddAdminSection());
         elements.add(anchorPaneViewAdministrators);
         elements.add(btnDeleteAdministrator);
+        elements.add(lblErrorDeleteSuperAdmin);
 
         return elements;
     }
