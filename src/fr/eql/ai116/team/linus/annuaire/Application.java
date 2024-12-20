@@ -131,6 +131,7 @@ public class Application extends javafx.application.Application {
         }
         this.account = account;
 
+        setCurrentPopup(null);
         tooltipPanel.updateConnectionInfo();
     }
 
@@ -156,10 +157,18 @@ public class Application extends javafx.application.Application {
             this.currentPopup.close();
         }
         this.currentPopup = currentPopup;
-        this.currentPopup.show();
+        if (currentPopup != null) this.currentPopup.show();
     }
 
     public SearchPanel getSearchPanel() {
         return searchPanel;
+    }
+
+    public TootipBorderPane getTooltipPanel() {
+        return tooltipPanel;
+    }
+
+    public HBox getAdminPanel() {
+        return adminPanel;
     }
 }
