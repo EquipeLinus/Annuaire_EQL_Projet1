@@ -43,6 +43,50 @@ public class PromoStack extends HBox {
             }
         });
         buttonContainer.getChildren().add(promoBtn);
+
+        /* MODIFICATIONS FROM ANDRAS
+        Button[] promoButtonsTable = new Button[buttonContainer.getChildren().size()];
+        for (int i = 0; i < buttonContainer.getChildren().size(); i++) {
+            promoButtonsTable[i] = (Button) buttonContainer.getChildren().get(i);
+        }
+
+        buttonContainer.getChildren().removeAll(promoButtonsTable);
+
+        String[] promoButtonsNameTable = new String[promoButtonsTable.length];
+        for (int i = 0; i < promoButtonsNameTable.length; i++) {
+            promoButtonsNameTable[i] = String.valueOf(promoButtonsTable[i]);
+        }
+
+        promoButtonsTable = new Button[];
+
+        promoButtonsNameTable = Arrays.stream(promoButtonsNameTable).sorted(String::compareTo).toArray(String[]::new);
+
+        for (int i = 0; i < promoButtonsNameTable.length; i++) {
+            Button promoButtonToReadd = new Button();
+            promoButtonsNameTable[i] = (Button) promoButtonsTable[i];
+        }
+
+        promoButtonsTable.
+
+        String[] promoButtonsNameTable = new String[promoButtonsTable.length];
+        for (int i = 0; i < promoButtonsNameTable.length; i++) {
+            promoButtonsNameTable[i] = ((Button) buttonContainer.getChildren().get(i)).getText();
+        }
+        Button[] promoButtonsTable = new Button[];
+        for (int i = 0; i < buttonContainer.getChildren().size(); i++) {
+            result[i] = ((Button) buttonContainer.getChildren().get(i)).getText();
+        }
+        buttonContainer.getChildren().removeAll(buttonContainer.getChildren().);
+        promoButtonsNameTable = Arrays.stream(promoButtonsNameTable).sorted(String::compareTo).toArray(String[]::new);
+        for (String promoButtonsToReaddName : promoButtonsNameTable) {
+            String promoButtonToReaddName = new String(promoButtonsToReaddName);
+            Button promoButtonToReadd = new Button(promoButtonToReaddName);
+            promoButtonToReadd.setMinWidth(80);
+            promoButtonToReadd.setMaxWidth(80);
+            buttonContainer.getChildren().add(promoButtonToReadd);
+        }
+        // END OF ANDRAS' MODIFICATIONS */
+
     }
     public void removePromo(String name) {
         for (Node child : buttonContainer.getChildren()) {
