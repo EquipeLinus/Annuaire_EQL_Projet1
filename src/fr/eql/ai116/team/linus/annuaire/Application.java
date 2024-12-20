@@ -96,7 +96,7 @@ public class Application extends javafx.application.Application {
          * Scene & Stage setup
          */
 
-
+        setAccount(new Administrator("fake user", "fake mdp", "Super Administrateur"));
 
         root.setTop(topPane);
         root.setCenter(centerPane);
