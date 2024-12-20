@@ -27,9 +27,6 @@ public class AnchorPaneViewAdministrators extends AnchorPane {
         usernameCol.setMinWidth(200);
         usernameCol.setCellValueFactory(new PropertyValueFactory<Administrator, String>("username"));
 
-        Button btnDelete = new Button("Delete");
-
-
         table.getColumns().addAll(usernameCol);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -40,10 +37,12 @@ public class AnchorPaneViewAdministrators extends AnchorPane {
 
         getChildren().add(table);
 
-        setRightAnchor(table,5.);
-        setLeftAnchor(table,5.);
+        setRightAnchor(table,15.);
+        setLeftAnchor(table,15.);
         setTopAnchor(table,5.);
         setBottomAnchor(table,5.);
+
+        setMinHeight(50);
     }
 
     public void setTable(List<Administrator> list) {
