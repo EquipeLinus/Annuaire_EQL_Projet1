@@ -53,6 +53,7 @@ public class TootipBorderPane extends BorderPane {
          * Top panel
          */
         HBox topPanel = new HBox(20.);
+        topPanel.setStyle ("-fx-background-color:b");
 
         Button btnHelp = new Button("Aide");
         btnAccountManagement.setVisible(false);

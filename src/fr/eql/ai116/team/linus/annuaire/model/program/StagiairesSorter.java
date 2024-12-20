@@ -68,17 +68,11 @@ public class StagiairesSorter {
         return stagiairesList;
 
     }
-
     public static boolean verifyIfStagiaireTxtIsEmpty(Administrator account) {
 
-        if(account.getStatut().equals("Administrateur") || account.getStatut().equals("Super Administrateur")){
+        if(account.getStatut() != null){
             try(RandomAccessFile output = new RandomAccessFile("resources/datas.bin","rw")){
-
-                output.seek(output.length());
-                if(output.length() == 0){
-                    return true;
-                }
-
+                return output.length() < Long.BYTES;
             }
             catch (FileNotFoundException e){
                 logger.error("The file was not found ");
@@ -89,7 +83,5 @@ public class StagiairesSorter {
         }
 
         return false;
-
     }
-
 }
