@@ -83,7 +83,6 @@ public class VBoxAdmin extends VBox {
         HBox generalBox = new HBox(5);
         generalBox.getChildren().addAll(vBoxFirstName,vBoxLastName,vBoxPromotion,vBoxYear,vBoxDepartment,vBoxBtn);
 
-        errorLabel.setTextFill(Color.RED);
         getChildren().addAll(generalBox, errorLabel);
 
         table.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Stagiaire>() {
@@ -100,34 +99,35 @@ public class VBoxAdmin extends VBox {
                 updateBtnBox();
             }
         });
-        System.out.println();
 
         btnAdd.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                errorLabel.setText("");
+                resetErrorLabel();
                 try {
                     int year = Integer.parseInt(txtYear.getText());
                     int department = Integer.parseInt(txtDepartment.getText());
 
                     BinManager bManager = new BinManager();
-                    if (!bManager.addStagiaire(new Stagiaire(
+                    if (bManager.addStagiaire(new Stagiaire(
                             txtFirstName.getText(),
                             txtLastName.getText(),
                             txtPromotion.getText(),
                             year,
                             department
                     ))) {
-                        errorLabel.setText("Stagiaire déjà existant");
+                        setConfirmLabel("Stagiaire ajouté avec succès");
+                    } else {
+                        setErrorLabel("Stagiaire déjà existant");
                     }
                     searchPanel.search();
-                    bManager.displayTree(BinManager.root,0);
+                    //bManager.displayTree(BinManager.root,0);
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 } catch (NumberFormatException e) {
-                    errorLabel.setText("Année ou département incorrect");
+                    setErrorLabel("Année ou département incorrect");
                 }
             }
         });
@@ -135,7 +135,7 @@ public class VBoxAdmin extends VBox {
         btnModify.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                errorLabel.setText("");
+                resetErrorLabel();
                 try {
                     int year = Integer.parseInt(txtYear.getText());
                     int department = Integer.parseInt(txtDepartment.getText());
@@ -149,13 +149,15 @@ public class VBoxAdmin extends VBox {
                             department
                     ));
                     searchPanel.search();
-                    bManager.displayTree(BinManager.root,0);
+
+                    setConfirmLabel("Stagiaire modifié avec succès");
+                    //bManager.displayTree(BinManager.root,0);
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 } catch (NumberFormatException e) {
-                    errorLabel.setText("Année ou département incorrect");
+                    setErrorLabel("Année ou département incorrect");
                 }
             }
         });
@@ -163,14 +165,15 @@ public class VBoxAdmin extends VBox {
         btnDelete.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                errorLabel.setText("");
+                resetErrorLabel();
                 try {
                     BinManager bManager = new BinManager();
                     if (bManager.removeStagiaire(selectedStagiaire.getID())) {
                         searchPanel.search();
+                        setConfirmLabel("Stagiaire supprimé avec succès");
                         //bManager.displayTree(BinManager.root,0);
                     } else {
-                        errorLabel.setText("Stagiaire non existant");
+                        setErrorLabel("Stagiaire non existant");
                     }
 
                 } catch (FileNotFoundException e) {
@@ -201,6 +204,7 @@ public class VBoxAdmin extends VBox {
     }
 
     private void updateBtnBox() {
+        if (selectedStagiaire == null) return;
         try {
             int year = Integer.parseInt(txtYear.getText());
             int department = Integer.parseInt(txtDepartment.getText());
@@ -219,15 +223,25 @@ public class VBoxAdmin extends VBox {
                 vBoxBtn.getChildren().set(1, btnModify);
             }
 
-            resetErrorLabel();
-
         } catch (NumberFormatException e) {
             vBoxBtn.getChildren().set(1, btnModify);
-            errorLabel.setText("Année ou département incorrect");
+            setErrorLabel("Année ou département incorrect");
         }
     }
 
     private void resetErrorLabel() {
         errorLabel.setText("");
+    }
+
+    private void setErrorLabel(String text) {
+        errorLabel.setTextFill(Color.RED);
+        errorLabel.setText(text);
+        InitializeTxtPanel.delay(1000, () -> errorLabel.setText(""));
+    }
+
+    private void setConfirmLabel(String text) {
+        errorLabel.setTextFill(Color.GREEN);
+        errorLabel.setText(text);
+        InitializeTxtPanel.delay(1000, () -> errorLabel.setText(""));
     }
 }
