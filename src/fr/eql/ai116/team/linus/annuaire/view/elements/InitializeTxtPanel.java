@@ -2,18 +2,16 @@ package fr.eql.ai116.team.linus.annuaire.view.elements;
 
 import fr.eql.ai116.team.linus.annuaire.Application;
 import fr.eql.ai116.team.linus.annuaire.model.program.BinManager;
+import fr.eql.ai116.team.linus.annuaire.model.program.Delay;
 import fr.eql.ai116.team.linus.annuaire.model.program.StagiairesSorter;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -64,14 +62,14 @@ public class InitializeTxtPanel extends VBox {
             public void handle(ActionEvent event) {
                 lblInfo.setTextFill(Color.GREEN);
                 lblInfo.setText("Veuillez patienter");
-                delay(500, () -> {
+                Delay.delay(500, () -> {
                     try {
                         BinManager bManager = new BinManager();
                         bManager.initialize();
                         lblInfo.setText("Fini");
                         Application.getInstance().getSearchPanel().search();
 
-                        delay(500, () -> ((Stage) getScene().getWindow()).close());
+                        Delay.delay(500, () -> ((Stage) getScene().getWindow()).close());
                     } catch (IOException | NumberFormatException e) {
                         lblInfo.setTextFill(Color.RED);
                         lblInfo.setText("Fichier invalide !");
@@ -82,18 +80,7 @@ public class InitializeTxtPanel extends VBox {
         });
     }
 
-    public static void delay(long millis, Runnable continuation) {
-        Task<Void> sleeper = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                try { Thread.sleep(millis); }
-                catch (InterruptedException e) { }
-                return null;
-            }
-        };
-        sleeper.setOnSucceeded(event -> continuation.run());
-        new Thread(sleeper).start();
-    }
+
 
     public static void openWindow() {
         InitializeTxtPanel init = new InitializeTxtPanel();

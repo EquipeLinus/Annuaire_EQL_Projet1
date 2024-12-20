@@ -3,6 +3,7 @@ package fr.eql.ai116.team.linus.annuaire.view.elements;
 import fr.eql.ai116.team.linus.annuaire.Application;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
+import fr.eql.ai116.team.linus.annuaire.model.program.Delay;
 import fr.eql.ai116.team.linus.annuaire.model.program.ExportToPdf;
 import fr.eql.ai116.team.linus.annuaire.view.windows.AdministratorWindow;
 import fr.eql.ai116.team.linus.annuaire.view.windows.ConnexionWindow;
@@ -78,11 +79,11 @@ public class TootipBorderPane extends BorderPane {
             }
         });
 
-
+        btnConnexion.borderProperty();
         btnExport.setOnAction(e -> {
             lblInfo.setTextFill(Color.ORANGE);
             lblInfo.setText("Veuillez patienter");
-            InitializeTxtPanel.delay(500, () -> {
+            Delay.delay(10, () -> {
                 if(ExportToPdf.exportAnchorPaneViewStagiaireToPdf(Application.getInstance().getTable())){
                     lblInfo.setTextFill(Color.GREEN);
                     lblInfo.setText("Le pdf a été créé");

@@ -59,9 +59,8 @@ public class AdministratorSorter {
                     output.seek(nextValue);
                 }
 
-                logger.info("Username : " + username + " | Username Wanted" + usernameWanted + " | Next value : " +nextValue +" | Previous value : " + previousValue);
+
             }while (!usernameWanted.equals(username));
-            System.out.println("sortie");
 
             if (nextValue == -1){
                 output.seek(previousValue);
@@ -229,7 +228,7 @@ public class AdministratorSorter {
     private static Administrator checkIfAdminExists(List<Administrator> listAdmins, String usernameWanted) {
 
         for (Administrator admin : listAdmins) {
-            System.out.println(usernameWanted + "  " +admin.getUsername());
+
             if(admin.getUsername().equals(usernameWanted)){
 
                 return admin;
