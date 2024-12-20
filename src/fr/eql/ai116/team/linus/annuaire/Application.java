@@ -53,6 +53,10 @@ public class Application extends javafx.application.Application {
         launch(args);
     }
 
+    public TableView<Stagiaire> getTable() {
+        return table;
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
 
