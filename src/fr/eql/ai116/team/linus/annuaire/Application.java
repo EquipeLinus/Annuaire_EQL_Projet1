@@ -151,4 +151,8 @@ public class Application extends javafx.application.Application {
         this.currentPopup = currentPopup;
         this.currentPopup.show();
     }
+
+    public SearchPanel getSearchPanel() {
+        return searchPanel;
+    }
 }
