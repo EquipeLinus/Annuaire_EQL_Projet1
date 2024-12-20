@@ -106,7 +106,7 @@ public class BinManager {
         List<Stagiaire> fetchedStagiaire = StagiairesSorter.stagiairesListGenerator();
 
         writeNodeAtIndex(fetchedStagiaire.get(0),root); //La root est write à la main
-        for (int i = 1; i < 10; i++) {
+        for (int i = 1; i < fetchedStagiaire.size(); i++) {
             addStagiaire(fetchedStagiaire.get(i));
         }
     }
@@ -339,9 +339,11 @@ public class BinManager {
         for (long l : getChilds(coupleA[0])) {
             allIndexs.add(l);
         }
-        allIndexs.add(coupleA[1]); // Est potentiellement la root ?
-        for (long l : getChilds(coupleA[1])) {
-            allIndexs.add(l);
+        if (coupleA[1] != -1) { // Est potentiellement la root ?
+            allIndexs.add(coupleA[1]);
+            for (long l : getChilds(coupleA[1])) {
+                allIndexs.add(l);
+            }
         }
         allIndexs.add(coupleB[0]);
         for (long l : getChilds(coupleB[0])) {
@@ -363,6 +365,10 @@ public class BinManager {
             long left = allIndexs.get((i*3)+2);
 
             setChilds(current, new long[]{right, left});
+        }
+
+        if (coupleA[1] == -1) {
+            setRoot(coupleB[0]);
         }
     }
     //endregion
