@@ -27,6 +27,7 @@ public class SearchPanel extends GridPane {
     TextField textFieldFirstName = new TextField();
     PromoStack promotionStack = new PromoStack(textFieldPromo);
 
+
     Button validerButton = new Button("Rechercher");
 
     private AnchorPaneViewStagiaire viewStagiaire;
