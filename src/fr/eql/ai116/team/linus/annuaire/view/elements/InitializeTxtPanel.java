@@ -25,14 +25,16 @@ import java.io.IOException;
 // Pop up initialisation fichier
 public class InitializeTxtPanel extends VBox {
     private Label textFile = new Label("Entrez un chemin d'accès");
-    private TextField txtFilePath = new TextField("chemin d'accès au fichier...");
-    private Button btnFilePath = new Button("Select file");
+    private TextField txtFilePath = new TextField("");
+    private Button btnFilePath = new Button("Sélectionner fichier");
     private Button btnValidate = new Button("Valider");
     private Label lblInfo = new Label("");
 
     public InitializeTxtPanel() {
 
         GridPane filePathBox = new GridPane();
+        txtFilePath.setPromptText("Chemin d'accès au fichier...");
+
         filePathBox.addRow(3,textFile);
         filePathBox.addRow(4,txtFilePath,btnFilePath);
         filePathBox.addRow(6,btnValidate, lblInfo);
@@ -75,7 +77,6 @@ public class InitializeTxtPanel extends VBox {
                         lblInfo.setText("Fichier invalide !");
                     }
                 });
-                System.out.println("test");
             }
 
         });
@@ -96,9 +97,11 @@ public class InitializeTxtPanel extends VBox {
 
     public static void openWindow() {
         InitializeTxtPanel init = new InitializeTxtPanel();
-        Scene secondScene = new Scene(init, 300, 120);
+        Scene secondScene = new Scene(init, 400, 120);
+        init.requestFocus();
         Stage newWindow = new Stage();
-        newWindow.setTitle("Please select initialization file");
+        newWindow.setResizable(false);
+        newWindow.setTitle("Choisissez le fichier stagiaire.txt pour l'importer");
         newWindow.setScene(secondScene);
         Application.getInstance().setCurrentPopup(newWindow);
 
