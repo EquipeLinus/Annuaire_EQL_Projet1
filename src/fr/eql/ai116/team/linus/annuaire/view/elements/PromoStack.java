@@ -26,7 +26,7 @@ public class PromoStack extends HBox {
         btnValidate.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                addPromo(promoTxt.getText());
+                addPromo(Clean.cleanPromo(promoTxt.getText()));
             }
         });
     }
