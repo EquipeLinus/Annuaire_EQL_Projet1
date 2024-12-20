@@ -30,19 +30,19 @@ public class AdministratorSorter {
     public static void main(String[] args) {
 
 //      addAdministratorToFile("Ad","Dors","Administrateur");
-          addAdministratorToFile("re","Rastors","Administrateur");
+          addAdministratorToFile("d","b","Administrateur");
 //        logger.info(getListAdmins());
 
         //modifyAdministrator("Adk","Adk", "Dorsee","Administrateur");
 
     }
 
-    private static void modifyAdministrator(String OldUsername ,String NewUsername,String NewPassword, String statut) {
+    public static void modifyAdministrator(String OldUsername ,String NewUsername,String NewPassword, String statut) {
         removeAdministrator(OldUsername);
         addAdministratorToFile(NewUsername,NewPassword,statut);
     }
 
-    private static void removeAdministrator(String usernameWanted) {
+    public static void removeAdministrator(String usernameWanted) {
 
         String username ="";
         int nextValue = 0;
@@ -100,8 +100,8 @@ public class AdministratorSorter {
                 int value = 0;
                 do {
                     input.seek(value);
-                    int index = input.readInt();
-                    int oldValue = input.readInt();
+                    input.readInt();
+                    input.readInt();
                     value = input.readInt();
                     String user = input.readUTF();
                     String password = input.readUTF();
@@ -117,7 +117,7 @@ public class AdministratorSorter {
             logger.error("Unable to create " + FILE, e);
         }
         catch (IOException e) {
-            logger.error("Unable to operate on the " + FILE, e);
+            logger.info("Il y a personne dans la liste" + FILE, e);
         }
         return administratorsList;
     }
@@ -132,7 +132,7 @@ public class AdministratorSorter {
             output.writeInt(-1);
             output.writeUTF("Super User");
             output.writeUTF("Super Password");
-            output.writeUTF("Super Administrator");
+            output.writeUTF("Super Administrateur");
 
         }
         catch (FileNotFoundException e){

@@ -120,7 +120,7 @@ public class VBoxAdmin extends VBox {
                         errorLabel.setText("Stagiaire déjà existant");
                     }
                     searchPanel.search();
-                    bManager.displayTree(0,0);
+                    bManager.displayTree(BinManager.root,0);
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (IOException e) {
@@ -147,7 +147,7 @@ public class VBoxAdmin extends VBox {
                             department
                     ));
                     searchPanel.search();
-                    bManager.displayTree(0,0);
+                    bManager.displayTree(BinManager.root,0);
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (IOException e) {
@@ -165,7 +165,7 @@ public class VBoxAdmin extends VBox {
                     BinManager bManager = new BinManager();
                     bManager.removeStagiaire(selectedStagiaire.getID());
                     searchPanel.search();
-                    bManager.displayTree(0,0);
+                    bManager.displayTree(BinManager.root,0);
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (IOException e) {

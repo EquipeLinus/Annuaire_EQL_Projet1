@@ -21,8 +21,11 @@ public class BinManager {
 
     private final RandomAccessFile raf;
 
-    public BinManager() throws FileNotFoundException {
+    public static long root;
+
+    public BinManager() throws IOException {
         raf = new RandomAccessFile(BIN_PATH, "rw");
+        root = getRoot();
     }
 
     // Le main ici est temporaire, je m'en sert pour mes tests
@@ -31,10 +34,10 @@ public class BinManager {
         try {
             BinManager bManager = new BinManager();
             bManager.clearFile();
-            bManager.writeNodeAtIndex(new Stagiaire("thomas", "duron", "ai116", 2024, 93), 0);
             bManager.initialize();
-            bManager.displayTree(0,0);
-
+            bManager.displayTree(root,0);
+            bManager.removeStagiaire("KAPLA 12_KANAAN_Suhaila");
+            bManager.displayTree(root,0);
             /*
             bManager.displayTree(0,0);
 
@@ -102,7 +105,7 @@ public class BinManager {
 
         List<Stagiaire> fetchedStagiaire = StagiairesSorter.stagiairesListGenerator();
 
-        writeNodeAtIndex(fetchedStagiaire.get(0),0); //La root est write à la main
+        writeNodeAtIndex(fetchedStagiaire.get(0),root); //La root est write à la main
         for (int i = 1; i < fetchedStagiaire.size(); i++) {
             addStagiaire(fetchedStagiaire.get(i));
         }
@@ -117,7 +120,7 @@ public class BinManager {
      */
     public boolean addStagiaire(Stagiaire stagiaire) throws IOException {
 
-        long[] couple = searchCoupleWithID(stagiaire.getID(), 0);
+        long[] couple = searchCoupleWithID(stagiaire.getID(), root);
         if (couple[0] != -1) return false;
 
         long parent = couple[1];
@@ -138,12 +141,12 @@ public class BinManager {
      * @throws IOException
      */
     public void removeStagiaire(String ID) throws IOException {
-        removeStagiaire(searchCoupleWithID(ID, 0));
+        removeStagiaire(searchCoupleWithID(ID, root));
     }
 
     public void modifyStagiaire(String IDoldStagiaire, Stagiaire newStagiaire) throws IOException {
         log.debug("modifying " + IDoldStagiaire + " to " + newStagiaire.getID());
-        removeStagiaire(searchCoupleWithID(IDoldStagiaire, 0));
+        removeStagiaire(searchCoupleWithID(IDoldStagiaire, root));
         addStagiaire(newStagiaire);
         log.debug("modify done");
     }
@@ -217,7 +220,7 @@ public class BinManager {
     public Set<String> getAllPromos() throws IOException {
         Set<String> allPromos = new HashSet<>();
 
-        List<Stagiaire> allStagiaires = getAll(0,new ArrayList<>());
+        List<Stagiaire> allStagiaires = getAll(root,new ArrayList<>());
         for (Stagiaire stagiaire : allStagiaires) {
             allPromos.add(stagiaire.getPromotion());
         }
@@ -309,6 +312,7 @@ public class BinManager {
      */
     public void clearFile() throws IOException {
         new FileOutputStream(BIN_PATH).close();
+        root = getRoot();
     }
 
     /**
@@ -335,9 +339,11 @@ public class BinManager {
         for (long l : getChilds(coupleA[0])) {
             allIndexs.add(l);
         }
-        allIndexs.add(coupleA[1]);
-        for (long l : getChilds(coupleA[1])) {
-            allIndexs.add(l);
+        if (coupleA[1] != -1) { // Est potentiellement la root ?
+            allIndexs.add(coupleA[1]);
+            for (long l : getChilds(coupleA[1])) {
+                allIndexs.add(l);
+            }
         }
         allIndexs.add(coupleB[0]);
         for (long l : getChilds(coupleB[0])) {
@@ -359,6 +365,10 @@ public class BinManager {
             long left = allIndexs.get((i*3)+2);
 
             setChilds(current, new long[]{right, left});
+        }
+
+        if (coupleA[1] == -1) {
+            setRoot(coupleB[0]);
         }
     }
     //endregion
@@ -397,10 +407,14 @@ public class BinManager {
      */
     private void removeNode_ZeroChildren(long[] couple) throws IOException {
 
-        if (getRight(couple[1]) == couple[0]) {
-            setRight(couple[1],-1);
+        if (couple[1] == -1) {
+            setRoot(Long.BYTES);
         } else {
-            setLeft(couple[1],-1);
+            if (getRight(couple[1]) == couple[0]) {
+                setRight(couple[1],-1);
+            } else {
+                setLeft(couple[1],-1);
+            }
         }
     }
 
@@ -414,10 +428,14 @@ public class BinManager {
         long[] childOfNodeToRemove = getChilds(couple[0]);
         long goodChild = childOfNodeToRemove[0]==-1?childOfNodeToRemove[1]:childOfNodeToRemove[0];
 
-        if (getRight(couple[1]) == couple[0]) {
-            setRight(couple[1],goodChild);
+        if (couple[1] == -1) {
+            setRoot(goodChild);
         } else {
-            setLeft(couple[1],goodChild);
+            if (getRight(couple[1]) == couple[0]) {
+                setRight(couple[1],goodChild);
+            } else {
+                setLeft(couple[1],goodChild);
+            }
         }
     }
 
@@ -431,9 +449,9 @@ public class BinManager {
         long[] switchingNode = searchLefterNode(new long[]{getRight(couple[0]),couple[0]});
 
         System.out.println(Arrays.toString(switchingNode));
-        displayTree(0,0);
+        //displayTree(root,0);
         inverseConnexions(couple, switchingNode);
-        displayTree(0,0);
+        //displayTree(root,0);
 
         long[] newCouple;
         if (couple[0] == switchingNode[1]) {
@@ -565,6 +583,19 @@ public class BinManager {
         raf.readUTF();
         raf.readLong();
         raf.writeLong(value);
+    }
+
+    private long getRoot() throws IOException {
+        if (raf.length() < Long.BYTES) setRoot(Long.BYTES);
+
+        raf.seek(0);
+        return raf.readLong();
+    }
+
+    private void setRoot(long index) throws IOException {
+        root = index;
+        raf.seek(0);
+        raf.writeLong(index);
     }
     //endregion
 }
