@@ -21,13 +21,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
+import java.awt.Desktop;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 
 public class ExportToPdf {
 
     private static final Logger logger = LogManager.getLogger();
-
+    private static final String FILE = "resources/exportTable.pdf";
     public static boolean exportAnchorPaneViewStagiaireToPdf(TableView<Stagiaire> tableAnchorPane){
 
         Document doc = new Document();
@@ -53,7 +56,7 @@ public class ExportToPdf {
                 ; row_count++) {
             Row row = table.getRows().add();
 
-            item = tableAnchorPane.getItems().get(row_count);
+            item = tableAnchorPane.getItems().get(row_count -1);
 
             col = tableAnchorPane.getColumns().get(0);
             Cell cell = row.getCells().add((String) col.getCellObservableValue(item).getValue() );
@@ -78,8 +81,13 @@ public class ExportToPdf {
 
         doc.getPages().get_Item(1).getParagraphs().add(table);
 
-        doc.save( "ExportTable.pdf");
-        logger.info("Le pdf a été créé");
+        doc.save(FILE);
+        File myFile = new File(FILE);
+        try {
+            Desktop.getDesktop().open(myFile);
+        } catch (IOException e) {
+
+        }
         return true;
     }
 }

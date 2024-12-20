@@ -26,14 +26,14 @@ import java.io.IOException;
 public class InitializeTxtPanel extends VBox {
     private Label textFile = new Label("Entrez un chemin d'accès");
     private TextField txtFilePath = new TextField("");
-    private Button btnFilePath = new Button("Select file");
+    private Button btnFilePath = new Button("Sélectionner fichier");
     private Button btnValidate = new Button("Valider");
     private Label lblInfo = new Label("");
 
     public InitializeTxtPanel() {
 
         GridPane filePathBox = new GridPane();
-        txtFilePath.setPromptText("chemin d'accès au fichier...");
+        txtFilePath.setPromptText("Chemin d'accès au fichier...");
 
         filePathBox.addRow(3,textFile);
         filePathBox.addRow(4,txtFilePath,btnFilePath);
@@ -77,7 +77,7 @@ public class InitializeTxtPanel extends VBox {
                         lblInfo.setText("Fichier invalide !");
                     }
                 });
-                System.out.println("test");
+
             }
 
         });
@@ -102,7 +102,7 @@ public class InitializeTxtPanel extends VBox {
         init.requestFocus();
         Stage newWindow = new Stage();
         newWindow.setResizable(false);
-        newWindow.setTitle("Please select initialization file");
+        newWindow.setTitle("Choisissez un fichier à initialiser");
         newWindow.setScene(secondScene);
         Application.getInstance().setCurrentPopup(newWindow);
 
