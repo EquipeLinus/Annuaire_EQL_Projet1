@@ -37,7 +37,7 @@ public class AdministratorSorter {
 
     }
 
-    private static void modifyAdministrator(String OldUsername ,String NewUsername,String NewPassword, String statut) {
+    public static void modifyAdministrator(String OldUsername ,String NewUsername,String NewPassword, String statut) {
         removeAdministrator(OldUsername);
         addAdministratorToFile(NewUsername,NewPassword,statut);
     }
@@ -132,7 +132,7 @@ public class AdministratorSorter {
             output.writeInt(-1);
             output.writeUTF("Super User");
             output.writeUTF("Super Password");
-            output.writeUTF("Super Administrator");
+            output.writeUTF("Super Administrateur");
 
         }
         catch (FileNotFoundException e){

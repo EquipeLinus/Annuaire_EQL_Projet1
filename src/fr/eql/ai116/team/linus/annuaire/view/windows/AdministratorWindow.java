@@ -2,6 +2,8 @@ package fr.eql.ai116.team.linus.annuaire.view.windows;
 
 import fr.eql.ai116.team.linus.annuaire.Application;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
+import fr.eql.ai116.team.linus.annuaire.model.program.AdministratorSorter;
+import fr.eql.ai116.team.linus.annuaire.model.program.StagiairesSorter;
 import fr.eql.ai116.team.linus.annuaire.view.elements.AnchorPaneViewAdministrators;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -56,6 +58,7 @@ public class AdministratorWindow extends AnchorPane {
         List<Node> elements = new ArrayList<>();
 
         Administrator account = Application.getInstance().getAccount();
+        System.out.println(account.getStatut());
         if (account != null && !account.getStatut().equals("Super Administrateur")) return elements;
 
         Label labelSuperAdmin = new Label("Gestion des administrateurs (super-admin)");
@@ -153,7 +156,11 @@ public class AdministratorWindow extends AnchorPane {
         btnModifyPassword.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                /// AJOUTER FONCTION QUI PERMET DE VRAIMENT MODIFIER LE MDP:
+                AdministratorSorter.modifyAdministrator(Application.getInstance().getAccount().getUsername(),
+                        Application.getInstance().getAccount().getUsername(),
+                        txtPasswordChange.getText(),
+                        "Administrateur"
+                        );
 
                 confirmationLbl.setTextFill(Color.GREEN);
                 confirmationLbl.setText("Mot de passe modifié avec succès");
@@ -192,7 +199,7 @@ public class AdministratorWindow extends AnchorPane {
         btnCreate.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                /// AJOUTER FONCTION QUI PERMET DE VRAIMENT D'AJOUTER UN ADMIN:
+                AdministratorSorter.addAdministratorToFile(txtAdministrator.getText(),txtPassword.getText(),"Administrateur");
 
                 confirmationLbl.setTextFill(Color.GREEN);
                 confirmationLbl.setText("Administrateur créer avec succès");
