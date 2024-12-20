@@ -1,14 +1,10 @@
 package fr.eql.ai116.team.linus.annuaire.model.program;
 
-import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.EOFException;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -69,27 +65,20 @@ public class StagiairesSorter {
 
     }
 
-    public static boolean verifyIfStagiaireTxtIsEmpty(Administrator account) {
+    public static boolean isDatasEmpty() {
 
-        if(account.getStatut().equals("Administrateur") || account.getStatut().equals("Super Administrateur")){
-            try(RandomAccessFile output = new RandomAccessFile("resources/datas.bin","rw")){
-
-                output.seek(output.length());
-                if(output.length() == 0){
-                    return true;
-                }
-
-            }
-            catch (FileNotFoundException e){
-                logger.error("The file was not found ");
-            }
-            catch (IOException e){
-                logger.error("L'écriture n'a pas marché ");
-            }
+        try(RandomAccessFile output = new RandomAccessFile("resources/datas.bin","rw")){
+            
+            return output.length() <= Long.BYTES;
+        }
+        catch (FileNotFoundException e){
+            logger.error("The file was not found ");
+        }
+        catch (IOException e){
+            logger.error("L'écriture n'a pas marché ");
         }
 
         return false;
-
     }
 
 }

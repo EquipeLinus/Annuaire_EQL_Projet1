@@ -5,12 +5,9 @@ import fr.eql.ai116.team.linus.annuaire.Application;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.program.AdministratorSorter;
 import fr.eql.ai116.team.linus.annuaire.model.program.StagiairesSorter;
-import fr.eql.ai116.team.linus.annuaire.view.Clean;
 import fr.eql.ai116.team.linus.annuaire.view.elements.InitializeTxtPanel;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -19,10 +16,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class ConnexionWindow extends VBox {
@@ -102,7 +97,7 @@ public class ConnexionWindow extends VBox {
                 labelConnexionAnswer.setText("Vous êtes connecté en tant que " + account.getUsername() + " avec les droits "
                         + account.getStatut());
 
-                if (StagiairesSorter.verifyIfStagiaireTxtIsEmpty(account)) {
+                if (StagiairesSorter.isDatasEmpty()) {
                     InitializeTxtPanel.openWindow();
                 }
 
