@@ -138,6 +138,7 @@ public class AdministratorWindow extends AnchorPane {
         administrationWindow.setTitle("Gestion de compte");
         administrationWindow.setScene(administrationScene);
 
+        administrationWindow.setResizable(false);
         Application.getInstance().setCurrentPopup(administrationWindow);
     }
 
