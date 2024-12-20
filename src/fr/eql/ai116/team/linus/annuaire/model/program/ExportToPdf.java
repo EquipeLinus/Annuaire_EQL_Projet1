@@ -34,14 +34,11 @@ public class ExportToPdf {
     public static boolean exportAnchorPaneViewStagiaireToPdf(TableView<Stagiaire> tableAnchorPane){
 
         Document doc = new Document();
-        //Ajouter une page
-        Page page = doc.getPages().add();
+        Page page =doc.getPages().add();
 
         TextFragment textFragment = new TextFragment("Liste des stagiaires");
         textFragment.setPosition(new Position(40, 0));
         textFragment.getTextState().setFontSize(22);
-
-
 
         Table table = new Table();
         table.setBorder(new BorderInfo(BorderSide.All, .5f, Color.getLightGray()));
@@ -52,20 +49,23 @@ public class ExportToPdf {
         TableColumn col = null;
         String transform = null;
 
-        for (int row_count = 1; row_count < tableAnchorPane.getItems().size()
-                ; row_count++) {
+        Row rowStart = table.getRows().add();
+        rowStart.getCells().add("Nom");
+        rowStart.getCells().add("Prénom");
+        rowStart.getCells().add("Promotion");
+        rowStart.getCells().add("Année");
+        rowStart.getCells().add("Département");
+
+        for (int row_count = 1; row_count < tableAnchorPane.getItems().size() +1; row_count++) {
             Row row = table.getRows().add();
 
             item = tableAnchorPane.getItems().get(row_count -1);
 
             col = tableAnchorPane.getColumns().get(0);
-            Cell cell = row.getCells().add((String) col.getCellObservableValue(item).getValue() );
-
-
+            row.getCells().add((String) col.getCellObservableValue(item).getValue() );
 
             col = tableAnchorPane.getColumns().get(1);
             row.getCells().add((String) col.getCellObservableValue(item).getValue() );
-
 
             col = tableAnchorPane.getColumns().get(2);
             row.getCells().add((String) col.getCellObservableValue(item).getValue() );
@@ -79,7 +79,9 @@ public class ExportToPdf {
             row.getCells().add(transform);
         }
 
+
         doc.getPages().get_Item(1).getParagraphs().add(table);
+
 
         doc.save(FILE);
         File myFile = new File(FILE);

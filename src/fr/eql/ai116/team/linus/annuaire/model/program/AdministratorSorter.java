@@ -48,7 +48,7 @@ public class AdministratorSorter {
         int nextValue = 0;
         int previousValue = 0;
 
-        try (RandomAccessFile output = new RandomAccessFile(FILE,"rw")){
+        try (RandomAccessFile output = new RandomAccessFile(FOLDER +FILE,"rw")){
 
             do {
                 output.readInt();
@@ -59,9 +59,8 @@ public class AdministratorSorter {
                     output.seek(nextValue);
                 }
 
-                logger.info("Username : " + username + " | Username Wanted" + usernameWanted + " | Next value : " +nextValue +" | Previous value : " + previousValue);
+
             }while (!usernameWanted.equals(username));
-            System.out.println("sortie");
 
             if (nextValue == -1){
                 output.seek(previousValue);
@@ -95,7 +94,7 @@ public class AdministratorSorter {
 
     public static List<Administrator> getListAdmins() {
         List<Administrator> administratorsList = new ArrayList<>();
-        try (RandomAccessFile input = new RandomAccessFile(FILE,"rw")){
+        try (RandomAccessFile input = new RandomAccessFile(FOLDER +FILE,"rw")){
 
                 int value = 0;
                 do {
@@ -123,10 +122,10 @@ public class AdministratorSorter {
     }
 
     private static void addSuperAdminToFile() {
-        File ressourcesFolder = new File(FOLDER);
+        File ressourcesFolder = new File("resources");
         ressourcesFolder.mkdir();
 
-        try(RandomAccessFile output = new RandomAccessFile(FILE,"rw")){
+        try(RandomAccessFile output = new RandomAccessFile(FOLDER + FILE,"rw")){
             output.writeInt(0);
             output.writeInt(-1);
             output.writeInt(-1);
@@ -146,14 +145,14 @@ public class AdministratorSorter {
 
     public static void addAdministratorToFile( String username, String password, String statut) {
 
-        File ressourcesFolder = new File(FOLDER);
+        File ressourcesFolder = new File("resources");
         ressourcesFolder.mkdir();
         if(checkIfAdminExists(getListAdmins() , username) != null){
             logger.info("L'administrateur existe déjà");
             return;
         }
 
-        try(RandomAccessFile output = new RandomAccessFile(FILE,"rw")){
+        try(RandomAccessFile output = new RandomAccessFile(FOLDER + FILE,"rw")){
 
 
            if(output.length()==0){
@@ -229,7 +228,7 @@ public class AdministratorSorter {
     private static Administrator checkIfAdminExists(List<Administrator> listAdmins, String usernameWanted) {
 
         for (Administrator admin : listAdmins) {
-            System.out.println(usernameWanted + "  " +admin.getUsername());
+
             if(admin.getUsername().equals(usernameWanted)){
 
                 return admin;
