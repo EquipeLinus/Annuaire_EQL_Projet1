@@ -2,7 +2,9 @@ package fr.eql.ai116.team.linus.annuaire.view.windows;
 
 import fr.eql.ai116.team.linus.annuaire.Application;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
+import fr.eql.ai116.team.linus.annuaire.model.program.AdministratorSorter;
 import fr.eql.ai116.team.linus.annuaire.view.elements.AnchorPaneViewAdministrators;
+import fr.eql.ai116.team.linus.annuaire.view.elements.AnchorPaneViewStagiaire;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -220,7 +222,7 @@ public class AdministratorWindow extends AnchorPane {
                 confirmationLbl.setTextFill(Color.GREEN);
                 confirmationLbl.setText("Administrateur créer avec succès");
 
-                anchorPaneViewAdministrators.setTable(AdministratorSorter.getListAdmins());
+
             }
         });
 
