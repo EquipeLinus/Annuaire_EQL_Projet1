@@ -65,6 +65,7 @@ public class AdministratorWindow extends AnchorPane {
         openWindow();
 
         resize();
+        administrationWindow.setResizable(false);
     }
 
     private void resize() {
@@ -139,7 +140,6 @@ public class AdministratorWindow extends AnchorPane {
         administrationWindow.setTitle("Gestion de compte");
         administrationWindow.setScene(administrationScene);
 
-        administrationWindow.setResizable(false);
         Application.getInstance().setCurrentPopup(administrationWindow);
     }
 

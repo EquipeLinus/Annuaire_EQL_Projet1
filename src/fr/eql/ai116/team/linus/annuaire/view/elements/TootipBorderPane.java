@@ -3,6 +3,7 @@ package fr.eql.ai116.team.linus.annuaire.view.elements;
 import fr.eql.ai116.team.linus.annuaire.Application;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
+import fr.eql.ai116.team.linus.annuaire.model.program.Delay;
 import fr.eql.ai116.team.linus.annuaire.model.program.ExportToPdf;
 import fr.eql.ai116.team.linus.annuaire.view.windows.AdministratorWindow;
 import fr.eql.ai116.team.linus.annuaire.view.windows.ConnexionWindow;
@@ -17,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import javax.swing.*;
@@ -48,9 +50,22 @@ public class TootipBorderPane extends BorderPane {
         btnExport.setMinWidth(120);
         btnExport.setMinHeight(40);
 
+
         rightPanel.setPadding(new Insets(0, 100, 20, 0));
         rightPanel.getChildren().addAll(btnConnexion, btnExport,lblInfo);
         setRight(rightPanel);
+
+        /**
+         * Center panel
+         */
+
+
+        Pane containerLabelConnexionInfo = new Pane();
+
+        containerLabelConnexionInfo.getChildren().add(lblConnectionInfo);
+        lblConnectionInfo.relocate(-40,30);
+        lblConnectionInfo.setFont(new Font(16));
+        setCenter(containerLabelConnexionInfo);
 
         /**
          * Top panel
@@ -60,14 +75,12 @@ public class TootipBorderPane extends BorderPane {
         Button btnHelp = new Button("Aide");
         btnAccountManagement.setVisible(false);
 
-        topPanel.setPadding(new Insets(-5, 0, 0, 0));
+        topPanel.setPadding(new Insets(-5, 0, 0, -70));
 
         topPanel.setAlignment(Pos.CENTER_LEFT);
-        topPanel.getChildren().addAll(btnHelp, btnAccountManagement, lblConnectionInfo);
+        topPanel.getChildren().addAll(btnHelp, btnAccountManagement);
         setTop(topPanel);
 
-        lblConnectionInfo.setMaxWidth(350);
-        lblConnectionInfo.setMinWidth(350);
 
         btnConnexion.setOnAction(e -> {
              if(!isLoggedIn) {
@@ -78,11 +91,11 @@ public class TootipBorderPane extends BorderPane {
             }
         });
 
-
+        btnConnexion.borderProperty();
         btnExport.setOnAction(e -> {
             lblInfo.setTextFill(Color.ORANGE);
             lblInfo.setText("Veuillez patienter");
-            InitializeTxtPanel.delay(500, () -> {
+            Delay.delay(10, () -> {
                 if(ExportToPdf.exportAnchorPaneViewStagiaireToPdf(Application.getInstance().getTable())){
                     lblInfo.setTextFill(Color.GREEN);
                     lblInfo.setText("Le pdf a été créé");

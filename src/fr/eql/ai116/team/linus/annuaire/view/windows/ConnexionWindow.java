@@ -4,6 +4,7 @@ package fr.eql.ai116.team.linus.annuaire.view.windows;
 import fr.eql.ai116.team.linus.annuaire.Application;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.program.AdministratorSorter;
+import fr.eql.ai116.team.linus.annuaire.model.program.Delay;
 import fr.eql.ai116.team.linus.annuaire.model.program.StagiairesSorter;
 import fr.eql.ai116.team.linus.annuaire.view.elements.InitializeTxtPanel;
 import javafx.concurrent.Task;
@@ -103,7 +104,7 @@ public class ConnexionWindow extends VBox {
                     InitializeTxtPanel.openWindow();
                 }
 
-                delay(500, connexionWindow::close);
+                Delay.delay(500, connexionWindow::close);
 
                 root.getChildren().add(labelConnexionAnswer);
 
@@ -116,17 +117,6 @@ public class ConnexionWindow extends VBox {
         });
     }
 
-    public static void delay(long millis, Runnable continuation) {
-        Task<Void> sleeper = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                try { Thread.sleep(millis); }
-                catch (InterruptedException e) { }
-                return null;
-            }
-        };
-        sleeper.setOnSucceeded(event -> continuation.run());
-        new Thread(sleeper).start();
-    }
+
 
 }
