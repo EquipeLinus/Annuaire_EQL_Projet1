@@ -129,9 +129,10 @@ public class Application extends javafx.application.Application {
         } else {
             onDisconnection(this.account);
         }
+        if (this.account != null) setCurrentPopup(null);
+
         this.account = account;
 
-        setCurrentPopup(null);
         tooltipPanel.updateConnectionInfo();
     }
 
