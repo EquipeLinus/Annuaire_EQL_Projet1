@@ -30,7 +30,7 @@ public class AdministratorSorter {
     public static void main(String[] args) {
 
 //      addAdministratorToFile("Ad","Dors","Administrateur");
-          addAdministratorToFile("d","b","Administrateur");
+        //addAdministratorToFile("d","b","Administrateur");
 //        logger.info(getListAdmins());
 
         //modifyAdministrator("Adk","Adk", "Dorsee","Administrateur");

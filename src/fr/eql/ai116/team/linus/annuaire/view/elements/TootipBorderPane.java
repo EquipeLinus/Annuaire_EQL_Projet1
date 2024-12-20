@@ -3,6 +3,7 @@ package fr.eql.ai116.team.linus.annuaire.view.elements;
 import fr.eql.ai116.team.linus.annuaire.Application;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
+import fr.eql.ai116.team.linus.annuaire.model.program.ExportToPdf;
 import fr.eql.ai116.team.linus.annuaire.view.windows.AdministratorWindow;
 import fr.eql.ai116.team.linus.annuaire.view.windows.ConnexionWindow;
 import javafx.geometry.Insets;
@@ -15,6 +16,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import javax.swing.*;
@@ -27,6 +29,7 @@ public class TootipBorderPane extends BorderPane {
     Label lblConnectionInfo = new Label("Compte utilisateur");
     Button btnAccountManagement = new Button("Gestion de compte");
     Button btnConnexion = new Button("Connexion");
+    Label lblInfo = new Label("");
     boolean isLoggedIn = Application.getInstance().getAccount() != null;
 
 
@@ -46,13 +49,13 @@ public class TootipBorderPane extends BorderPane {
         btnExport.setMinHeight(40);
 
         rightPanel.setPadding(new Insets(0, 100, 20, 0));
-        rightPanel.getChildren().addAll(btnConnexion, btnExport);
+        rightPanel.getChildren().addAll(btnConnexion, btnExport,lblInfo);
         setRight(rightPanel);
 
         /**
          * Top panel
          */
-        HBox topPanel = new HBox(20.);
+        HBox topPanel = new HBox();
 
         Button btnHelp = new Button("Aide");
         btnAccountManagement.setVisible(false);
@@ -77,7 +80,19 @@ public class TootipBorderPane extends BorderPane {
 
 
         btnExport.setOnAction(e -> {
-            //ExportToPdf.exportAnchorPaneViewStagiaireToPdf(table);
+            lblInfo.setTextFill(Color.ORANGE);
+            lblInfo.setText("Veuillez patienter");
+            InitializeTxtPanel.delay(500, () -> {
+                if(ExportToPdf.exportAnchorPaneViewStagiaireToPdf(Application.getInstance().getTable())){
+                    lblInfo.setTextFill(Color.GREEN);
+                    lblInfo.setText("Le pdf a été créé");
+                }
+                else {
+                    lblInfo.setTextFill(Color.RED);
+                    lblInfo.setText("Le pdf n'as pas pu être créé");
+                }
+
+            });
         });
 
         btnAccountManagement.setOnAction(e -> {
