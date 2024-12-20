@@ -89,10 +89,10 @@ public class TootipBorderPane extends BorderPane {
             if (Desktop.isDesktopSupported()) {
                 try {
                     if (Application.getInstance().getAccount() == null) {
-                        File myFile = new File("test.pdf");
+                        File myFile = new File("resources/guide_utilisateur.pdf");
                         Desktop.getDesktop().open(myFile);
                     } else {
-                        File myFile = new File("resources/test2.pdf");
+                        File myFile = new File("resources/guide_administrateur.pdf");
                         Desktop.getDesktop().open(myFile);
                     }
 
