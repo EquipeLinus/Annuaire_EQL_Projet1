@@ -85,10 +85,10 @@ public class AdministratorSorter {
 
         }
         catch (FileNotFoundException e) {
-            logger.error("Unable to create " + FILE, e);
+            logger.error("Unable to create " + FILE);
         }
         catch (IOException e) {
-            logger.error("Unable to operate on the " + FILE, e);
+            logger.error("Unable to operate on the " + FILE);
         }
 
     }
@@ -117,7 +117,7 @@ public class AdministratorSorter {
             logger.error("Unable to create " + FILE, e);
         }
         catch (IOException e) {
-            logger.info("Il y a personne dans la liste" + FILE, e);
+            logger.info("Il y a personne dans la liste" + FILE);
         }
         return administratorsList;
     }
