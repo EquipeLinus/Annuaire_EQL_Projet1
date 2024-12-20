@@ -226,7 +226,7 @@ public class AdministratorSorter {
     /**
      * For check if the input admin exist
      */
-    private static Administrator checkIfAdminExists(List<Administrator> listAdmins, String usernameWanted) {
+    public static Administrator checkIfAdminExists(List<Administrator> listAdmins, String usernameWanted) {
 
         for (Administrator admin : listAdmins) {
             System.out.println(usernameWanted + "  " +admin.getUsername());

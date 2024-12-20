@@ -272,9 +272,18 @@ public class AdministratorWindow extends AnchorPane {
         btnCreate.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                AdministratorSorter.addAdministratorToFile(txtAdministrator.getText(), txtPassword.getText(), "Administrateur");
-                confirmationLbl.setTextFill(Color.GREEN);
-                confirmationLbl.setText("Administrateur créer avec succès");
+
+
+                if(AdministratorSorter.checkIfAdminExists(AdministratorSorter.getListAdmins(), txtAdministrator.getText()) == null) {
+                    confirmationLbl.setText("Administrateur créé avec succès");
+                    confirmationLbl.setTextFill(Color.GREEN);
+                    AdministratorSorter.addAdministratorToFile(txtAdministrator.getText(), txtPassword.getText(), "Administrateur");
+                } else {
+                    confirmationLbl.setText("Administrateur avec cet identifiant existe déjà.");
+                    confirmationLbl.setTextFill(Color.RED);
+                }
+
+
 
                 anchorPaneViewAdministrators.setTable(AdministratorSorter.getListAdmins());
             }
