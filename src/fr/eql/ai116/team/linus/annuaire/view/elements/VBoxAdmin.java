@@ -105,6 +105,7 @@ public class VBoxAdmin extends VBox {
         btnAdd.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                errorLabel.setText("");
                 try {
                     int year = Integer.parseInt(txtYear.getText());
                     int department = Integer.parseInt(txtDepartment.getText());
@@ -134,6 +135,7 @@ public class VBoxAdmin extends VBox {
         btnModify.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                errorLabel.setText("");
                 try {
                     int year = Integer.parseInt(txtYear.getText());
                     int department = Integer.parseInt(txtDepartment.getText());
@@ -161,11 +163,16 @@ public class VBoxAdmin extends VBox {
         btnDelete.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                errorLabel.setText("");
                 try {
                     BinManager bManager = new BinManager();
-                    bManager.removeStagiaire(selectedStagiaire.getID());
-                    searchPanel.search();
-                    bManager.displayTree(BinManager.root,0);
+                    if (bManager.removeStagiaire(selectedStagiaire.getID())) {
+                        searchPanel.search();
+                        //bManager.displayTree(BinManager.root,0);
+                    } else {
+                        errorLabel.setText("Stagiaire non existant");
+                    }
+
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (IOException e) {

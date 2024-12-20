@@ -140,8 +140,13 @@ public class BinManager {
      * @param ID l'ID du stagiaire à supprimer
      * @throws IOException
      */
-    public void removeStagiaire(String ID) throws IOException {
-        removeStagiaire(searchCoupleWithID(ID, root));
+    public boolean removeStagiaire(String ID) throws IOException {
+        long[] coupleToDelete = searchCoupleWithID(ID, root);
+        if (coupleToDelete[0] == -1) return false;
+        else {
+            removeStagiaire(coupleToDelete);
+            return true;
+        }
     }
 
     public void modifyStagiaire(String IDoldStagiaire, Stagiaire newStagiaire) throws IOException {
