@@ -3,8 +3,8 @@ package fr.eql.ai116.team.linus.annuaire.view.windows;
 import fr.eql.ai116.team.linus.annuaire.Application;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.program.AdministratorSorter;
+import fr.eql.ai116.team.linus.annuaire.model.program.StagiairesSorter;
 import fr.eql.ai116.team.linus.annuaire.view.elements.AnchorPaneViewAdministrators;
-import fr.eql.ai116.team.linus.annuaire.view.elements.AnchorPaneViewStagiaire;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -14,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableView;
@@ -21,6 +22,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -35,10 +37,13 @@ import java.util.List;
 public class AdministratorWindow extends AnchorPane {
 
     private static final Logger logger = LogManager.getLogger();
+    private AnchorPaneViewAdministrators anchorPaneViewAdministrators;
+    Accordion modifyIdSection;
+    Accordion modifyMdpSection;
+    Stage administrationWindow;
+    VBox root = new VBox(10);
 
     public AdministratorWindow(Stage stage) {
-
-        VBox root = new VBox(10);
         AnchorPane.setLeftAnchor(root, 50.);
         AnchorPane.setRightAnchor(root, 50.);
         AnchorPane.setTopAnchor(root, 30.);
@@ -47,11 +52,30 @@ public class AdministratorWindow extends AnchorPane {
         Label labelModifyAccount = new Label("Modifier mon compte");
         labelModifyAccount.setFont(new Font(24));
 
-        root.getChildren().addAll(labelModifyAccount, getModifyIdSection(), getModifyMDPSection());
+        modifyIdSection = getModifyIdSection();
+        modifyMdpSection = getModifyMDPSection();
+
+        root.getChildren().addAll(labelModifyAccount, modifyIdSection, modifyMdpSection);
 
         root.getChildren().addAll(getSuperAdminElements());
+
         getChildren().add(root);
+
         openWindow();
+
+        resize();
+    }
+
+    private void resize() {
+        double height = AnchorPane.getBottomAnchor(root) + AnchorPane.getTopAnchor(root) + 50;
+        for (Node child : root.getChildren()) {
+            height += root.getSpacing();
+            if (child instanceof Region) {
+                height += ((Region) child).getHeight();
+            }
+        }
+        administrationWindow.setMinHeight(height);
+        administrationWindow.setMaxHeight(height);
     }
 
     private List<Node> getSuperAdminElements() {
@@ -64,7 +88,7 @@ public class AdministratorWindow extends AnchorPane {
         labelSuperAdmin.setFont(new Font(24));
 
         TableView<Administrator> table = new TableView<>();
-        AnchorPaneViewAdministrators anchorPaneViewAdministrators = new AnchorPaneViewAdministrators(table);
+        anchorPaneViewAdministrators = new AnchorPaneViewAdministrators(table);
 
         Button btnDeleteAdministrator = new Button();
         btnDeleteAdministrator.setVisible(false);
@@ -99,10 +123,10 @@ public class AdministratorWindow extends AnchorPane {
 
     private void openWindow() {
 
-        Scene administrationWindows = new Scene(this);
-        Stage administrationWindow = new Stage();
+        Scene administrationScene = new Scene(this);
+        administrationWindow = new Stage();
         administrationWindow.setTitle("Gestion de compte");
-        administrationWindow.setScene(administrationWindows);
+        administrationWindow.setScene(administrationScene);
 
         Application.getInstance().setCurrentPopup(administrationWindow);
     }
@@ -118,7 +142,7 @@ public class AdministratorWindow extends AnchorPane {
         Label confirmationLbl = new Label("");
         confirmationLbl.setFont(new Font(12));
         btnBox.setAlignment(Pos.CENTER_LEFT);
-        btnBox.getChildren().addAll(btnModifyUsername,confirmationLbl);
+        btnBox.getChildren().addAll(btnModifyUsername, confirmationLbl);
 
         TitledPane idAccordionTP = new TitledPane("Identifiant",
                 new VBox(lblNewID, txtUsernameChange, btnBox));
@@ -127,7 +151,7 @@ public class AdministratorWindow extends AnchorPane {
         btnModifyUsername.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (!txtUsernameChange.getText().isEmpty() ){
+                if (!txtUsernameChange.getText().isEmpty()) {
                     AdministratorSorter.modifyAdministrator(Application.getInstance().getAccount().getUsername(),
                             txtUsernameChange.getText(),
                             Application.getInstance().getAccount().getPassword(),
@@ -138,10 +162,17 @@ public class AdministratorWindow extends AnchorPane {
             }
         });
 
-        idAccordion.getPanes().get(0).expandedProperty().addListener(new ChangeListener<Boolean>() {
+        idAccordionTP.expandedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (!newValue) confirmationLbl.setText("");
+            }
+        });
+
+        idAccordion.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                resize();
             }
         });
 
@@ -161,7 +192,7 @@ public class AdministratorWindow extends AnchorPane {
         Label confirmationLbl = new Label("");
         confirmationLbl.setFont(new Font(12));
         btnBox.setAlignment(Pos.CENTER_LEFT);
-        btnBox.getChildren().addAll(btnModifyPassword,confirmationLbl);
+        btnBox.getChildren().addAll(btnModifyPassword, confirmationLbl);
 
         TitledPane mdpAccordionTP = new TitledPane("Mot de passe",
                 new VBox(labelPasswordChange, txtPasswordChange, labelConfirmationPasswordChange, txtConfirmationPasswordChange, btnBox));
@@ -170,15 +201,14 @@ public class AdministratorWindow extends AnchorPane {
         btnModifyPassword.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(txtPasswordChange.getText().equals(txtConfirmationPasswordChange.getText()) && !txtPasswordChange.getText().isEmpty() ){
+                if (txtPasswordChange.getText().equals(txtConfirmationPasswordChange.getText()) && !txtPasswordChange.getText().isEmpty()) {
                     AdministratorSorter.modifyAdministrator(Application.getInstance().getAccount().getUsername(),
                             Application.getInstance().getAccount().getUsername(),
                             txtPasswordChange.getText(),
                             "Administrateur");
                     confirmationLbl.setTextFill(Color.GREEN);
                     confirmationLbl.setText("Mot de passe modifié avec succès");
-                }
-                else {
+                } else {
                     confirmationLbl.setTextFill(Color.RED);
                     confirmationLbl.setText("Les mots de passes ne sont pas identiques");
                 }
@@ -186,10 +216,17 @@ public class AdministratorWindow extends AnchorPane {
             }
         });
 
-        mdpAccordion.getPanes().get(0).expandedProperty().addListener(new ChangeListener<Boolean>() {
+        mdpAccordionTP.expandedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (!newValue) confirmationLbl.setText("");
+            }
+        });
+
+        mdpAccordion.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                resize();
             }
         });
 
@@ -202,14 +239,14 @@ public class AdministratorWindow extends AnchorPane {
         Label labelAdministrator = new Label("Identifiant:");
         TextField txtAdministrator = new TextField();
         Label labelPassword = new Label("Mot de passe:");
-        TextField txtPassword = new TextField();
+        PasswordField txtPassword = new PasswordField();
 
         HBox btnBox = new HBox(5);
         Button btnCreate = new Button("Créer administrateur");
         Label confirmationLbl = new Label("");
         confirmationLbl.setFont(new Font(12));
         btnBox.setAlignment(Pos.CENTER_LEFT);
-        btnBox.getChildren().addAll(btnCreate,confirmationLbl);
+        btnBox.getChildren().addAll(btnCreate, confirmationLbl);
 
         TitledPane adminCreationAccordionTP = new TitledPane("Créer un nouveau administrateur",
                 new VBox(labelAdministrator, txtAdministrator, labelPassword, txtPassword, btnBox));
@@ -218,18 +255,25 @@ public class AdministratorWindow extends AnchorPane {
         btnCreate.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                AdministratorSorter.addAdministratorToFile(txtAdministrator.getText(),txtPassword.getText(),"Administrateur");
+                AdministratorSorter.addAdministratorToFile(txtAdministrator.getText(), txtPassword.getText(), "Administrateur");
                 confirmationLbl.setTextFill(Color.GREEN);
                 confirmationLbl.setText("Administrateur créer avec succès");
 
-
+                anchorPaneViewAdministrators.setTable(AdministratorSorter.getListAdmins());
             }
         });
 
-        adminCreationAccordion.getPanes().get(0).expandedProperty().addListener(new ChangeListener<Boolean>() {
+        adminCreationAccordionTP.expandedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (!newValue) confirmationLbl.setText("");
+            }
+        });
+
+        adminCreationAccordion.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                resize();
             }
         });
 

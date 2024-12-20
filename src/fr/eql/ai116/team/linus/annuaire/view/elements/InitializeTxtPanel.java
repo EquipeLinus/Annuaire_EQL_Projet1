@@ -67,6 +67,8 @@ public class InitializeTxtPanel extends VBox {
                         BinManager bManager = new BinManager();
                         bManager.initialize();
                         lblInfo.setText("Fini");
+                        Application.getInstance().getSearchPanel().search();
+
                         delay(500, () -> ((Stage) getScene().getWindow()).close());
                     } catch (IOException | NumberFormatException e) {
                         lblInfo.setTextFill(Color.RED);

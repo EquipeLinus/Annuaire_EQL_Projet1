@@ -49,7 +49,7 @@ public class AnchorPaneViewStagiaire extends AnchorPane {
 
         try {
             BinManager binManager = new BinManager();
-            setTable(binManager.getAll( 0, new ArrayList<Stagiaire>()));
+            setTable(binManager.getAll( BinManager.root, new ArrayList<Stagiaire>()));
         } catch (FileNotFoundException e) {
             logger.info("Fichier non trouvé");
         } catch (IOException e) {

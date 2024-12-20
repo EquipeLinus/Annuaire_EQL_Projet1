@@ -96,17 +96,13 @@ public class SearchPanel extends GridPane {
         String[] validatedPromos = promotionStack.getValidatedPromos();
 
         if (validatedPromos.length == 0) {
-            result = binManager.getAll(0,new ArrayList<>());}
+            result = binManager.getAll(BinManager.root,new ArrayList<>());}
         else {
             for (String validatedPromo : validatedPromos) {
-                result = binManager.searchPromo(validatedPromo, 0, result);
+                result = binManager.searchPromo(validatedPromo, BinManager.root, result);
             }
         }
         return result;
-    }
-
-    private void addPromoStack() {
-
     }
 }
 

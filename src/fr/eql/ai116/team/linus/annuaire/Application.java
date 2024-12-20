@@ -2,12 +2,14 @@ package fr.eql.ai116.team.linus.annuaire;
 
 import fr.eql.ai116.team.linus.annuaire.model.entity.Administrator;
 import fr.eql.ai116.team.linus.annuaire.model.entity.Stagiaire;
+import fr.eql.ai116.team.linus.annuaire.model.program.ExportToPdf;
 import fr.eql.ai116.team.linus.annuaire.view.elements.AnchorPaneViewStagiaire;
-;
+import fr.eql.ai116.team.linus.annuaire.view.elements.InitializeTxtPanel;
 import fr.eql.ai116.team.linus.annuaire.view.elements.SearchPanel;
 import fr.eql.ai116.team.linus.annuaire.view.elements.TootipBorderPane;
 import fr.eql.ai116.team.linus.annuaire.view.elements.VBoxAdmin;
-
+import fr.eql.ai116.team.linus.annuaire.view.windows.AdministratorWindow;
+import fr.eql.ai116.team.linus.annuaire.view.windows.ConnexionWindow;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -49,10 +51,6 @@ public class Application extends javafx.application.Application {
 
     public static void main(String[] args) {
         launch(args);
-    }
-
-    public TableView<Stagiaire> getTable() {
-        return table;
     }
 
     @Override
@@ -152,5 +150,9 @@ public class Application extends javafx.application.Application {
         }
         this.currentPopup = currentPopup;
         this.currentPopup.show();
+    }
+
+    public SearchPanel getSearchPanel() {
+        return searchPanel;
     }
 }
