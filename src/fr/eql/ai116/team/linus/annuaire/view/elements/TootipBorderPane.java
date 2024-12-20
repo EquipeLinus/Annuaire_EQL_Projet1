@@ -55,7 +55,7 @@ public class TootipBorderPane extends BorderPane {
         /**
          * Top panel
          */
-        HBox topPanel = new HBox();
+        HBox topPanel = new HBox(20.);
 
         Button btnHelp = new Button("Aide");
         btnAccountManagement.setVisible(false);
