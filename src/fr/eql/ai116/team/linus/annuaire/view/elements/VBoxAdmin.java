@@ -239,12 +239,12 @@ public class VBoxAdmin extends VBox {
     private void setErrorLabel(String text) {
         errorLabel.setTextFill(Color.RED);
         errorLabel.setText(text);
-        Delay.delay(1000, () -> errorLabel.setText(""));
+        Delay.delay(5000, () -> errorLabel.setText(""));
     }
 
     private void setConfirmLabel(String text) {
         errorLabel.setTextFill(Color.GREEN);
         errorLabel.setText(text);
-        Delay.delay(1000, () -> errorLabel.setText(""));
+        Delay.delay(5000, () -> errorLabel.setText(""));
     }
 }
