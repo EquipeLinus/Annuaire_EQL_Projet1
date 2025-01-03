@@ -75,9 +75,9 @@ public class TootipBorderPane extends BorderPane {
         Button btnHelp = new Button("Aide");
         btnAccountManagement.setVisible(false);
 
-        topPanel.setPadding(new Insets(-5, 0, 0, -70));
+        topPanel.setPadding(new Insets(-5, 150, 10, 0));
 
-        topPanel.setAlignment(Pos.CENTER_LEFT);
+        topPanel.setAlignment(Pos.CENTER_RIGHT);
         topPanel.getChildren().addAll(btnHelp, btnAccountManagement);
         setTop(topPanel);
 
