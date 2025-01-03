@@ -61,7 +61,7 @@ public class Application extends javafx.application.Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        AdministratorSorter.addAdministratorToFile("d","b","Administrateur");
+        AdministratorSorter.addSuperAdminToFile();
 
         /**
          * general variable initialization
